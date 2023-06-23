@@ -1,6 +1,6 @@
-﻿using XAF;
+﻿using XAF.UI.Abstraction;
 
-namespace XAF.WPF.Attributes;
+namespace XAF.UI.WPF.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class ViewForAttribute<TViewModel> : Attribute

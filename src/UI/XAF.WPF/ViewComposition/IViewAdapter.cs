@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 public interface IViewAdapter
 {
     Type ForType { get; }

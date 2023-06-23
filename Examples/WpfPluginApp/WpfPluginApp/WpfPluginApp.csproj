@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\Hosting\XAF.Hosting\XAF.Hosting.csproj" />
-		<ProjectReference Include="..\..\..\src\UI\XAF.WPF\XAF.WPF.csproj" />
+		<ProjectReference Include="..\..\..\src\UI\XAF.WPF\XAF.UI.WPF.csproj" />
 		<ProjectReference Include="..\WpfPlugin\WpfPlugin.csproj" />
 	</ItemGroup>
 

@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
-using XAF;
 using XAF.Modularity;
 using XAF.Modularity.Abstraction;
-using XAF.WPF.Modules;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Modules;
 
 namespace WpfPlugin;
 public class WPFModule : UiModule

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using XAF.WPF.ExtensionMethodes;
+using XAF.UI.WPF.ExtensionMethodes;
 
-namespace XAF.WPF.ViewAdapters;
+namespace XAF.UI.WPF.ViewAdapters;
 public sealed class ContentControlAdapter : ViewAdapterBase<ContentControl>
 {
     public override bool Contains(ContentControl container, FrameworkElement view)

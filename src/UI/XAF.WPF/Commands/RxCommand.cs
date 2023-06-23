@@ -7,8 +7,9 @@ using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Reflection;
 using System.Windows.Input;
+using XAF.UI.Abstraction.Commands;
 
-namespace XAF.Commands;
+namespace XAF.UI.WPF.Commands;
 
 
 public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>

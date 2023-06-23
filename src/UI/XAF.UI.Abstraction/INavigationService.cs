@@ -1,4 +1,4 @@
-﻿namespace XAF;
+﻿namespace XAF.UI.Abstraction;
 public interface INavigationService
 {
     uint BackStackCapacity { get; set; }

@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace XAF.WPF.Converters;
+namespace XAF.UI.WPF.Converters;
 public abstract class BaseValueConverter<TConverter, TFor> : MarkupExtension, IValueConverter
         where TConverter : BaseValueConverter<TConverter, TFor>, new()
 {

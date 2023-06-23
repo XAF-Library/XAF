@@ -1,7 +1,7 @@
 ﻿using System.Reactive;
 using System.Windows.Input;
 
-namespace XAF.Commands;
+namespace XAF.UI.Abstraction.Commands;
 
 public interface IRxCommand<TParam, TResult> : IObservable<TResult>, ICommand, IDisposable
 {

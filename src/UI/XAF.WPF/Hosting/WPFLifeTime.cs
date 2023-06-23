@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
 
-namespace XAF.WPF.Hosting;
+namespace XAF.UI.WPF.Hosting;
 public class WpfLifetime : IHostLifetime
 {
     private readonly IWpfThread _thread;

@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using XAF;
-using XAF.WPF.Attributes;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Attributes;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 internal class ViewCollection : IViewCollection
 {
     private readonly List<ViewDescriptor> _viewDescriptors = new();

@@ -4,12 +4,13 @@ using Microsoft.Extensions.Hosting;
 using System.Windows;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity.Extensions;
-using XAF.WPF.Hosting.Internal;
-using XAF.WPF.Internal;
-using XAF.WPF.StartupActions;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Hosting.Internal;
+using XAF.UI.WPF.Internal;
+using XAF.UI.WPF.StartupActions;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Hosting;
+namespace XAF.UI.WPF.Hosting;
 public static class HostBuilderExtensions
 {
     public static IRxHostBuilder UseWPF(this IRxHostBuilder builder)
@@ -32,6 +33,8 @@ public static class HostBuilderExtensions
         where TViewModel : class, ISplashWindowViewModel
     {
         builder.Services.AddSingleton<ISplashWindowViewModel, TViewModel>();
+        builder.Services.AddStartupActions<WpfAppSplashScreenInitializer>();
+        builder.Services.AddStartupActions<WpfAppShellAfterModuleInitialization>();
         return builder;
     }
 
@@ -41,9 +44,6 @@ public static class HostBuilderExtensions
         var viewCollection = new ViewCollection();
 
         builder.Services.AddHostedService<WpfApp>();
-
-        builder.Services.AddStartupActions<WpfAppShellInitializer>();
-        builder.Services.AddStartupActions<WpfAppShellAfterModuleInitialization>();
         builder.Services.AddStartupActions<WpfAppInitializer>();
 
         builder.Services.AddSingleton<IHostLifetime, WpfLifetime>();

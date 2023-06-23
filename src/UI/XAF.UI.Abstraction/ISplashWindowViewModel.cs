@@ -1,11 +1,9 @@
 ﻿using System.Windows;
-using XAF;
 
-namespace XAF.WPF;
+namespace XAF.UI.Abstraction;
 public interface ISplashWindowViewModel : IViewModel
 {
     Type WindowType { get; }
-    Window? SplashWindow { get; set; }
     Task OnAppStartAsync();
-    Task AfterModuleInitalizationAsync();
+    Task AfterModuleInitializationAsync();
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using XAF.Modularity.StartupActions;
 
-namespace XAF.WPF.StartupActions;
+namespace XAF.UI.WPF.StartupActions;
 public class StartupActionPriority
 {
     public const int BeforSplashScreen = ModuleStartupActionPriorities.BeforeModuleInitialization - 100;

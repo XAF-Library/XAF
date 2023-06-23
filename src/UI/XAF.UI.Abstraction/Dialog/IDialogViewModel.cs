@@ -1,8 +1,9 @@
 ﻿using System.Reactive;
 using XAF;
-using XAF.Commands;
+using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.Commands;
 
-namespace XAF.Dialog;
+namespace XAF.UI.Abstraction.Dialog;
 public interface IDialogViewModel : IViewModel
 {
     IObservable<bool> CanCloseDialog { get; }

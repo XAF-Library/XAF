@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace XAF.WPF.Converters;
+namespace XAF.UI.WPF.Converters;
 
 public class BoolToVisibilityConverter : BaseValueConverter<BoolToVisibilityConverter, bool>
 {

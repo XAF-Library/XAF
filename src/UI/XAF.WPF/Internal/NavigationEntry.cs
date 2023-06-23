@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 public class NavigationEntry
 {
     public NavigationEntry? Before { get; set; }

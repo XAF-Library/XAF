@@ -5,7 +5,7 @@ using WpfPluginApp.ViewModels;
 using WpfPluginApp.Views;
 using XAF.Hosting;
 using XAF.Modularity.Extensions;
-using XAF.WPF.Hosting;
+using XAF.UI.WPF.Hosting;
 
 var builder = RxHost.CreateDefaultBuilder(args);
 

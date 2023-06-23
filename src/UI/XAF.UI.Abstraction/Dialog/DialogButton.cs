@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace XAF.Dialog;
+namespace XAF.UI.Abstraction.Dialog;
 
 public class DialogButton
 {

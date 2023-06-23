@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using XAF.WPF.Attributes;
-using XAF.WPF.Internal;
+using XAF.UI.WPF.Attributes;
+using XAF.UI.WPF.Internal;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 public static class ViewCollectionExtensions
 {
     public static IViewCollection AddViewsFromAssembly(this IViewCollection viewCollection, Assembly assembly)

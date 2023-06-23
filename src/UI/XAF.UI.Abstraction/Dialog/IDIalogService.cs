@@ -1,4 +1,4 @@
-﻿namespace XAF.Dialog;
+﻿namespace XAF.UI.Abstraction.Dialog;
 public interface IDialogService
 {
     T ShowDialog<T>()

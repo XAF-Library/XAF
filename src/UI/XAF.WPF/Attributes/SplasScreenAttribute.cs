@@ -1,4 +1,4 @@
-﻿namespace XAF.WPF.Attributes;
+﻿namespace XAF.UI.WPF.Attributes;
 public class SplashScreenAttribute : Attribute
 {
 }

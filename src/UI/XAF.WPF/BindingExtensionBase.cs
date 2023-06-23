@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows;
 using System.Windows.Markup;
 
-namespace XAF.WPF;
+namespace XAF.UI.WPF;
 public abstract class BindingExtensionBase : MarkupExtension
 {
 

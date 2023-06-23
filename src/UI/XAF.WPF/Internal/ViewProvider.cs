@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using XAF;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 internal class ViewProvider : IViewProvider
 {
     private readonly IServiceProvider _serviceProvider;

@@ -1,9 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows;
-using XAF;
-using XAF.WPF.Internal;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Internal;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 public static class ViewProviderExtensions
 {
     public static FrameworkElement GetView<TViewModel>(this IViewProvider viewProvider)

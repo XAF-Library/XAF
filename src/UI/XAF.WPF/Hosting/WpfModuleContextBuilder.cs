@@ -1,9 +1,9 @@
 ﻿using System.CodeDom;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity;
-using XAF.WPF.ViewComposition;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Hosting;
+namespace XAF.UI.WPF.Hosting;
 
 public class WpfModuleContextBuilder : ModuleRegistrationContextBuilder
 {

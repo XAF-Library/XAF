@@ -1,6 +1,6 @@
-﻿using XAF.WPF.ViewComposition;
+﻿using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 internal class ViewAdapterCollection : IViewAdapterCollection
 {
     private readonly Dictionary<Type, IViewAdapter> _viewAdapters = new();

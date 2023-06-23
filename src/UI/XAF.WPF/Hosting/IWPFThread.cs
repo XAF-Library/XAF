@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 
-namespace XAF.WPF.Hosting;
+namespace XAF.UI.WPF.Hosting;
 public interface IWpfThread
 {
     bool AppIsRunnning { get; }
@@ -13,6 +13,11 @@ public interface IWpfThread
 
     Thread Thread { get; }
     Application? Application { get; }
+
+    Window? MainWindow => Application?.MainWindow;
+
+    Window? SplashWindow { get; set; }
+
     Dispatcher? UiDispatcher { get; }
 
 

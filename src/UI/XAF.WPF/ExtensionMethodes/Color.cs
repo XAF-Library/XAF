@@ -1,7 +1,7 @@
 ﻿using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace XAF.WPF.ExtensionMethodes;
+namespace XAF.UI.WPF.ExtensionMethodes;
 
 public static class ColorExtensions
 {

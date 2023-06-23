@@ -1,15 +1,16 @@
 ﻿using System.Windows;
 using System.Diagnostics;
 using XAF.Hosting.Abstraction;
-using XAF.WPF.Hosting;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Hosting;
 
-namespace XAF.WPF.StartupActions;
-internal class WpfAppShellInitializer : IHostStartupAction
+namespace XAF.UI.WPF.StartupActions;
+internal class WpfAppSplashScreenInitializer : IHostStartupAction
 {
     private readonly IWpfThread _wpfThread;
-    private readonly ISplashWindowViewModel? _splashViewModel;
+    private readonly ISplashWindowViewModel _splashViewModel;
 
-    public WpfAppShellInitializer(IWpfThread wpfThread, ISplashWindowViewModel? splashViewModel)
+    public WpfAppSplashScreenInitializer(IWpfThread wpfThread, ISplashWindowViewModel splashViewModel)
     {
         _wpfThread = wpfThread;
         _splashViewModel = splashViewModel;
@@ -34,7 +35,7 @@ internal class WpfAppShellInitializer : IHostStartupAction
                     throw new UnreachableException();
                 }
 
-                _splashViewModel.SplashWindow = splashWindow;
+                _wpfThread.SplashWindow = splashWindow;
                 _wpfThread.Application.MainWindow = splashWindow;
                 splashWindow.Show();
             });
@@ -45,23 +46,20 @@ internal class WpfAppShellInitializer : IHostStartupAction
 
 internal class WpfAppShellAfterModuleInitialization : IHostStartupAction
 {
-    private readonly ISplashWindowViewModel _slpashViewModel;
+    private readonly IWpfThread _wpfThread;
+    private readonly ISplashWindowViewModel _splashViewModel;
 
     public int Priority => StartupActionPriority.ShowSplashScreen + 1;
     public HostStartupActionExecution ExecutionTime => HostStartupActionExecution.AfterHostedServicesStarted;
 
-    public WpfAppShellAfterModuleInitialization(ISplashWindowViewModel slpashViewModel)
+    public WpfAppShellAfterModuleInitialization(IWpfThread wpfThread, ISplashWindowViewModel splashViewModel)
     {
-        _slpashViewModel = slpashViewModel;
+        _wpfThread = wpfThread;
+        _splashViewModel = splashViewModel;
     }
 
     public async Task Execute(CancellationToken cancellation)
     {
-        if (_slpashViewModel.SplashWindow == null)
-        {
-            return;
-        }
-
-        await _slpashViewModel.AfterModuleInitalizationAsync().ConfigureAwait(false);
+        await _splashViewModel.AfterModuleInitializationAsync().ConfigureAwait(false);
     }
 }

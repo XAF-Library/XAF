@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 
-namespace XAF.WPF.ViewAdapters;
+namespace XAF.UI.WPF.ViewAdapters;
 public class SelectorAdapter : ViewAdapterBase<Selector>
 {
     public override bool Contains(Selector container, FrameworkElement view)

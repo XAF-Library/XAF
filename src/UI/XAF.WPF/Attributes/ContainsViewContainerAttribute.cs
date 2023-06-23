@@ -1,4 +1,4 @@
-﻿namespace XAF.WPF.Attributes;
+﻿namespace XAF.UI.WPF.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public class ContainsViewContainerAttribute : Attribute

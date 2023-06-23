@@ -5,11 +5,11 @@ using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using XAF;
-using XAF.WPF.ViewAdapters;
-using XAF.WPF.ViewComposition;
+using XAF.UI.WPF.Hosting;
+using XAF.UI.WPF.ViewAdapters;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Hosting.Internal;
+namespace XAF.UI.WPF.Hosting.Internal;
 internal class WpfThread : IWpfThread
 {
     private readonly ManualResetEvent _lock;
@@ -28,6 +28,7 @@ internal class WpfThread : IWpfThread
     [MemberNotNullWhen(true, nameof(UiDispatcher))]
     public bool AppCreated { get; private set; }
     public Dispatcher? UiDispatcher { get; private set; }
+    public Window? SplashWindow { get; set; }
 
     public WpfThread(IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
     {

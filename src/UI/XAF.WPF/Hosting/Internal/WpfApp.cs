@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System.Windows;
-using XAF.WPF;
-using XAF.WPF.Hosting;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Hosting;
 
-namespace XAF.WPF.Hosting.Internal;
+namespace XAF.UI.WPF.Hosting.Internal;
 public class WpfApp : IHostedService
 {
     private Window? _splashWindow;

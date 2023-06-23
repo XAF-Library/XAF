@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using XAF.WPF.ViewComposition;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.ViewAdapters;
+namespace XAF.UI.WPF.ViewAdapters;
 public abstract class ViewAdapterBase<T> : IViewAdapter<T>
     where T : FrameworkElement
 {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using XAF.ReactiveProperty;
-using XAF.WPF;
+using XAF.UI.WPF;
 
-namespace XAF.WPF.MarkupExtensions;
+namespace XAF.UI.WPF.MarkupExtensions;
 public class BindExtension : BindingExtensionBase
 {
     public BindExtension()

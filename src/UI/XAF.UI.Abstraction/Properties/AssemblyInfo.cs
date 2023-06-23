@@ -1,5 +1,5 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows.Markup;
 
 // In Projekten im SDK-Stil wie dem vorliegenden, bei dem verschiedene Assemblyattribute
 // üblicherweise in dieser Datei definiert wurden, werden diese Attribute jetzt während
@@ -18,9 +18,4 @@ using System.Windows.Markup;
 // Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM
 // bereitgestellt wird.
 
-[assembly: Guid("2f17aee6-b3e5-4597-9ae9-b711d5c41e35")]
-
-[assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.Converters")]
-[assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.MarkupExtensions")]
-[assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF")]
-[assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.Behaviors")]
+[assembly: Guid("2564ce32-7bf6-48c9-8cac-11ec14d390b9")]

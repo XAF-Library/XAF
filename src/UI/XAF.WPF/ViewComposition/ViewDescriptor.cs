@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
-using XAF.WPF.Attributes;
+using XAF.UI.WPF.Attributes;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 
 public class ViewDescriptor
 {
