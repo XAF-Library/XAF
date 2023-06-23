@@ -17,7 +17,7 @@ internal class ModuleInitializer : IHostStartupAction
     }
 
     public HostStartupActionExecution ExecutionTime { get; set; } = HostStartupActionExecution.AfterHostedServicesStarted;
-    public int Priority => ModuleStartupActionPriorities.ModuleInitalization;
+    public int Priority => ModuleStartupActionPriorities.ModuleInitialization;
 
     public async Task Execute(CancellationToken cancellation)
     {
@@ -34,11 +34,4 @@ internal class ModuleInitializer : IHostStartupAction
             }
         }
     }
-}
-
-public class ModuleStartupActionPriorities
-{
-    public const int ModuleInitalization = -100;
-    public const int BeforeModuleInitialization = ModuleInitalization - 10;
-    public const int AfterModuleInitialization = ModuleInitalization + 10;
 }

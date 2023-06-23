@@ -2,8 +2,9 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Runtime.ExceptionServices;
+using XAF.UI.Reactive;
 
-namespace XAF.ReactiveProperty;
+namespace XAF.UI.Reactive.ReactiveProperty;
 public class ReadOnlyRxProperty<T> : IReadOnlyRxProperty<T>, IObserver<T>
 {
 

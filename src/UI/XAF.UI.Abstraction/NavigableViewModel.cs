@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XAF.UI.Abstraction;
 
-namespace XAF;
+namespace XAF.UI.Abstraction;
 public abstract class NavigableViewModel : ViewModelBase, INavigableViewModel
 {
     public virtual void OnNavigatedFrom()

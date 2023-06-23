@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 using XAF.UI.Abstraction;
 using XAF.UI.WPF.ViewComposition;
 
@@ -17,9 +18,9 @@ internal class ViewProvider : IViewProvider
 
     public FrameworkElement GetViewWithViewModel(ViewDescriptor viewDescriptor)
     {
-        var vm = (IViewModel)_serviceProvider.GetUnregisteredService(viewDescriptor.ViewModelType);
+        var vm = (IViewModel)_serviceProvider.GetRequiredService(viewDescriptor.ViewModelType);
 
-        FrameworkElement view = (FrameworkElement)_serviceProvider.GetUnregisteredService(viewDescriptor.ViewType);
+        FrameworkElement view = (FrameworkElement)_serviceProvider.GetRequiredService(viewDescriptor.ViewType);
         view.DataContext = vm;
 
         return view;
@@ -36,7 +37,6 @@ internal class ViewProvider : IViewProvider
 
     public FrameworkElement GetView(ViewDescriptor viewDescriptor)
     {
-        FrameworkElement view = (FrameworkElement)_serviceProvider.GetUnregisteredService(viewDescriptor.ViewType);
-        return view;
+        return (FrameworkElement)_serviceProvider.GetRequiredService(viewDescriptor.ViewType);
     }
 }

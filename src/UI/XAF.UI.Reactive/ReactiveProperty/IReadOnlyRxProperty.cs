@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace XAF.ReactiveProperty;
+namespace XAF.UI.Reactive.ReactiveProperty;
 
 public interface IReadOnlyRxProperty : INotifyPropertyChanged
 {

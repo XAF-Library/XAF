@@ -10,7 +10,7 @@ public static class ViewCollectionExtensions
     public static IViewCollection AddViewsFromAssembly(this IViewCollection viewCollection, Assembly assembly)
     {
         var possibleTypes = assembly.GetTypes()
-            .Where(t => t.IsAssignableTo(typeof(FrameworkElement)) && t.GetCustomAttribute(typeof(ViewForAttribute<>)) != null);
+            .Where(t => t.IsAssignableTo(typeof(FrameworkElement)) && t.GetCustomAttribute(typeof(ViewForAttribute)) != null);
 
         foreach (var type in possibleTypes)
         {

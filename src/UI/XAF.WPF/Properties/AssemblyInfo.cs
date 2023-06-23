@@ -21,6 +21,5 @@ using System.Windows.Markup;
 [assembly: Guid("2f17aee6-b3e5-4597-9ae9-b711d5c41e35")]
 
 [assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.Converters")]
-[assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.MarkupExtensions")]
 [assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF")]
 [assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.Behaviors")]

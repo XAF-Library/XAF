@@ -17,7 +17,7 @@ internal class WpfAppInitializer : IHostStartupAction
         _wpfThread = wpfThread;
     }
 
-    public int Priority => StartupActionPriority.ShowMainWindow;
+    public int Priority => UiStartupActionPriorities.ShowMainWindow;
     public HostStartupActionExecution ExecutionTime => HostStartupActionExecution.AfterHostedServicesStarted;
 
     public async Task Execute(CancellationToken cancellation)

@@ -2,9 +2,9 @@
 using System.Diagnostics.Contracts;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
-using XAF;
+using XAF.UI.Reactive;
 
-namespace XAF.ReactiveProperty;
+namespace XAF.UI.Reactive.ReactiveProperty;
 public class RxProperty<T> : IRxProperty<T>
 {
     private T _value = default;

@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Concurrency;
 
-namespace XAF;
+namespace XAF.UI.Reactive;
 public static class Schedulers
 {
     public static IScheduler MainScheduler { get; internal set; }

@@ -13,7 +13,7 @@
 
         <Button
             Margin="5"
-            Command="{xaf:Bind NavigateToViewACommand}"
+            Command="{Binding NavigateToViewACommand}"
             Content="Navigate to View A" />
 
     </StackPanel>

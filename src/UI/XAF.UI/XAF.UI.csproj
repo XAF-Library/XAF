@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows7</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modularity\XAF.Modularity\XAF.Modularity.csproj" />
+    <ProjectReference Include="..\XAF.UI.Abstraction\XAF.UI.Abstraction.csproj" />
+  </ItemGroup>
+
+</Project>

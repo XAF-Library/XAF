@@ -9,15 +9,18 @@ public interface IWpfThread
 
     [MemberNotNullWhen(true, nameof(Application))]
     [MemberNotNullWhen(true, nameof(UiDispatcher))]
+    [MemberNotNullWhen(true, nameof(UiSyncContext))]
     bool AppCreated { get; }
 
     Thread Thread { get; }
+
     Application? Application { get; }
 
     Window? MainWindow => Application?.MainWindow;
 
     Window? SplashWindow { get; set; }
 
+    SynchronizationContext? UiSyncContext { get; }
     Dispatcher? UiDispatcher { get; }
 
 
@@ -25,4 +28,7 @@ public interface IWpfThread
     Task StopAsync(CancellationToken cancellation);
 
     Task WaitForAppStart();
+
+    [MemberNotNull(nameof(UiSyncContext))]
+    Task WaitForAppCreation();
 }

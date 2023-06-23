@@ -1,4 +1,4 @@
-﻿namespace XAF.ReactiveProperty;
+﻿namespace XAF.UI.Reactive.ReactiveProperty;
 
 public interface IRxProperty : IReadOnlyRxProperty
 {

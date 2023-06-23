@@ -1,6 +1,4 @@
-﻿using System.Reactive;
-using XAF;
-using XAF.UI.Abstraction;
+﻿using System.Windows.Input;
 using XAF.UI.Abstraction.Commands;
 
 namespace XAF.UI.Abstraction.Dialog;
@@ -8,10 +6,10 @@ public interface IDialogViewModel : IViewModel
 {
     IObservable<bool> CanCloseDialog { get; }
 
-    IRxCommand CloseCommand { get; }
+    ICommand CloseCommand { get; }
 }
 
-public interface IDialogViewModel<TResult> : IDialogViewModel
+public interface IDialogViewModel<out TResult> : IDialogViewModel
 {
-    new IRxCommand<TResult> CloseCommand { get; }
+    new IXafResultCommand<TResult> CloseCommand { get; }
 }

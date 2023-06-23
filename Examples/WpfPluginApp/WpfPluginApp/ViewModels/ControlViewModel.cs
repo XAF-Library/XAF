@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
 using XAF.UI.Abstraction;
-using XAF.UI.WPF.Commands;
+using XAF.UI.Reactive.Commands;
 
 namespace WpfPluginApp.ViewModels;
 public class ControlViewModel : ViewModelBase
