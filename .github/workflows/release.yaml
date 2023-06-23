@@ -1,0 +1,51 @@
+name: Create release
+on: 
+  push:
+    branches:
+      - release/v*.*
+      - preRelease/v*.*.*
+  pull_request:
+    branches:
+      - release/v*.*
+      - preRelease/v*.*.*
+
+jobs:
+  createRelease:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+            
+    - name: Install .NET Core SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.201
+      
+    - name: Create nuget package
+      run: .\.github\workflows\scripts\createNugetPackage.ps1 .
+      shell: pwsh
+
+    - name: SavePackages
+      uses: actions/upload-artifact@v3
+      with:
+         name: nugetPackages
+         path: ./nugetPackages/
+  
+  publishPackages:
+    needs: createRelease
+    runs-on: windows-latest
+    
+    if: github.event_name != 'pull_request'
+    steps:
+    
+      - name: LoadPackages
+        uses: actions/download-artifact@v3
+        with:
+          name: nugetPackages
+          path: ./nugetPackages/
+
+      - name: publish nuget
+        run: dotnet nuget push "**/*.nupkg" -s 'https://api.nuget.org/v3/index.json' -k ${{ secrets.NUGET_ORG }} --skip-duplicate

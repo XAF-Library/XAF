@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<Authors>ReactiveApplications</Authors>
+		<RepositoryType>Git</RepositoryType>
+		<RepositoryUrl>https://github.com/Reactive-Applications/ReactiveFramework</RepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="./../../README.md" Pack="true" PackagePath="\" />
+		<None Include="./../../LICENSE" Pack="true" PackagePath="\" />
+		
+		<PackageReference Include="DynamicData" Version="7.13.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-preview.5.23280.8" />
+	</ItemGroup>
+
+</Project>
