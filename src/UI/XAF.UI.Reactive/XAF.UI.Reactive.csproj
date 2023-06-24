@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XAF.UI\XAF.UI.csproj" />
+    <ProjectReference Include="..\..\Hosting\XAF.Hosting.Abstraction\XAF.Hosting.Abstraction.csproj" />
+    <ProjectReference Include="..\XAF.UI.Abstraction\XAF.UI.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>
