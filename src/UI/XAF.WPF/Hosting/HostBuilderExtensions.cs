@@ -15,14 +15,14 @@ using XAF.UI.WPF.ViewComposition;
 namespace XAF.UI.WPF.Hosting;
 public static class HostBuilderExtensions
 {
-    public static IRxHostBuilder UseWPF(this IRxHostBuilder builder)
+    public static IXafHostBuilder UseWPF(this IXafHostBuilder builder)
     {
         SetupBaseApp(builder);
         builder.Services.TryAddSingleton<Application, Application>();
         return builder;
     }
 
-    public static IRxHostBuilder ConfigureWpfApp<TApplication>(this IRxHostBuilder builder)
+    public static IXafHostBuilder ConfigureWpfApp<TApplication>(this IXafHostBuilder builder)
         where TApplication : Application
     {
 
@@ -31,7 +31,7 @@ public static class HostBuilderExtensions
         return builder;
     }
 
-    public static IRxHostBuilder UseSplashWindow<TViewModel>(this IRxHostBuilder builder)
+    public static IXafHostBuilder UseSplashWindow<TViewModel>(this IXafHostBuilder builder)
         where TViewModel : class, ISplashWindowViewModel
     {
         builder.Services.AddSingleton<ISplashWindowViewModel, TViewModel>();
@@ -40,7 +40,7 @@ public static class HostBuilderExtensions
         return builder;
     }
 
-    private static void SetupBaseApp(IRxHostBuilder builder)
+    private static void SetupBaseApp(IXafHostBuilder builder)
     {
         var viewAdapters = new ViewAdapterCollection();
         var viewCollection = new ViewCollection(builder.Services);

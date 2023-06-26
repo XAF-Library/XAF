@@ -22,7 +22,7 @@ internal static class HostBuilderExtensions
     internal static void AddDefaultConfigurationSources(IConfigurationBuilder configurationBuilder, string[]? args)
     {
         configurationBuilder.AddEnvironmentVariables(prefix: "DOTNET_");
-        configurationBuilder.AddEnvironmentVariables(prefix: "RXFRAMWEWORK_");
+        configurationBuilder.AddEnvironmentVariables(prefix: "XAFFRAMWEWORK_");
         if (args is not null && args.Length > 0)
         {
             configurationBuilder.AddCommandLine(args);
@@ -31,7 +31,7 @@ internal static class HostBuilderExtensions
 
     public static (IHostEnvironment, IFileProvider) CreateHostEnvironment(IConfiguration configuration)
     {
-        var env = new RxHostEnvironment()
+        var env = new XafHostEnvironment()
         {
             EnvironmentName = configuration[HostDefaults.EnvironmentKey] ?? Environments.Production,
             ContentRootPath = ResolveContentRootPath(configuration[HostDefaults.ContentRootKey], AppContext.BaseDirectory)

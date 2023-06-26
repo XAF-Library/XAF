@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace XAF.Hosting.Internal;
-internal class RxHostEnvironment : IHostEnvironment
+internal class XafHostEnvironment : IHostEnvironment
 {
     public string EnvironmentName { get; set; }
     public string ApplicationName { get; set; }

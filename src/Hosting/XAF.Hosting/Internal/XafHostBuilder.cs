@@ -1,21 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using XAF.Hosting.Abstraction;
 using XAF.Hosting.Internal;
 
 namespace ReactiveFramework.Hosting.Internal;
-internal partial class RxHostBuilder : IRxHostBuilder
+internal partial class XafHostBuilder : IXafHostBuilder
 {
-    private readonly RxHostBuilderSettings _settings;
+    private readonly XafHostBuilderSettings _settings;
     private readonly HostBuilderContext _context;
 
     private Func<IServiceCollection, IServiceProvider> _createServiceProvider;
@@ -29,7 +23,7 @@ internal partial class RxHostBuilder : IRxHostBuilder
     public ILoggingBuilder Logging { get; }
     public IDictionary<object, object> Properties { get; }
 
-    public RxHostBuilder(RxHostBuilderSettings settings)
+    public XafHostBuilder(XafHostBuilderSettings settings)
     {
         _settings = settings;
         Configuration = settings.Configuration;
@@ -165,7 +159,7 @@ internal partial class RxHostBuilder : IRxHostBuilder
         Services.AddSingleton<IConfiguration>(Configuration);
         Services.AddSingleton<IConfigurationBuilder>(Configuration);
         Services.AddSingleton<IHostApplicationLifetime, ApplicationLifetime>();
-        Services.AddSingleton<IHost, RxHost>();
+        Services.AddSingleton<IHost, XafHost>();
     }
 
     private sealed record LoggingBuilder(IServiceCollection Services) : ILoggingBuilder;

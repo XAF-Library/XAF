@@ -8,13 +8,13 @@ public class ModuleRegistrationContextBuilder : IModuleRegistrationContextBuilde
     private readonly Dictionary<Type, object> _contextObjects = new();
 
 
-    public IModuleRegistrationContext Build(IRxHostBuilder builder)
+    public IModuleRegistrationContext Build(IXafHostBuilder builder)
     {
         ProvideContextObjects(builder);
         return new ModuleRegistrationContext(_contextObjects);
     }
 
-    protected virtual void ProvideContextObjects(IRxHostBuilder builder)
+    protected virtual void ProvideContextObjects(IXafHostBuilder builder)
     {
         AddContextObject(builder.Services);
         AddContextObject(builder.Configuration);

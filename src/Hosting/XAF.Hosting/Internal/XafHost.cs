@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using XAF.Hosting.Abstraction;
 
 namespace XAF.Hosting.Internal;
-internal class RxHost : IHost
+internal class XafHost : IHost
 {
-    private readonly ILogger<RxHost> _logger;
+    private readonly ILogger<XafHost> _logger;
     private readonly IHostLifetime _hostLifetime;
     private readonly ApplicationLifetime _applicationLifetime;
     private readonly IHostEnvironment _hostEnvironment;
@@ -24,10 +24,10 @@ internal class RxHost : IHost
 
     public IServiceProvider Services { get; }
 
-    public RxHost(IServiceProvider services,
+    public XafHost(IServiceProvider services,
                   IHostEnvironment hostEnvironment,
                   IHostApplicationLifetime applicationLifetime,
-                  ILogger<RxHost> logger,
+                  ILogger<XafHost> logger,
                   IHostLifetime hostLifetime)
     {
         ArgumentNullException.ThrowIfNull(services);

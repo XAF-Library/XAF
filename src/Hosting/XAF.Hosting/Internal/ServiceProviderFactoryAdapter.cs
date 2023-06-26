@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
 
 namespace ReactiveFramework.Hosting.Internal;
-internal partial class RxHostBuilder
+internal partial class XafHostBuilder
 {
     private sealed class ServiceProviderFactoryAdapter<TContainerBuilder> : IServiceProviderFactory<object> where TContainerBuilder : notnull
     {
