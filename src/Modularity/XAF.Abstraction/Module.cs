@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XAF.Modularity.Abstraction;
 
-namespace XAF.Modularity;
+namespace XAF.Modularity.Abstraction;
 public abstract class Module : IModule
 {
     public Version Version { get; }
