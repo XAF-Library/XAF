@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XAF.UI.Abstraction;
+﻿using XAF.UI.Abstraction;
 
 namespace XAF.UI;
 public abstract class NavigableViewModel : ViewModelBase, INavigableViewModel
