@@ -8,7 +8,7 @@ using XAF.Modularity.Extensions;
 using XAF.UI.Reactive;
 using XAF.UI.WPF.Hosting;
 
-var builder = RxHost.CreateDefaultBuilder(args);
+var builder = XafHost.CreateDefaultBuilder(args);
 
 builder.ConfigureWpfApp<App>();
 builder.UseSplashWindow<SplashWindowViewModel>();

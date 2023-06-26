@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using XAF.Hosting.Abstraction;
 
 namespace XAF.Hosting;
-public class RxHost
+public class XafHost
 {
-    public static IRxHostBuilder CreateDefaultBuilder(string[] args)
-        => new RxHostBuilder(new RxHostBuilderSettings(
+    public static IXafHostBuilder CreateDefaultBuilder(string[] args)
+        => new XafHostBuilder(new XafHostBuilderSettings(
             args,
             null,
             null,
@@ -20,6 +20,6 @@ public class RxHost
             null,
             false));
 
-    public static IRxHostBuilder CreateDefaultBuilder(RxHostBuilderSettings settings)
-        => new RxHostBuilder(settings);
+    public static IXafHostBuilder CreateDefaultBuilder(XafHostBuilderSettings settings)
+        => new XafHostBuilder(settings);
 }

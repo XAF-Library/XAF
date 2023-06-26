@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace XAF.Hosting.Abstraction;
-public interface IRxHostBuilder : IHostBuilder
+public interface IXafHostBuilder : IHostBuilder
 {
     IHostEnvironment Environment { get; }
 

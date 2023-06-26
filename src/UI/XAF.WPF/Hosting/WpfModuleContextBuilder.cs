@@ -16,7 +16,7 @@ public class WpfModuleContextBuilder : ModuleRegistrationContextBuilder
         _viewAdapterCollection = viewAdapterCollection;
     }
 
-    protected override void ProvideContextObjects(IRxHostBuilder builder)
+    protected override void ProvideContextObjects(IXafHostBuilder builder)
     {
         base.ProvideContextObjects(builder);
         AddContextObject(_viewCollection);

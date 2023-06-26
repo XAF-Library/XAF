@@ -9,5 +9,5 @@ public interface IModuleRegistrationContext
 
 public interface IModuleRegistrationContextBuilder
 {
-    IModuleRegistrationContext Build(IRxHostBuilder hostBuilder);
+    IModuleRegistrationContext Build(IXafHostBuilder hostBuilder);
 }

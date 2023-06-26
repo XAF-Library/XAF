@@ -7,30 +7,30 @@ using XAF.Modularity.StartupActions;
 namespace XAF.Modularity.Extensions;
 public static class HostBuilderExtensions
 {
-    public static void UseModularity(this IRxHostBuilder builder)
+    public static void UseModularity(this IXafHostBuilder builder)
     {
         builder.Services.AddStartupActions<ModuleInitializer>();
     }
 
-    public static void UseModuleCatalog<T>(this IRxHostBuilder builder)
+    public static void UseModuleCatalog<T>(this IXafHostBuilder builder)
         where T : IModuleCatalog, new()
     {
         builder.Properties[typeof(IModuleCatalog)] = new T();
     }
 
-    public static void UseModuleRegistrationContextBuilder<T>(this IRxHostBuilder builder)
+    public static void UseModuleRegistrationContextBuilder<T>(this IXafHostBuilder builder)
         where T : IModuleRegistrationContextBuilder, new()
     {
         builder.Properties[typeof(IModuleRegistrationContextBuilder)] = new T();
     }
 
-    public static void UseModuleRegistrationContextBuilder<T>(this IRxHostBuilder builder, T ctxBuilder)
+    public static void UseModuleRegistrationContextBuilder<T>(this IXafHostBuilder builder, T ctxBuilder)
         where T : IModuleRegistrationContextBuilder
     {
         builder.Properties[typeof(IModuleRegistrationContextBuilder)] = ctxBuilder;
     }
 
-    public static async Task RegisterModuleAsync<T>(this IRxHostBuilder builder, CancellationToken cancellation)
+    public static async Task RegisterModuleAsync<T>(this IXafHostBuilder builder, CancellationToken cancellation)
         where T : IModule, new()
     {
         var catalog = builder.GetModuleCatalog();
@@ -40,7 +40,7 @@ public static class HostBuilderExtensions
             .ConfigureAwait(false);
     }
 
-    private static IModuleCatalog GetModuleCatalog(this IRxHostBuilder builder)
+    private static IModuleCatalog GetModuleCatalog(this IXafHostBuilder builder)
     {
         if (!builder.Properties.TryGetValue(typeof(IModuleCatalog), out var moduleCatalog))
         {
@@ -52,7 +52,7 @@ public static class HostBuilderExtensions
         return (IModuleCatalog)moduleCatalog;
     }
 
-    private static IModuleRegistrationContext GetModuleRegistrationContext(this IRxHostBuilder builder)
+    private static IModuleRegistrationContext GetModuleRegistrationContext(this IXafHostBuilder builder)
     {
 
         if (!builder.Properties.TryGetValue("ContextBuilderBuilded", out var _))
@@ -62,7 +62,7 @@ public static class HostBuilderExtensions
         return (IModuleRegistrationContext)builder.Properties[typeof(IModuleRegistrationContext)];
     }
 
-    private static void BuildModuleRegistrationContext(this IRxHostBuilder builder)
+    private static void BuildModuleRegistrationContext(this IXafHostBuilder builder)
     {
         if (!builder.Properties.TryGetValue(typeof(IModuleRegistrationContextBuilder), out var contextBuilder))
         {

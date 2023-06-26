@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 
 namespace XAF.Hosting.Abstraction;
-public record RxHostBuilderSettings(
+public record XafHostBuilderSettings(
     string[]? Args,
     ConfigurationManager? Configuration,
     string? EnvironmentName,
