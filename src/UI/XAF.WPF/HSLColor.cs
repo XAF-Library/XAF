@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace XAF.WPF;
+namespace XAF.UI.WPF;
 public struct HSLColor
 {
     public double H { get; set; }

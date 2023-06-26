@@ -1,4 +1,4 @@
-﻿namespace XAF.WPF.ViewComposition;
+﻿namespace XAF.UI.WPF.ViewComposition;
 public interface IViewAdapterCollection
 {
     void AddAdapter(IViewAdapter viewAdapter);

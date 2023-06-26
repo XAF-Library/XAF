@@ -1,15 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 using System.Windows;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity.Extensions;
-using XAF.WPF.Hosting.Internal;
-using XAF.WPF.Internal;
-using XAF.WPF.StartupActions;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Hosting.Internal;
+using XAF.UI.WPF.Internal;
+using XAF.UI.WPF.StartupActions;
+using XAF.UI.WPF.ViewAdapters;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Hosting;
+namespace XAF.UI.WPF.Hosting;
 public static class HostBuilderExtensions
 {
     public static IRxHostBuilder UseWPF(this IRxHostBuilder builder)
@@ -32,22 +35,21 @@ public static class HostBuilderExtensions
         where TViewModel : class, ISplashWindowViewModel
     {
         builder.Services.AddSingleton<ISplashWindowViewModel, TViewModel>();
+        builder.Services.AddStartupActions<WpfAppSplashScreenInitializer>();
+        builder.Services.AddStartupActions<WpfAppShellAfterModuleInitialization>();
         return builder;
     }
 
     private static void SetupBaseApp(IRxHostBuilder builder)
     {
-        var adapterCollection = new ViewAdapterCollection();
-        var viewCollection = new ViewCollection();
+        var viewAdapters = new ViewAdapterCollection();
+        var viewCollection = new ViewCollection(builder.Services);
 
         builder.Services.AddHostedService<WpfApp>();
-
-        builder.Services.AddStartupActions<WpfAppShellInitializer>();
-        builder.Services.AddStartupActions<WpfAppShellAfterModuleInitialization>();
         builder.Services.AddStartupActions<WpfAppInitializer>();
 
         builder.Services.AddSingleton<IHostLifetime, WpfLifetime>();
-        builder.Services.AddSingleton<IViewAdapterCollection>(adapterCollection);
+        builder.Services.AddSingleton<IViewAdapterCollection>(viewAdapters);
         builder.Services.AddSingleton<IViewCollection>(viewCollection);
 
         builder.Services.TryAddSingleton<IWpfThread, WpfThread>();
@@ -56,7 +58,13 @@ public static class HostBuilderExtensions
         builder.Services.TryAddSingleton<INavigationService, NavigationService>();
         builder.Services.TryAddSingleton<IViewCompositionService, ViewCompositionService>();
 
+        var executingAssembly = Assembly.GetEntryAssembly()!;
+
+        viewCollection.AddViewsFromAssembly(executingAssembly);
+        viewAdapters.AddAdaptersFromAssembly(executingAssembly);
+        viewAdapters.AddAdaptersFromAssembly(Assembly.GetAssembly(typeof(ContentControlAdapter))!);
+
         builder.UseModularity();
-        builder.UseModuleRegistrationContextBuilder(new WpfModuleContextBuilder(viewCollection, adapterCollection));
+        builder.UseModuleRegistrationContextBuilder(new WpfModuleContextBuilder(viewCollection, viewAdapters));
     }
 }

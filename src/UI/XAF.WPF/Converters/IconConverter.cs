@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace XAF.WPF.Converters;
+namespace XAF.UI.WPF.Converters;
 
 public class WindowIconConverter : BaseValueConverter<WindowIconConverter, ImageSource>
 {

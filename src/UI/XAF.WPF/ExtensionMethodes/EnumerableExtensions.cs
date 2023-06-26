@@ -1,4 +1,4 @@
-﻿namespace XAF.WPF.ExtensionMethodes;
+﻿namespace XAF.UI.WPF.ExtensionMethodes;
 public static class EnumerableExtensions
 {
     public static IEnumerable<T> AsSingleEnumerable<T>(this T element)

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using XAF;
 using XAF.Modularity;
 using XAF.Modularity.Abstraction;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Modules;
+namespace XAF.UI.WPF.Modules;
 public abstract class UiModule : Module
 {
 

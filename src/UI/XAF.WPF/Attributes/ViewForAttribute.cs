@@ -1,15 +1,23 @@
-﻿using XAF;
+﻿using XAF.UI.Abstraction;
 
-namespace XAF.WPF.Attributes;
+namespace XAF.UI.WPF.Attributes;
 
-[AttributeUsage(AttributeTargets.Class)]
-public class ViewForAttribute<TViewModel> : Attribute
+public class ViewForAttribute<TViewModel> : ViewForAttribute
     where TViewModel : IViewModel
+{
+    public ViewForAttribute()
+        : base(typeof(TViewModel))
+    {
+    }
+}
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+public class ViewForAttribute : Attribute
 {
     public Type ViewModelType { get; }
 
-    public ViewForAttribute()
+    public ViewForAttribute(Type viewModelType)
     {
-        ViewModelType = typeof(TViewModel);
+        ViewModelType = viewModelType;
     }
 }

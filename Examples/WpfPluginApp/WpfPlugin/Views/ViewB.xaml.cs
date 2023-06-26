@@ -1,5 +1,5 @@
 ﻿using WpfPlugin.ViewModels;
-using XAF.WPF.Attributes;
+using XAF.UI.WPF.Attributes;
 
 namespace WpfPlugin.Views;
 /// <summary>

@@ -1,16 +1,19 @@
-﻿using System.Collections;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using XAF;
-using XAF.WPF.Attributes;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Attributes;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 internal class ViewCollection : IViewCollection
 {
     private readonly List<ViewDescriptor> _viewDescriptors = new();
     private readonly Dictionary<object, HashSet<ViewDescriptor>> _lookupDictionary = new();
     private readonly Dictionary<Type, ViewDescriptor> _vmDictionary = new();
+    private readonly IServiceCollection _services;
 
     public IEnumerable<Type> Keys => _vmDictionary.Keys;
     public IEnumerable<ViewDescriptor> Values => _vmDictionary.Values;
@@ -21,6 +24,11 @@ internal class ViewCollection : IViewCollection
     public ViewDescriptor this[Type key] => _vmDictionary[key];
 
     public IEnumerable<ViewDescriptor> this[object key] => _lookupDictionary.TryGetValue(key, out var descriptors) ? descriptors : Enumerable.Empty<ViewDescriptor>();
+
+    public ViewCollection(IServiceCollection services)
+    {
+        _services = services;
+    }
 
     public ViewDescriptor AddView(Type viewType)
     {
@@ -74,6 +82,9 @@ internal class ViewCollection : IViewCollection
             var navKeysHasSet = (HashSet<object>)navKeys;
             navKeysHasSet.Add(navFrameAttribute.Key);
         }
+
+        _services.AddTransient(descriptor.ViewType);
+        _services.AddTransient(descriptor.ViewModelType);
     }
 
     public ViewDescriptor GetDescriptorForViewModel(Type viewModelType)

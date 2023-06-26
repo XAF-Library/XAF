@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 
 public interface IViewCollection : IReadOnlyViewCollection
 {

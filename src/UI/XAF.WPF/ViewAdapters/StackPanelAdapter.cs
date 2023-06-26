@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace XAF.WPF.ViewAdapters;
+namespace XAF.UI.WPF.ViewAdapters;
 internal class StackPanelAdapter : ViewAdapterBase<StackPanel>
 {
     public override bool Contains(StackPanel container, FrameworkElement view)

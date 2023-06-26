@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XAF.WPF.ExtensionMethodes;
+namespace XAF.UI.WPF.ExtensionMethodes;
 public static class DoubleExtensions
 {
     public static double Clip(this double value, double minValue, double maxValue)

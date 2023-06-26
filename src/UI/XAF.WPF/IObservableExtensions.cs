@@ -3,7 +3,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 
-namespace XAF.WPF;
+namespace XAF.UI.WPF;
 public static class IObservableExtensions
 {
     public static IObservable<TProperty> Observe<TComponent, TProperty>(this TComponent component, DependencyProperty dependencyProperty)

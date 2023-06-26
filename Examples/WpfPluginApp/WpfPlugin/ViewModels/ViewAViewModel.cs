@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Linq;
-using XAF;
-using XAF.Commands;
-using XAF.ReactiveProperty;
+using XAF.UI.Abstraction;
+using XAF.UI.Reactive.Commands;
+using XAF.UI.Reactive.ReactiveProperty;
 
 namespace WpfPlugin.ViewModels;
 public class ViewAViewModel : NavigableViewModel

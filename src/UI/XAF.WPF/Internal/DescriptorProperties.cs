@@ -1,4 +1,4 @@
-﻿namespace XAF.WPF.Internal;
+﻿namespace XAF.UI.WPF.Internal;
 internal static class ViewDescriptorKeys
 {
     public static Guid IsShellKey = new("9240A792-80D0-405C-8434-EE5C97C5A03B");

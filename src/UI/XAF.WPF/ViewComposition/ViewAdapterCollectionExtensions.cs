@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 public static class ViewAdapterCollectionExtensions
 {
     public static void AddAdapter<T>(this IViewAdapterCollection viewAdapterCollection)

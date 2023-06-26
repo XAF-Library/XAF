@@ -5,15 +5,16 @@ using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using XAF;
-using XAF.WPF.ViewAdapters;
-using XAF.WPF.ViewComposition;
+using XAF.UI.WPF.Hosting;
+using XAF.UI.WPF.ViewAdapters;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Hosting.Internal;
+namespace XAF.UI.WPF.Hosting.Internal;
 internal class WpfThread : IWpfThread
 {
     private readonly ManualResetEvent _lock;
     private readonly ManualResetEvent _appStartedEventlock;
+    private readonly ManualResetEvent _appCreatedEventlock;
     private readonly IServiceProvider _serviceProvider;
     private readonly IHostApplicationLifetime _applicationLifetime;
 
@@ -28,13 +29,18 @@ internal class WpfThread : IWpfThread
     [MemberNotNullWhen(true, nameof(UiDispatcher))]
     public bool AppCreated { get; private set; }
     public Dispatcher? UiDispatcher { get; private set; }
+    public Window? SplashWindow { get; set; }
+    public SynchronizationContext? UiSyncContext { get; private set; }
 
     public WpfThread(IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
     {
         _applicationLifetime = applicationLifetime;
         _serviceProvider = serviceProvider;
+        
         _lock = new ManualResetEvent(false);
         _appStartedEventlock = new(false);
+        _appCreatedEventlock = new(false);
+
         Thread = new Thread(InternalThread)
         {
             IsBackground = false
@@ -46,29 +52,23 @@ internal class WpfThread : IWpfThread
     private void InternalThread()
     {
         UiDispatcher = Dispatcher.CurrentDispatcher;
-        SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(UiDispatcher));
-
-        Schedulers.MainScheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
+        UiSyncContext = new DispatcherSynchronizationContext(UiDispatcher);
 
         Application = _serviceProvider.GetRequiredService<Application>();
         AppCreated = true;
+        _appCreatedEventlock.Set();
         _lock.WaitOne();
         if (_applicationLifetime.ApplicationStopped.IsCancellationRequested)
         {
             return;
         }
 
-        var viewCollection = _serviceProvider.GetRequiredService<IViewCollection>();
-        var viewAdapters = _serviceProvider.GetRequiredService<IViewAdapterCollection>();
-        var executingAssembly = Assembly.GetEntryAssembly()!;
-
-        viewCollection.AddViewsFromAssembly(executingAssembly);
-        viewAdapters.AddAdaptersFromAssembly(executingAssembly);
-        viewAdapters.AddAdaptersFromAssembly(Assembly.GetAssembly(typeof(ContentControlAdapter))!);
+        AppIsRunnning = true;
 
         _appStartedEventlock.Set();
-        AppIsRunnning = true;
+
         Application.Run();
+
         AppIsRunnning = false;
 
         if (!_externalStop)
@@ -80,6 +80,12 @@ internal class WpfThread : IWpfThread
     public Task WaitForAppStart()
     {
         _appStartedEventlock.WaitOne();
+        return Task.CompletedTask;
+    }
+
+    public Task WaitForAppCreation()
+    {
+        _appCreatedEventlock.WaitOne();
         return Task.CompletedTask;
     }
 
@@ -101,7 +107,8 @@ internal class WpfThread : IWpfThread
         {
             return;
         }
+
         _externalStop = true;
-        await UiDispatcher.InvokeAsync(() => Application.Shutdown());
+        await UiDispatcher.InvokeAsync(Application.Shutdown);
     }
 }

@@ -1,10 +1,11 @@
-﻿using System.Reactive.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reactive.Linq;
 using System.Windows;
-using XAF;
-using XAF.WPF.Behaviors;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Behaviors;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 internal class NavigationService : INavigationService
 {
     private readonly IViewProvider _viewProvider;
@@ -215,7 +216,7 @@ internal class NavigationService : INavigationService
 
         if (newView.DataContext == null || viewModel != null)
         {
-            viewModel ??= (IViewModel)_serviceProvider.GetUnregisteredService(viewModelType);
+            viewModel ??= (IViewModel)_serviceProvider.GetRequiredService(viewModelType);
             newView.DataContext = viewModel;
         }
 

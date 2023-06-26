@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XAF.WPF.Attributes;
+namespace XAF.UI.WPF.Attributes;
 public class ShellAttribute : Attribute
 {
 }

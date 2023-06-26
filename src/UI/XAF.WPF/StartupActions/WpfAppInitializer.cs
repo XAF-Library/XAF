@@ -1,8 +1,9 @@
 ﻿using XAF.Hosting.Abstraction;
-using XAF.WPF.Hosting;
-using XAF.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.WPF.Hosting;
+using XAF.UI.WPF.ViewComposition;
 
-namespace XAF.WPF.StartupActions;
+namespace XAF.UI.WPF.StartupActions;
 internal class WpfAppInitializer : IHostStartupAction
 {
     private readonly ISplashWindowViewModel _splashViewModel;
@@ -16,7 +17,7 @@ internal class WpfAppInitializer : IHostStartupAction
         _wpfThread = wpfThread;
     }
 
-    public int Priority => StartupActionPriority.ShowMainWindow;
+    public int Priority => UiStartupActionPriorities.ShowMainWindow;
     public HostStartupActionExecution ExecutionTime => HostStartupActionExecution.AfterHostedServicesStarted;
 
     public async Task Execute(CancellationToken cancellation)
@@ -27,7 +28,7 @@ internal class WpfAppInitializer : IHostStartupAction
             _wpfThread.Application!.MainWindow = shell;
 
             shell.Show();
-            _splashViewModel.SplashWindow?.Close();
+            _wpfThread.SplashWindow?.Close();
         });
     }
 }

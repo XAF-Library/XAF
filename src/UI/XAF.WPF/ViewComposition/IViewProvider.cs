@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using XAF;
+using XAF.UI.Abstraction;
 
-namespace XAF.WPF.ViewComposition;
+namespace XAF.UI.WPF.ViewComposition;
 public interface IViewProvider
 {
     IReadOnlyViewCollection ViewCollection { get; }

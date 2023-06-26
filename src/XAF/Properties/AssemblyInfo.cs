@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("f16d6c96-de35-496f-9fd1-172093dbae9b")]
 
-[assembly:InternalsVisibleTo("XAF.WPF")]
+[assembly: InternalsVisibleTo("XAF.UI.WPF")]

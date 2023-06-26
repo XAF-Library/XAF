@@ -5,7 +5,7 @@ using System.Reactive.Subjects;
 using System.Security.Cryptography.Xml;
 using System.Windows;
 
-namespace XAF.WPF.Internal;
+namespace XAF.UI.WPF.Internal;
 public class NavigationBackStack
 {
 

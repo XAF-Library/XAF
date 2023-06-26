@@ -61,7 +61,6 @@ internal class RxHost : IHost
         await _hostLifetime.WaitForStartAsync(cancellationToken).ConfigureAwait(false);
         token.ThrowIfCancellationRequested();
 
-
         var startupActions = Services.GetHostStartupActions()
             .OrderBy(a => a.Priority);
         _hostedServices = Services.GetServices<IHostedService>();
