@@ -1,4 +1,4 @@
-﻿namespace XAF.Extensions;
+﻿namespace XAF.Utilities.ExtensionMethods;
 
 public interface IErrorHandler
 {

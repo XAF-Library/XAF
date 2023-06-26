@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modularity\XAF.Abstraction\XAF.Modularity.Abstraction.csproj" />
+    <ProjectReference Include="..\..\XAF\XAF.Utilities.csproj" />
+    <ProjectReference Include="..\XAF.UI.Abstraction\XAF.UI.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using WpfPluginApp.Views;
+using XAF.UI;
 using XAF.UI.Abstraction;
 
 namespace WpfPluginApp.ViewModels;

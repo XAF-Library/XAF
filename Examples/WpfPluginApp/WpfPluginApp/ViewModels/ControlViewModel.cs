@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
+using XAF.UI;
 using XAF.UI.Abstraction;
 using XAF.UI.Reactive.Commands;
 

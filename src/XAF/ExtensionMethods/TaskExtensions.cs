@@ -1,9 +1,8 @@
-﻿namespace XAF.Extensions;
+﻿namespace XAF.Utilities.ExtensionMethods;
 
 public static class TaskExtensions
 {
     public static async void Await(this Task task, IErrorHandler? errorHandler = null)
-
     {
         try
         {

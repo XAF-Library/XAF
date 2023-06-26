@@ -1,4 +1,4 @@
-﻿using XAF.UI.Abstraction;
+﻿using XAF.UI;
 
 namespace WpfPluginApp.ViewModels;
 public class ShellViewModel : ViewModelBase

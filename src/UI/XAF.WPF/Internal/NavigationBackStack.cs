@@ -1,34 +1,34 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Security.Cryptography.Xml;
-using System.Windows;
+﻿using System.Windows;
+using XAF.Utilities;
 
 namespace XAF.UI.WPF.Internal;
-public class NavigationBackStack
+public class NavigationBackStack : NotfiyPropertyChanged
 {
 
     private NavigationEntry? _current;
     private NavigationEntry? _root;
     private NavigationEntry? _tail;
 
-    private readonly BehaviorSubject<bool> _canNavigateBackSubject = new(false);
-    private readonly BehaviorSubject<bool> _canNavigateForwardSubject = new(false);
-
     private uint _count;
 
     public uint Capacity { get; set; }
 
-    public IObservable<bool> CanNavigateBack()
+    private bool _canNavigateBack;
+
+    public bool CanNavigateBack
     {
-        return _canNavigateBackSubject;
+        get { return _canNavigateBack; }
+        set => Set(ref _canNavigateBack, value);
     }
 
-    public IObservable<bool> CanNavigateForward()
+    private bool _canNavigateForward;
+
+    public bool CanNavigateForward
     {
-        return _canNavigateForwardSubject;
+        get { return _canNavigateForward; }
+        set => Set(ref _canNavigateForward, value);
     }
+
 
     public void Insert(FrameworkElement element)
     {
@@ -68,7 +68,7 @@ public class NavigationBackStack
             _count--;
         }
 
-        _canNavigateBackSubject.OnNext(_current.Before != null);
+        CanNavigateBack = _current.Before != null;
     }
 
     public NavigationBackStack(uint capacity = 10)
@@ -78,30 +78,30 @@ public class NavigationBackStack
 
     public NavigationEntry NavigateBack()
     {
-        if (!CanNavigateBack().FirstAsync().Wait())
+        if (!CanNavigateBack)
         {
             throw new InvalidOperationException("cant navigate back");
         }
 
         _current = _current.Before;
 
-        _canNavigateBackSubject.OnNext(_current.Before != null);
-        _canNavigateForwardSubject.OnNext(_current.After != null);
+        CanNavigateBack = _current.Before != null;
+        CanNavigateForward = _current.After != null;
 
         return _current;
     }
 
     public NavigationEntry NavigateForward()
     {
-        if (!CanNavigateForward().FirstAsync().Wait())
+        if (!CanNavigateForward)
         {
             throw new InvalidOperationException("cant navigate back");
         }
 
         _current = _current.After;
 
-        _canNavigateForwardSubject.OnNext(_current.After != null);
-        _canNavigateBackSubject.OnNext(_current.Before != null);
+        CanNavigateForward = _current.After != null;
+        CanNavigateBack = _current.Before != null;
 
         return _current;
     }

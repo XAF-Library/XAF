@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using XAF.UI;
 using XAF.UI.Abstraction;
 using XAF.UI.Reactive.Commands;
 using XAF.UI.Reactive.ReactiveProperty;

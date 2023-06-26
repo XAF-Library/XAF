@@ -1,13 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
-using System.Reactive.Concurrency;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using XAF.UI.WPF.Hosting;
-using XAF.UI.WPF.ViewAdapters;
-using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.Hosting.Internal;
 internal class WpfThread : IWpfThread

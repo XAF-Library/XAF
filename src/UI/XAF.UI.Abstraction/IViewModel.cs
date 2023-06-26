@@ -1,4 +1,6 @@
-﻿namespace XAF.UI.Abstraction;
-public interface IViewModel
+﻿using System.ComponentModel;
+
+namespace XAF.UI.Abstraction;
+public interface IViewModel : INotifyPropertyChanged
 {
 }
