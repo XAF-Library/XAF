@@ -22,7 +22,7 @@ public class XafCommand<TParam, TResult> : IXafCommand<TParam, TResult>
 
     public bool CanExecute(object? parameter) 
         => parameter is not TParam param
-            ? throw new ArgumentException($"Commandparameter can't be casted to: {typeof(TParam)}")
+            ? throw new InvalidCastException($"Commandparameter can't be casted to: {typeof(TParam)}")
             : CanExecute(param);
 
     public TResult Execute(TParam param) 
@@ -32,7 +32,7 @@ public class XafCommand<TParam, TResult> : IXafCommand<TParam, TResult>
     {
         if(parameter is not TParam param)
         {
-            throw new ArgumentException($"Commandparameter can't be casted to: {typeof(TParam)}");
+            throw new InvalidCastException($"Commandparameter can't be casted to: {typeof(TParam)}");
         }
         var res = Execute(param);
         Executed?.Invoke(res);
@@ -60,7 +60,7 @@ public class XafCommand<TParam> : IXafCommand<TParam>
 
     public bool CanExecute(object? parameter)
         => parameter is not TParam param
-            ? throw new ArgumentException($"Commandparameter can't be casted to: {typeof(TParam)}")
+            ? throw new InvalidCastException($"Commandparameter can't be casted to: {typeof(TParam)}")
             : CanExecute(param);
 
     public void Execute(TParam param)
