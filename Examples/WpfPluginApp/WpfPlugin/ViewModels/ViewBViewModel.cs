@@ -1,4 +1,4 @@
-﻿using XAF.UI.Abstraction;
+﻿using XAF.UI;
 using XAF.UI.Reactive.ReactiveProperty;
 
 namespace WpfPlugin.ViewModels;

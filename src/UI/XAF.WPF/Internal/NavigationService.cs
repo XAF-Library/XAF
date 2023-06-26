@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reactive.Linq;
 using System.Windows;
 using XAF.UI.Abstraction;
 using XAF.UI.WPF.Behaviors;
 using XAF.UI.WPF.ViewComposition;
+using XAF.Utilities;
 
 namespace XAF.UI.WPF.Internal;
 internal class NavigationService : INavigationService
@@ -39,7 +39,7 @@ internal class NavigationService : INavigationService
         }
     }
 
-    public IObservable<bool> CanNavigateBack(object containerKey)
+    public bool CanNavigateBack(object containerKey)
     {
         if (!_backStacks.TryGetValue(containerKey, out var backStack))
         {
@@ -47,10 +47,10 @@ internal class NavigationService : INavigationService
             _backStacks[containerKey] = backStack;
         }
 
-        return backStack.CanNavigateBack();
+        return backStack.CanNavigateBack;
     }
 
-    public IObservable<bool> CanNavigateForward(object containerKey)
+    public bool CanNavigateForward(object containerKey)
     {
         if (!_backStacks.TryGetValue(containerKey, out var backStack))
         {
@@ -58,12 +58,34 @@ internal class NavigationService : INavigationService
             _backStacks[containerKey] = backStack;
         }
 
-        return backStack.CanNavigateForward();
+        return backStack.CanNavigateForward;
+    }
+
+    public void RegisterCanNavigateBackChangedCallback(object containerKey, Action<bool> callback)
+    {
+        if (!_backStacks.TryGetValue(containerKey, out var backStack))
+        {
+            backStack = new(_backStackCapacity);
+            _backStacks[containerKey] = backStack;
+        }
+
+        backStack.AddValueChangedCallBack(b => b.CanNavigateBack, callback);
+    }
+
+    public void ReigsterCanNavigateForwardChangedCallback(object containerKey, Action<bool> callback)
+    {
+        if (!_backStacks.TryGetValue(containerKey, out var backStack))
+        {
+            backStack = new(_backStackCapacity);
+            _backStacks[containerKey] = backStack;
+        }
+
+        backStack.AddValueChangedCallBack(b => b.CanNavigateBack, callback);
     }
 
     public void NavigateBack(object containerKey)
     {
-        if (!CanNavigateBack(containerKey).FirstAsync().Wait())
+        if (!CanNavigateBack(containerKey))
         {
             throw new InvalidOperationException("can't navigate back");
         }
@@ -91,7 +113,7 @@ internal class NavigationService : INavigationService
 
     public void NavigateForward(object containerKey)
     {
-        if (!CanNavigateForward(containerKey).FirstAsync().Wait())
+        if (!CanNavigateForward(containerKey))
         {
             throw new InvalidOperationException("can't navigate forward");
         }

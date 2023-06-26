@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace XAF.Extensions;
+namespace XAF.Utilities.ExtensionMethods;
 
 public static class INotifyPropertyChangedExtensions
 {

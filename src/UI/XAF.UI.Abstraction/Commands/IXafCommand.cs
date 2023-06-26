@@ -3,6 +3,7 @@
 namespace XAF.UI.Abstraction.Commands;
 public interface IXafCommand<in TParam, out TResult> : ICommand
 {
+    event Action<TResult>? Executed;
     bool CanExecute(TParam param);
 
     TResult Execute(TParam param);
