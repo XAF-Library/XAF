@@ -4,6 +4,11 @@ using System.Windows.Controls;
 namespace XAF.UI.WPF.ViewAdapters;
 internal class StackPanelAdapter : ViewAdapterBase<StackPanel>
 {
+    public override void Clear(StackPanel container)
+    {
+        container.Children.Clear();
+    }
+
     public override bool Contains(StackPanel container, FrameworkElement view)
     {
         return container.Children.Contains(view);

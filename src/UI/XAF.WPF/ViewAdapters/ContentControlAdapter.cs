@@ -5,6 +5,11 @@ using XAF.UI.WPF.ExtensionMethodes;
 namespace XAF.UI.WPF.ViewAdapters;
 public sealed class ContentControlAdapter : ViewAdapterBase<ContentControl>
 {
+    public override void Clear(ContentControl container)
+    {
+        container.Content = null;
+    }
+
     public override bool Contains(ContentControl container, FrameworkElement view)
     {
         return container.Content == view;
