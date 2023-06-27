@@ -6,25 +6,25 @@ public readonly struct Result<T>
 {
     private readonly T? _value;
     private readonly Exception? _exception;
-    private readonly bool _success;
 
     [MemberNotNullWhen(true, nameof(_exception))]
     [MemberNotNullWhen(false, nameof(_value))]
-    public bool IsError => !_success;
+    public bool IsError => !IsSuccess;
 
     [MemberNotNullWhen(true, nameof(_value))]
     [MemberNotNullWhen(false, nameof(_exception))]
-    public bool IsSuccess => _success;
+    
+    public bool IsSuccess { get; }
 
     private Result(T value)
     {
-        _success = true;
+        IsSuccess = true;
         _value = value;
     }
 
     private Result(Exception exception)
     {
-        _success = false;
+        IsSuccess = false;
         _exception = exception;
     }
 
@@ -36,6 +36,19 @@ public readonly struct Result<T>
         Func<T, TResult> success,
         Func<Exception, TResult> failure)
         => IsSuccess ? success(_value) : failure(_exception);
+
+    public void Switch(
+        Action<T> success,
+        Action<Exception> failure)
+    {
+        if (IsSuccess)
+        {
+            success(_value);
+            return;
+        }
+            failure(_exception);
+    }
+
 }
 
 public readonly struct Result<TValue, TError>
@@ -72,4 +85,16 @@ public readonly struct Result<TValue, TError>
         Func<TValue, TResult> success,
         Func<TError, TResult> failure)
         => IsSuccess ? success(_value) : failure(_error);
+
+    public void Switch(
+       Action<TValue> success,
+       Action<TError> failure)
+    {
+        if (IsSuccess)
+        {
+            success(_value);
+            return;
+        }
+        failure(_error);
+    }
 }
