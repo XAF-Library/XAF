@@ -4,6 +4,11 @@ using System.Windows.Controls.Primitives;
 namespace XAF.UI.WPF.ViewAdapters;
 public class SelectorAdapter : ViewAdapterBase<Selector>
 {
+    public override void Clear(Selector container)
+    {
+        container.Items.Clear();
+    }
+
     public override bool Contains(Selector container, FrameworkElement view)
     {
         return container.Items.Contains(view);

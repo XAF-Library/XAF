@@ -42,6 +42,13 @@ public abstract class ViewAdapterBase<T> : IViewAdapter<T>
         Remove((T)container, view);
     }
 
+    public abstract void Clear(T container);
+
+    public void Clear(FrameworkElement container)
+    {
+        Clear((T)container);
+    }
+
     public abstract void Select(T container, FrameworkElement view);
 
     public void Select(FrameworkElement container, FrameworkElement view)

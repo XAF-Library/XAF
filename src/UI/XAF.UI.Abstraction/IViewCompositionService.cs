@@ -16,4 +16,6 @@ public interface IViewCompositionService
         where T : IViewModel;
 
     void RemoveView(Type viewModel, object containerKey);
+
+    void ClearViews(object containerKey);
 }

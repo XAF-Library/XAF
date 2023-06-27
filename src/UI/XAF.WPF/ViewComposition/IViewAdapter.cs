@@ -9,6 +9,7 @@ public interface IViewAdapter
     void Insert(FrameworkElement container, FrameworkElement view);
     void Remove(FrameworkElement container, FrameworkElement view);
     void Select(FrameworkElement container, FrameworkElement view);
+    void Clear(FrameworkElement container);
     IEnumerable<FrameworkElement> GetElements(FrameworkElement container);
     FrameworkElement? GetActiveView(FrameworkElement container);
 }
@@ -20,6 +21,7 @@ public interface IViewAdapter<T> : IViewAdapter
     void Insert(T container, FrameworkElement view);
     void Remove(T container, FrameworkElement view);
     void Select(T container, FrameworkElement view);
+    void Clear(T container);
     IEnumerable<FrameworkElement> GetElements(T container);
     FrameworkElement? GetActiveView(T container);
 }
