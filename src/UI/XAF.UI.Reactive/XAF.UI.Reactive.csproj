@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows7</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Hosting\XAF.Hosting.Abstraction\XAF.Hosting.Abstraction.csproj" />
-    <ProjectReference Include="..\XAF.UI\XAF.UI.csproj" />
   </ItemGroup>
 
 </Project>

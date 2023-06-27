@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
-using XAF.Modularity;
 using XAF.Modularity.Abstraction;
 using XAF.UI.Abstraction;
 using XAF.UI.WPF.Modules;
