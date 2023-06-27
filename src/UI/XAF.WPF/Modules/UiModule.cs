@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using XAF.Modularity;
 using XAF.Modularity.Abstraction;
 using XAF.UI.Abstraction;
 using XAF.UI.WPF.ViewComposition;
