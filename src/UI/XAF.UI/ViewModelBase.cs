@@ -3,7 +3,7 @@ using XAF.Utilities;
 
 namespace XAF.UI;
 
-public abstract class ViewModelBase : NotfiyPropertyChanged, IViewModel
+public abstract class ViewModelBase : NotifyPropertyChanged, IViewModel
 {
    
 }

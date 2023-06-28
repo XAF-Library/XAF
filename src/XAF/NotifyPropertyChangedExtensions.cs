@@ -7,7 +7,7 @@ public static class NotifyPropertyChangedExtensions
     public static void AddValueChangedCallBack<TModel, TProperty>(this TModel viewModel,
        Expression<Func<TModel, TProperty>> propertySelector,
        Action<TProperty> callBack)
-       where TModel : NotfiyPropertyChanged
+       where TModel : NotifyPropertyChanged
     {
         var name = propertySelector.GetPropertyName();
         viewModel.AddCallBack(callBack, name);

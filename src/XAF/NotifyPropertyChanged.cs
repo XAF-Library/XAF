@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 
 namespace XAF.Utilities;
-public abstract class NotfiyPropertyChanged : INotifyPropertyChanged
+public abstract class NotifyPropertyChanged : INotifyPropertyChanged
 {
-    private readonly Dictionary<string, List<Action<object>>> _callbacks;
+    private readonly Dictionary<string, List<Action<object?>>> _callbacks;
 
-    public NotfiyPropertyChanged()
+    public NotifyPropertyChanged()
     {
         _callbacks = new();
     }
@@ -14,10 +14,10 @@ public abstract class NotfiyPropertyChanged : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
 
-    protected void Set<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
+    protected virtual void Set<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
         => Set(ref backingField, value, EqualityComparer<T>.Default, propertyName);
 
-    protected void Set<T>(ref T backingField, T value, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
+    protected virtual void Set<T>(ref T backingField, T value, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
     {
         ArgumentNullException.ThrowIfNull(comparer);
         ArgumentNullException.ThrowIfNull(propertyName);
@@ -26,7 +26,7 @@ public abstract class NotfiyPropertyChanged : INotifyPropertyChanged
         {
             return;
         }
-
+        OnPropertyChanging(propertyName, backingField, value);
         backingField = value;
         OnPropertyChanged(propertyName);
 
@@ -39,12 +39,17 @@ public abstract class NotfiyPropertyChanged : INotifyPropertyChanged
         }
     }
 
-    protected void OnPropertyChanged(string propertyName)
+    protected virtual void OnPropertyChanging(string propertyName, object? oldValue, object? newValue)
+    {
+
+    }
+
+    protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected void AddCallBack<T>(T property,
+    protected virtual void AddCallBack<T>(T property,
         Action<T> callback,
         [CallerArgumentExpression(nameof(property))] string? propertyName = null)
     {
@@ -52,7 +57,7 @@ public abstract class NotfiyPropertyChanged : INotifyPropertyChanged
         AddCallBack(callback, propertyName);
     }
 
-    internal void AddCallBack<T>(Action<T> callback, string propertyName)
+    internal void AddCallBack<T>(Action<T?> callback, string propertyName)
     {
         ArgumentNullException.ThrowIfNull(callback);
         ArgumentNullException.ThrowIfNull(propertyName);
@@ -63,6 +68,17 @@ public abstract class NotfiyPropertyChanged : INotifyPropertyChanged
             _callbacks.Add(propertyName, callbacks);
         }
 
-        callbacks.Add(o => callback((T)o));
+        callbacks.Add(o =>
+        {
+            if(o is null)
+            {
+                callback(default);
+            }
+            if(o is not T value)
+            {
+                throw new InvalidCastException($"property '{propertyName}' can't be casted to {typeof(T)} ");
+            }
+            callback(value);
+        });
     }
 }

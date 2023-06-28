@@ -2,7 +2,7 @@
 using XAF.Utilities;
 
 namespace XAF.UI.WPF.Internal;
-public class NavigationBackStack : NotfiyPropertyChanged
+public class NavigationBackStack : NotifyPropertyChanged
 {
 
     private NavigationEntry? _current;
