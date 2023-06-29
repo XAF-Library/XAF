@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 namespace XAF.Utilities;
 public abstract class NotifyPropertyChanged : INotifyPropertyChanged
 {
-    private readonly Dictionary<string, List<Action<object?>>> _callbacks;
+    protected readonly Dictionary<string, List<Action<object?>>> PropertyChangedCallbacks;
 
     public NotifyPropertyChanged()
     {
-        _callbacks = new();
+        PropertyChangedCallbacks = new();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -28,15 +28,7 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
         }
         OnPropertyChanging(propertyName, backingField, value);
         backingField = value;
-        OnPropertyChanged(propertyName);
-
-        if (_callbacks.TryGetValue(propertyName, out var callbacks))
-        {
-            foreach (var callback in callbacks)
-            {
-                callback(backingField);
-            }
-        }
+        OnPropertyChanged(propertyName, value);
     }
 
     protected virtual void OnPropertyChanging(string propertyName, object? oldValue, object? newValue)
@@ -44,9 +36,17 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
 
     }
 
-    protected virtual void OnPropertyChanged(string propertyName)
+    protected virtual void OnPropertyChanged(string propertyName, object? newValue)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        
+        if (PropertyChangedCallbacks.TryGetValue(propertyName, out var callbacks))
+        {
+            foreach (var callback in callbacks)
+            {
+                callback(newValue);
+            }
+        }
     }
 
     protected virtual void AddCallBack<T>(T property,
@@ -62,10 +62,10 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
         ArgumentNullException.ThrowIfNull(callback);
         ArgumentNullException.ThrowIfNull(propertyName);
 
-        if (!_callbacks.TryGetValue(propertyName, out var callbacks))
+        if (!PropertyChangedCallbacks.TryGetValue(propertyName, out var callbacks))
         {
             callbacks = new();
-            _callbacks.Add(propertyName, callbacks);
+            PropertyChangedCallbacks.Add(propertyName, callbacks);
         }
 
         callbacks.Add(o =>
