@@ -39,7 +39,11 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
     protected virtual void OnPropertyChanged(string propertyName, object? newValue)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        
+       CallPropertyChangedCallBacks(propertyName, newValue);
+    }
+
+    protected virtual void CallPropertyChangedCallBacks(string propertyName, object? newValue)
+    {
         if (PropertyChangedCallbacks.TryGetValue(propertyName, out var callbacks))
         {
             foreach (var callback in callbacks)
