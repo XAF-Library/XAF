@@ -7,6 +7,8 @@ public interface IXafCommand<in TParam, out TResult> : ICommand
     bool CanExecute(TParam param);
 
     TResult Execute(TParam param);
+
+    void RaiseCanExecuteChanged();
 }
 
 public interface IXafCommand<in TParam> : ICommand
@@ -14,6 +16,17 @@ public interface IXafCommand<in TParam> : ICommand
     bool CanExecute(TParam param);
 
     void Execute(TParam param);
+
+    void RaiseCanExecuteChanged();
+}
+
+public interface IXafCommand : ICommand
+{
+    bool CanExecute();
+
+    void Execute();
+
+    void RaiseCanExecuteChanged();
 }
 
 public interface IXafResultCommand<out TResult> : ICommand
@@ -21,4 +34,6 @@ public interface IXafResultCommand<out TResult> : ICommand
     bool CanExecute();
 
     TResult Execute();
+
+    void RaiseCanExecuteChanged();
 }
