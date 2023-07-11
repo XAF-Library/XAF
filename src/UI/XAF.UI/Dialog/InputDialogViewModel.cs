@@ -1,13 +1,20 @@
 ﻿using XAF.UI.Abstraction.Dialog;
 
 namespace XAF.UI.Dialog;
-public abstract class InputDialogViewModel<TResult> : DialogViewModel, IInputDialogViewModel<TResult>
+public abstract class InputDialogViewModel<TResult> : ViewModelBase, IInputDialogViewModel<TResult>
 {
-    public abstract TResult? GetResult();
+    public abstract string Title { get; }
 
+    public abstract TResult? OnDialogClosed();
+
+    public abstract void OnDialogOpened();
 }
 
-public abstract class InputDialogViewModel<TParameter, TResult> : InputDialogViewModel<TResult>, IInputDialogViewModel<TParameter, TResult>
+public abstract class InputDialogViewModel<TParameter, TResult> : ViewModelBase, IInputDialogViewModel<TParameter, TResult>
 {
-    public abstract void OnDialogOpend(TParameter parameter);
+    public abstract string Title { get; }
+
+    public abstract TResult? OnDialogClosed();
+
+    public abstract void OnDialogOpened(TParameter parameter);
 }

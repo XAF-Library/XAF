@@ -12,5 +12,4 @@ public interface IDialogService
 
     TResult? ShowInputDialog<TViewModel, TParameter, TResult>(TParameter parameter)
         where TViewModel: IInputDialogViewModel<TParameter,TResult>;
-
 }

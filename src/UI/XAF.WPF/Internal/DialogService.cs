@@ -1,13 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Dialog;
-using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.Internal;
@@ -51,10 +45,7 @@ internal class DialogService : IDialogService
 
         dialogVm.OnDialogOpened();
         window.ShowDialog();
-        var result = dialogVm.GetResult();
-        dialogVm.OnDialogClosed();
-
-        return result;
+        return dialogVm.OnDialogClosed();
     }
 
     public TResult? ShowInputDialog<TViewModel, TParameter, TResult>(TParameter parameter) 
@@ -62,16 +53,13 @@ internal class DialogService : IDialogService
     {
         var (window, dialogVm) = CreateDialogWindow<TViewModel>();
 
-        dialogVm.OnDialogOpened();
-        dialogVm.OnDialogOpend(parameter);
+        dialogVm.OnDialogOpened(parameter);
         window.ShowDialog();
-        var result = dialogVm.GetResult();
-        dialogVm.OnDialogClosed();
-        return result;
+        return dialogVm.OnDialogClosed();
     }
 
     private (Window window, T viewmodel) CreateDialogWindow<T>()
-        where T : IDialogViewModel
+        where T : IViewModel
     {
         var descriptor = _viewCollection.GetDescriptorForViewModel(typeof(T));
         Type? dialogWindowType = null;

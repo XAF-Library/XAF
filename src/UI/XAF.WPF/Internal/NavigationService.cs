@@ -97,14 +97,14 @@ internal class NavigationService : INavigationService
 
             var oldView = adapter.GetActiveView(container)!;
 
-            if (oldView.DataContext is INavigableViewModel oldVm)
+            if (oldView.DataContext is INavigationTarget oldVm)
             {
                 oldVm.OnNavigatedFrom();
             }
 
             adapter.Select(container, entry.View);
 
-            if (entry.View.DataContext is INavigableViewModel newVm)
+            if (entry.View.DataContext is INavigationTarget newVm)
             {
                 newVm.OnNavigatedTo();
             }
@@ -125,26 +125,26 @@ internal class NavigationService : INavigationService
 
             var oldView = adapter.GetActiveView(container)!;
 
-            if (oldView.DataContext is INavigableViewModel oldVm)
+            if (oldView.DataContext is INavigationTarget oldVm)
             {
                 oldVm.OnNavigatedFrom();
             }
 
             adapter.Select(container, entry.View);
 
-            if (entry.View.DataContext is INavigableViewModel newVm)
+            if (entry.View.DataContext is INavigationTarget newVm)
             {
                 newVm.OnNavigatedTo();
             }
         });
     }
 
-    public void NavigateTo<TViewModel>(object containerKey) where TViewModel : INavigableViewModel
+    public void NavigateTo<TViewModel>(object containerKey) where TViewModel : INavigationTarget
     {
         NavigateTo(typeof(TViewModel), containerKey);
     }
 
-    public void NavigateTo<TViewModel, TParameter>(object containerKey, TParameter parameter) where TViewModel : INavigableViewModel<TParameter>
+    public void NavigateTo<TViewModel, TParameter>(object containerKey, TParameter parameter) where TViewModel : INavigationTarget<TParameter>
     {
 
         if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
@@ -157,14 +157,14 @@ internal class NavigationService : INavigationService
         {
             var newView = ExecuteNavigation(containerKey, container, typeof(TViewModel));
 
-            if (newView.DataContext is INavigableViewModel<TParameter> paramVm)
+            if (newView.DataContext is INavigationTarget<TParameter> paramVm)
             {
                 paramVm.OnNavigatedTo(parameter);
             }
         });
     }
 
-    public void NavigateTo<TViewModel>(object containerKey, TViewModel viewModel) where TViewModel : INavigableViewModel
+    public void NavigateTo<TViewModel>(object containerKey, TViewModel viewModel) where TViewModel : INavigationTarget
     {
         if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
             .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
@@ -192,7 +192,7 @@ internal class NavigationService : INavigationService
         {
             var newView = ExecuteNavigation(containerKey, container, viewModelType);
 
-            if (newView.DataContext is INavigableViewModel paramVm)
+            if (newView.DataContext is INavigationTarget paramVm)
             {
                 paramVm.OnNavigatedTo();
             }
@@ -221,7 +221,7 @@ internal class NavigationService : INavigationService
 
         var oldView = adapter.GetActiveView(container);
 
-        if (oldView != null && oldView.DataContext is INavigableViewModel vm)
+        if (oldView != null && oldView.DataContext is INavigationTarget vm)
         {
             vm.OnNavigatedFrom();
         }

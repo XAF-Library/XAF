@@ -1,7 +1,7 @@
 ﻿using XAF.UI.Abstraction;
 
 namespace XAF.UI;
-public abstract class NavigableViewModel : ViewModelBase, INavigableViewModel
+public abstract class NavigationTarget : ViewModelBase, INavigationTarget
 {
     public virtual void OnNavigatedFrom()
     {
@@ -14,7 +14,7 @@ public abstract class NavigableViewModel : ViewModelBase, INavigableViewModel
     }
 }
 
-public abstract class NavigableViewModel<T> : NavigableViewModel, INavigableViewModel<T>
+public abstract class NavigationTarget<T> : NavigationTarget, INavigationTarget<T>
 {
     public virtual void OnNavigatedTo(T parameter)
     {

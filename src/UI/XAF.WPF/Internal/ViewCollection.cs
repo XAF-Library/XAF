@@ -53,7 +53,7 @@ internal class ViewCollection : IViewCollection
         _viewDescriptors.Add(descriptor);
         _vmDictionary.Add(descriptor.ViewModelType, descriptor);
 
-        if (descriptor.ViewModelType.IsAssignableFrom(typeof(INavigableViewModel)))
+        if (descriptor.ViewModelType.IsAssignableFrom(typeof(INavigationTarget)))
         {
             AddLookupKey(descriptor, ViewDescriptorKeys.IsNavigableKey);
         }
