@@ -22,7 +22,11 @@ public sealed class ContentControlAdapter : ViewAdapterBase<ContentControl>
 
     public override IEnumerable<FrameworkElement> GetElements(ContentControl container)
     {
-        return container.Content.AsSingleEnumerable().OfType<FrameworkElement>();
+        if(container.Content is FrameworkElement element)
+        {
+            yield return element;
+        }
+        yield break;
     }
 
     public override void Insert(ContentControl container, FrameworkElement view)

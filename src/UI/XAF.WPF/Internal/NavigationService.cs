@@ -1,29 +1,43 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using XAF.UI.Abstraction;
+using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.Behaviors;
 using XAF.UI.WPF.ViewComposition;
+using XAF.UI.WPF.ExtensionMethodes;
 using XAF.Utilities;
 
 namespace XAF.UI.WPF.Internal;
 internal class NavigationService : INavigationService
 {
     private readonly IViewProvider _viewProvider;
-    private readonly IViewCollection _viewCollection;
+    private readonly IViewDescriptorProvider _viewDescriptorProvider;
     private readonly IViewAdapterCollection _viewAdapters;
     private readonly IServiceProvider _serviceProvider;
     private readonly Dictionary<object, NavigationBackStack> _backStacks = new();
     private readonly Dictionary<object, List<FrameworkElement>> _viewCache = new();
     private readonly Dictionary<object, IViewAdapter> _viewAdapterForContainers = new();
-
+    private readonly HashSet<object> _aviableNavKeys = new HashSet<object>();
     private uint _backStackCapacity = 1;
 
-    public NavigationService(IViewProvider viewProvider, IViewCollection viewCollection, IViewAdapterCollection viewAdapters, IServiceProvider serviceProvider)
+    public NavigationService(IViewProvider viewProvider, 
+        IViewDescriptorProvider viewDescriptorProvider, 
+        IViewAdapterCollection viewAdapters, 
+        IServiceProvider serviceProvider)
     {
         _viewProvider = viewProvider;
-        _viewCollection = viewCollection;
+        _viewDescriptorProvider = viewDescriptorProvider;
         _viewAdapters = viewAdapters;
         _serviceProvider = serviceProvider;
+
+        var navKeys = viewDescriptorProvider.GetDescriptorsByDecorator<ContainsViewContainerAttribute>()
+            .SelectMany(d => d.GetNavigationKeys());
+
+        foreach (var navKey in navKeys)
+        {
+            _aviableNavKeys.Add(navKey);
+        }
+
     }
 
     public uint BackStackCapacity
@@ -147,8 +161,7 @@ internal class NavigationService : INavigationService
     public void NavigateTo<TViewModel, TParameter>(object containerKey, TParameter parameter) where TViewModel : INavigationTarget<TParameter>
     {
 
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
-            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        if (!_aviableNavKeys.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -166,8 +179,7 @@ internal class NavigationService : INavigationService
 
     public void NavigateTo<TViewModel>(object containerKey, TViewModel viewModel) where TViewModel : INavigationTarget
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
-            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        if (!_aviableNavKeys.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -182,8 +194,7 @@ internal class NavigationService : INavigationService
 
     public void NavigateTo(Type viewModelType, object containerKey)
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
-            .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        if (!_aviableNavKeys.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }

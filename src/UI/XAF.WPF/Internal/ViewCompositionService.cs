@@ -1,25 +1,35 @@
 ﻿using XAF.UI.Abstraction;
+using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.Behaviors;
+using XAF.UI.WPF.ExtensionMethodes;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.Internal;
 internal class ViewCompositionService : IViewCompositionService
 {
-    private readonly IReadOnlyViewCollection _viewCollection;
+    private readonly IViewDescriptorProvider _viewDescriptorProvider;
     private readonly IViewAdapterCollection _viewAdapters;
     private readonly IViewProvider _viewProvider;
+    private readonly HashSet<object> _aviableNavKey = new();
 
     public ViewCompositionService(IViewAdapterCollection viewAdapters, IViewProvider viewProvider)
     {
-        _viewCollection = viewProvider.ViewCollection;
+        _viewDescriptorProvider = viewProvider.ViewDescriptorProvider;
         _viewAdapters = viewAdapters;
         _viewProvider = viewProvider;
+
+        var navKeys = _viewDescriptorProvider.GetDescriptorsByDecorator<ContainsViewContainerAttribute>()
+          .SelectMany(d => d.GetNavigationKeys());
+
+        foreach (var navKey in navKeys)
+        {
+            _aviableNavKey.Add(navKey);
+        }
     }
 
     public void ClearViews(object containerKey)
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
-           .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        if (!_aviableNavKey.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -39,8 +49,7 @@ internal class ViewCompositionService : IViewCompositionService
 
     public void InsertView(Type viewMdoel, object containerKey)
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
-           .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        if (!_aviableNavKey.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -55,8 +64,7 @@ internal class ViewCompositionService : IViewCompositionService
 
     public void InsertView<TViewModel>(TViewModel viewModel, object containerKey) where TViewModel : IViewModel
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey)
-           .Any(v => v.Properties.TryGetValue(ViewDescriptorKeys.ContainsViewContainerKey, out var navKeys) && navKeys is HashSet<object> hasSet && hasSet.Contains(containerKey)))
+        if (!_aviableNavKey.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -76,7 +84,7 @@ internal class ViewCompositionService : IViewCompositionService
 
     public void RemoveView<T>(T viewModel, object containerKey) where T : IViewModel
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey).Any(v => v.Properties[ViewDescriptorKeys.ContainsViewContainerKey].Equals(containerKey)))
+        if (!_aviableNavKey.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }
@@ -112,7 +120,7 @@ internal class ViewCompositionService : IViewCompositionService
 
     public void RemoveView(Type viewModel, object containerKey)
     {
-        if (!_viewCollection.GetDescriptorsByKey(ViewDescriptorKeys.ContainsViewContainerKey).Any(v => v.Properties[ViewDescriptorKeys.ContainsViewContainerKey].Equals(containerKey)))
+        if (!_aviableNavKey.Contains(containerKey))
         {
             throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
         }

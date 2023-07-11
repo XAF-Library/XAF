@@ -7,10 +7,10 @@ namespace XAF.UI.WPF.Internal;
 internal class ViewProvider : IViewProvider
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IViewCollection _viewCollection;
-    public IReadOnlyViewCollection ViewCollection => _viewCollection;
+    private readonly IViewDescriptorProvider _viewCollection;
+    public IViewDescriptorProvider ViewDescriptorProvider => _viewCollection;
 
-    public ViewProvider(IViewCollection viewCollection, IServiceProvider serviceProvider)
+    public ViewProvider(IViewDescriptorProvider viewCollection, IServiceProvider serviceProvider)
     {
         _viewCollection = viewCollection;
         _serviceProvider = serviceProvider;

@@ -7,10 +7,10 @@ namespace XAF.UI.WPF.Hosting;
 
 public class WpfModuleContextBuilder : ModuleRegistrationContextBuilder
 {
-    private readonly IViewCollection _viewCollection;
+    private readonly IViewDescriptorCollection _viewCollection;
     private readonly IViewAdapterCollection _viewAdapterCollection;
 
-    public WpfModuleContextBuilder(IViewCollection viewCollection, IViewAdapterCollection viewAdapterCollection)
+    public WpfModuleContextBuilder(IViewDescriptorCollection viewCollection, IViewAdapterCollection viewAdapterCollection)
     {
         _viewCollection = viewCollection;
         _viewAdapterCollection = viewAdapterCollection;
