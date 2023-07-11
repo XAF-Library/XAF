@@ -16,5 +16,10 @@
             Command="{Binding NavigateToViewACommand}"
             Content="Navigate to View A" />
 
+        <Button
+            Margin="5"
+            Command="{Binding OpenDialogCommand}"
+            Content="Open Dialog" />
+
     </StackPanel>
 </UserControl>

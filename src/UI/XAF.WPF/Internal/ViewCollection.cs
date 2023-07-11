@@ -67,6 +67,13 @@ internal class ViewCollection : IViewCollection
         {
             AddLookupKey(descriptor, ViewDescriptorKeys.IsSplashScreenKey);
         }
+        var dialogWindowAttribtue = descriptor.ViewType.GetCustomAttribute<DialogWindowAttribute>();
+        if ( dialogWindowAttribtue != null)
+        {
+            AddLookupKey(descriptor, ViewDescriptorKeys.HasSpecialDialogWindowKey);
+            descriptor.Properties[ViewDescriptorKeys.HasSpecialDialogWindowKey] = dialogWindowAttribtue.WindowType;
+            _services.AddTransient(dialogWindowAttribtue.WindowType);
+        }
 
         var navFrameAttributes = descriptor.ViewType.GetCustomAttributes<ContainsViewContainerAttribute>();
         foreach (var navFrameAttribute in navFrameAttributes)

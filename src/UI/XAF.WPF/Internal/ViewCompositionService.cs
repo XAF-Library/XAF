@@ -5,13 +5,13 @@ using XAF.UI.WPF.ViewComposition;
 namespace XAF.UI.WPF.Internal;
 internal class ViewCompositionService : IViewCompositionService
 {
-    private readonly IViewCollection _viewCollection;
+    private readonly IReadOnlyViewCollection _viewCollection;
     private readonly IViewAdapterCollection _viewAdapters;
     private readonly IViewProvider _viewProvider;
 
-    public ViewCompositionService(IViewCollection viewCollection, IViewAdapterCollection viewAdapters, IViewProvider viewProvider)
+    public ViewCompositionService(IViewAdapterCollection viewAdapters, IViewProvider viewProvider)
     {
-        _viewCollection = viewCollection;
+        _viewCollection = viewProvider.ViewCollection;
         _viewAdapters = viewAdapters;
         _viewProvider = viewProvider;
     }
@@ -48,7 +48,7 @@ internal class ViewCompositionService : IViewCompositionService
         ViewContainer.ExecuteContainerAction(containerKey, container =>
         {
             var adapter = _viewAdapters.GetAdapterFor(container.GetType());
-            var view = _viewProvider.GetViewWithViewModel(viewMdoel);
+            var (view, _) = _viewProvider.GetViewWithViewModel(viewMdoel);
             adapter.Insert(container, view);
         });
     }

@@ -1,21 +1,16 @@
 ﻿namespace XAF.UI.Abstraction.Dialog;
 public interface IDialogService
 {
-    T ShowDialog<T>()
+    void ShowDialog<T>()
         where T : IDialogViewModel;
 
-    void ShowDialog<T>(T viewModel)
-        where T : IDialogViewModel;
+    void ShowDialog<TViewmodel, TParameter>(TParameter parameter)
+        where TViewmodel : IDialogViewModel<TParameter>;
 
-    TResult? ShowDialog<TViewModel, TResult>()
-        where TViewModel : IDialogViewModel<TResult>;
+    TResult? ShowInputDialog<TViewModel, TResult>()
+        where TViewModel : IInputDialogViewModel<TResult>;
 
-    TResult? ShowDialog<TViewModel, TResult>(TViewModel viewModel)
-        where TViewModel : IDialogViewModel<TResult>;
+    TResult? ShowInputDialog<TViewModel, TParameter, TResult>(TParameter parameter)
+        where TViewModel: IInputDialogViewModel<TParameter,TResult>;
 
-    Task<TResult?> ShowDialogAsync<TViewModel, TResult>()
-        where TViewModel : IDialogViewModel<TResult>;
-
-    Task<TResult?> ShowDialogAsync<TViewModel, TResult>(TViewModel viewModel)
-        where TViewModel : IDialogViewModel<TResult>;
 }

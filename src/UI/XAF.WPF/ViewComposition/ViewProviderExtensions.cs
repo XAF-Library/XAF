@@ -6,10 +6,11 @@ using XAF.UI.WPF.Internal;
 namespace XAF.UI.WPF.ViewComposition;
 public static class ViewProviderExtensions
 {
-    public static FrameworkElement GetView<TViewModel>(this IViewProvider viewProvider)
+    public static (FrameworkElement, TViewModel) GetViewWithViewModel<TViewModel>(this IViewProvider viewProvider)
         where TViewModel : IViewModel
     {
-        return viewProvider.GetViewWithViewModel(typeof(TViewModel));
+        var (view, vm) = viewProvider.GetViewWithViewModel(typeof(TViewModel));
+        return (view, (TViewModel)vm);
     }
 
     public static Window GetShell(this IViewProvider viewProvider)
@@ -17,9 +18,9 @@ public static class ViewProviderExtensions
         var descriptor = viewProvider.ViewCollection.GetDescriptorsByKey(ViewDescriptorKeys.IsShellKey).FirstOrDefault()
             ?? throw new InvalidOperationException("no shell registered");
 
-        var shell = (Window)viewProvider.GetViewWithViewModel(descriptor);
+        var (view, _) = viewProvider.GetViewWithViewModel(descriptor);
 
-        return shell;
+        return (Window)view;
     }
 
     public static bool IsSplashScreenRegistered(this IViewProvider viewProvider)
@@ -31,8 +32,8 @@ public static class ViewProviderExtensions
     {
         var descriptor = viewProvider.ViewCollection.GetDescriptorsByKey(ViewDescriptorKeys.IsSplashScreenKey).FirstOrDefault()
             ?? throw new InvalidOperationException("no splash screen registered");
-
-        return (Window)viewProvider.GetViewWithViewModel(descriptor);
+        var (view, _) = viewProvider.GetViewWithViewModel(descriptor);
+        return (Window)view;
     }
 
     public static ViewDescriptor GetViewDescriptorForViewModel(this IViewProvider viewProvider, Type vmType)
@@ -47,7 +48,7 @@ public static class ViewProviderExtensions
         return descriptor?.LookupKeys.Contains(ViewDescriptorKeys.IsNavigableKey) ?? false;
     }
 
-    public static FrameworkElement GetViewWithViewModel(this IViewProvider viewProvider, Type viewModelType)
+    public static (FrameworkElement, IViewModel) GetViewWithViewModel(this IViewProvider viewProvider, Type viewModelType)
     {
         return !viewProvider.ViewCollection.TryGetDescriptorForViewModel(viewModelType, out var viewDescriptor)
             ? throw new KeyNotFoundException($"no view for view model type \"{viewModelType.FullName}\" found")
