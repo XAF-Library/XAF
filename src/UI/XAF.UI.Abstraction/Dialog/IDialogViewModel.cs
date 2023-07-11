@@ -1,15 +1,17 @@
-﻿using System.Windows.Input;
+﻿using System.Reflection.Metadata;
+using System.Windows.Input;
 using XAF.UI.Abstraction.Commands;
 
 namespace XAF.UI.Abstraction.Dialog;
 public interface IDialogViewModel : IViewModel
 {
-    IObservable<bool> CanCloseDialog { get; }
-
-    ICommand CloseCommand { get; }
+    string Title { get; }
+    
+    void OnDialogOpened();
+    void OnDialogClosed();
 }
 
-public interface IDialogViewModel<out TResult> : IDialogViewModel
+public interface IDialogViewModel<in TParameter> : IDialogViewModel
 {
-    new IXafResultCommand<TResult> CloseCommand { get; }
+    void OnDialogOpend(TParameter parameter);
 }

@@ -53,7 +53,7 @@ internal class ViewCollection : IViewCollection
         _viewDescriptors.Add(descriptor);
         _vmDictionary.Add(descriptor.ViewModelType, descriptor);
 
-        if (descriptor.ViewModelType.IsAssignableFrom(typeof(INavigableViewModel)))
+        if (descriptor.ViewModelType.IsAssignableFrom(typeof(INavigationTarget)))
         {
             AddLookupKey(descriptor, ViewDescriptorKeys.IsNavigableKey);
         }
@@ -66,6 +66,13 @@ internal class ViewCollection : IViewCollection
         if (descriptor.ViewType.GetCustomAttribute<SplashScreenAttribute>() != null)
         {
             AddLookupKey(descriptor, ViewDescriptorKeys.IsSplashScreenKey);
+        }
+        var dialogWindowAttribtue = descriptor.ViewType.GetCustomAttribute<DialogWindowAttribute>();
+        if ( dialogWindowAttribtue != null)
+        {
+            AddLookupKey(descriptor, ViewDescriptorKeys.HasSpecialDialogWindowKey);
+            descriptor.Properties[ViewDescriptorKeys.HasSpecialDialogWindowKey] = dialogWindowAttribtue.WindowType;
+            _services.AddTransient(dialogWindowAttribtue.WindowType);
         }
 
         var navFrameAttributes = descriptor.ViewType.GetCustomAttributes<ContainsViewContainerAttribute>();

@@ -2,7 +2,7 @@
 using XAF.UI.Reactive.ReactiveProperty;
 
 namespace WpfPlugin.ViewModels;
-public class ViewBViewModel : NavigableViewModel<string>
+public class ViewBViewModel : NavigationTarget<string>
 {
     public RxProperty<string> Message { get; } = new("Default Message");
 

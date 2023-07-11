@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace XAF.UI.Abstraction;
-public interface INavigableViewModel : IViewModel
+public interface INavigationTarget : IViewModel
 {
     void OnNavigatedTo();
     void OnNavigatedFrom();
 }
 
-public interface INavigableViewModel<T> : INavigableViewModel
+public interface INavigationTarget<T> : INavigationTarget
 {
     void OnNavigatedTo(T parameter);
 }

@@ -7,7 +7,7 @@ using XAF.Modularity.StartupActions;
 namespace XAF.Modularity.Extensions;
 public static class HostBuilderExtensions
 {
-    public static void UseModularity(this IXafHostBuilder builder)
+    public static void AddModularity(this IXafHostBuilder builder)
     {
         builder.Services.AddStartupActions<ModuleInitializer>();
     }

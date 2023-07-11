@@ -6,7 +6,8 @@ namespace XAF.UI.WPF.ViewComposition;
 public interface IViewProvider
 {
     IReadOnlyViewCollection ViewCollection { get; }
-    FrameworkElement GetViewWithViewModel(ViewDescriptor viewDescriptor);
+
+    (FrameworkElement, IViewModel) GetViewWithViewModel(ViewDescriptor viewDescriptor);
 
     FrameworkElement GetViewWithViewModel(IViewModel viewModel);
 

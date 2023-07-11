@@ -10,8 +10,8 @@ using XAF.UI.WPF.Hosting;
 
 var builder = XafHost.CreateDefaultBuilder(args);
 
-builder.ConfigureWpfApp<App>();
-builder.UseSplashWindow<SplashWindowViewModel>();
+builder.AddWpf<App>();
+builder.AddSplashWindow<SplashWindowViewModel>();
 
 await builder.RegisterModuleAsync<WPFModule>(default);
 
@@ -19,6 +19,6 @@ var app = builder.Build();
 
 var uiSyncContext = await app.GetUiSyncContext();
 
-app.UseRx(uiSyncContext);
+app.AddRx(uiSyncContext);
 
 await app.RunAsync();

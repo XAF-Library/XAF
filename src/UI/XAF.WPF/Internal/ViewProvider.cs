@@ -16,14 +16,14 @@ internal class ViewProvider : IViewProvider
         _serviceProvider = serviceProvider;
     }
 
-    public FrameworkElement GetViewWithViewModel(ViewDescriptor viewDescriptor)
+    public (FrameworkElement, IViewModel) GetViewWithViewModel(ViewDescriptor viewDescriptor)
     {
         var vm = (IViewModel)_serviceProvider.GetRequiredService(viewDescriptor.ViewModelType);
 
         FrameworkElement view = (FrameworkElement)_serviceProvider.GetRequiredService(viewDescriptor.ViewType);
         view.DataContext = vm;
 
-        return view;
+        return (view,vm);
     }
 
     public FrameworkElement GetViewWithViewModel(IViewModel viewModel)

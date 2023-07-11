@@ -5,7 +5,7 @@ using XAF.UI.Reactive.Commands;
 using XAF.UI.Reactive.ReactiveProperty;
 
 namespace WpfPlugin.ViewModels;
-public class ViewAViewModel : NavigableViewModel
+public class ViewAViewModel : NavigationTarget
 {
     public RxProperty<string> Message { get; } = new();
 

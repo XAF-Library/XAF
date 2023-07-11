@@ -6,6 +6,7 @@ using System.Windows;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity.Extensions;
 using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.Dialog;
 using XAF.UI.WPF.Hosting.Internal;
 using XAF.UI.WPF.Internal;
 using XAF.UI.WPF.StartupActions;
@@ -15,14 +16,14 @@ using XAF.UI.WPF.ViewComposition;
 namespace XAF.UI.WPF.Hosting;
 public static class HostBuilderExtensions
 {
-    public static IXafHostBuilder UseWPF(this IXafHostBuilder builder)
+    public static IXafHostBuilder AddWPF(this IXafHostBuilder builder)
     {
         SetupBaseApp(builder);
         builder.Services.TryAddSingleton<Application, Application>();
         return builder;
     }
 
-    public static IXafHostBuilder ConfigureWpfApp<TApplication>(this IXafHostBuilder builder)
+    public static IXafHostBuilder AddWpf<TApplication>(this IXafHostBuilder builder)
         where TApplication : Application
     {
 
@@ -31,7 +32,7 @@ public static class HostBuilderExtensions
         return builder;
     }
 
-    public static IXafHostBuilder UseSplashWindow<TViewModel>(this IXafHostBuilder builder)
+    public static IXafHostBuilder AddSplashWindow<TViewModel>(this IXafHostBuilder builder)
         where TViewModel : class, ISplashWindowViewModel
     {
         builder.Services.AddSingleton<ISplashWindowViewModel, TViewModel>();
@@ -57,6 +58,7 @@ public static class HostBuilderExtensions
         builder.Services.TryAddSingleton<IViewProvider, ViewProvider>();
         builder.Services.TryAddSingleton<INavigationService, NavigationService>();
         builder.Services.TryAddSingleton<IViewCompositionService, ViewCompositionService>();
+        builder.Services.TryAddSingleton<IDialogService, DialogService>();
 
         var executingAssembly = Assembly.GetEntryAssembly()!;
 
@@ -64,7 +66,7 @@ public static class HostBuilderExtensions
         viewAdapters.AddAdaptersFromAssembly(executingAssembly);
         viewAdapters.AddAdaptersFromAssembly(Assembly.GetAssembly(typeof(ContentControlAdapter))!);
 
-        builder.UseModularity();
+        builder.AddModularity();
         builder.UseModuleRegistrationContextBuilder(new WpfModuleContextBuilder(viewCollection, viewAdapters));
     }
 }
