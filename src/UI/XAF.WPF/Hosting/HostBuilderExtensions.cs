@@ -17,14 +17,14 @@ using XAF.UI.WPF.ViewComposition;
 namespace XAF.UI.WPF.Hosting;
 public static class HostBuilderExtensions
 {
-    public static IXafHostBuilder AddWPF(this IXafHostBuilder builder)
+    public static IXafHostBuilder ConfigureWPF(this IXafHostBuilder builder)
     {
         SetupBaseApp(builder);
         builder.Services.TryAddSingleton<Application, Application>();
         return builder;
     }
 
-    public static IXafHostBuilder AddWpf<TApplication>(this IXafHostBuilder builder)
+    public static IXafHostBuilder ConfigureWpf<TApplication>(this IXafHostBuilder builder)
         where TApplication : Application
     {
 
@@ -72,7 +72,7 @@ public static class HostBuilderExtensions
         viewAdapters.AddAdaptersFromAssembly(executingAssembly);
         viewAdapters.AddAdaptersFromAssembly(Assembly.GetAssembly(typeof(ContentControlAdapter))!);
 
-        builder.UseModularity();
+        builder.ConfigureModularity();
         builder.UseModuleRegistrationContextBuilder(new WpfModuleContextBuilder(viewDescriptorCollection, viewAdapters));
     }
 }
