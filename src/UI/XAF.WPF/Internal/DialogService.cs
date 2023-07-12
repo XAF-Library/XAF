@@ -2,18 +2,19 @@
 using System.Windows;
 using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Dialog;
+using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.Internal;
 internal class DialogService : IDialogService
 {
-    private readonly IReadOnlyViewCollection _viewCollection;
+    private readonly IViewDescriptorProvider _viewCollection;
     private readonly IViewProvider _viewProvider;
     private readonly IServiceProvider _serviceProvider;
 
     public DialogService(IViewProvider viewProvider, IServiceProvider serviceProvider)
     {
-        _viewCollection = viewProvider.ViewCollection;
+        _viewCollection = viewProvider.ViewDescriptorProvider;
         _viewProvider = viewProvider;
         _serviceProvider = serviceProvider;
     }
@@ -62,18 +63,14 @@ internal class DialogService : IDialogService
         where T : IViewModel
     {
         var descriptor = _viewCollection.GetDescriptorForViewModel(typeof(T));
-        Type? dialogWindowType = null;
-        if (descriptor.Properties.TryGetValue(ViewDescriptorKeys.HasSpecialDialogWindowKey, out var windowType))
+        if (!descriptor.TryGetDecoratorValue<DialogWindowAttribute, Type>(out var windowType))
         {
-            dialogWindowType = (Type)windowType;
+            windowType = typeof(DialogWindow);
         }
 
-        var window = dialogWindowType != null
-            ? (Window)_serviceProvider.GetRequiredService(dialogWindowType)
-            : new DialogWindow();
+        var window = (Window)_serviceProvider.GetRequiredService(windowType);
 
         var (view, viewModel) = _viewProvider.GetViewWithViewModel(descriptor);
-
         window.Content = view;
         var dialogVm = (T)viewModel;
 

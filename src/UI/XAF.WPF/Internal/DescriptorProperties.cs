@@ -5,8 +5,6 @@ internal static class ViewDescriptorKeys
 
     public static Guid IsSplashScreenKey = new("0AC06AED-612C-4205-BEB5-92BEB8F2DBA4");
 
-    public static Guid IsNavigableKey = new("0AC06AED-612C-4205-BEB5-92BEB8F2DBA4");
-
     public static Guid ContainsViewContainerKey = new("B478A3A5-47A4-4CD7-B740-169274BAD7EC");
 
     public static Guid HasSpecialDialogWindowKey = new("9D4855B6-DB66-4564-8389-F768C6862637");

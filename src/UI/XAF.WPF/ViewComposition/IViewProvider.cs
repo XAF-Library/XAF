@@ -5,7 +5,7 @@ using XAF.UI.Abstraction;
 namespace XAF.UI.WPF.ViewComposition;
 public interface IViewProvider
 {
-    IReadOnlyViewCollection ViewCollection { get; }
+    IViewDescriptorProvider ViewDescriptorProvider { get; }
 
     (FrameworkElement, IViewModel) GetViewWithViewModel(ViewDescriptor viewDescriptor);
 

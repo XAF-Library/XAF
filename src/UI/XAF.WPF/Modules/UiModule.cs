@@ -16,10 +16,10 @@ public abstract class UiModule : Module
     public override async Task RegisterModuleAsync(IModuleRegistrationContext context, CancellationToken cancellation)
     {
         await base.RegisterModuleAsync(context, cancellation).ConfigureAwait(false);
-        RegisterViews(context.Get<IViewCollection>());
+        RegisterViews(context.Get<IViewDescriptorCollection>());
     }
 
-    public virtual void RegisterViews(IViewCollection viewCollection)
+    public virtual void RegisterViews(IViewDescriptorCollection viewCollection)
     {
         viewCollection.AddViewsFromAssembly(GetType().Assembly);
     }
