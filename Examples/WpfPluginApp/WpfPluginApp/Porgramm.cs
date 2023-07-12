@@ -10,7 +10,7 @@ using XAF.UI.WPF.Hosting;
 
 var builder = XafHost.CreateDefaultBuilder(args);
 
-builder.AddWpf<App>();
+builder.ConfigureWpf<App>();
 builder.AddSplashWindow<SplashWindowViewModel>();
 
 await builder.RegisterModuleAsync<WPFModule>(default);
