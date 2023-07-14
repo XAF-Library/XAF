@@ -6,6 +6,7 @@ using XAF.UI.WPF.Behaviors;
 using XAF.UI.WPF.ViewComposition;
 using XAF.UI.WPF.ExtensionMethodes;
 using XAF.Utilities;
+using XAF.Utilities.ExtensionMethods;
 
 namespace XAF.UI.WPF.Internal;
 internal class NavigationService : INavigationService
@@ -14,6 +15,7 @@ internal class NavigationService : INavigationService
     private readonly IViewDescriptorProvider _viewDescriptorProvider;
     private readonly IViewAdapterCollection _viewAdapters;
     private readonly IServiceProvider _serviceProvider;
+    private readonly Dictionary<object, List<Action<Type>>> _navigationCallbacks = new(); 
     private readonly Dictionary<object, NavigationBackStack> _backStacks = new();
     private readonly Dictionary<object, List<FrameworkElement>> _viewCache = new();
     private readonly Dictionary<object, IViewAdapter> _viewAdapterForContainers = new();
@@ -210,6 +212,16 @@ internal class NavigationService : INavigationService
         });
     }
 
+    public void AddNavigationCallback(object containerKey, Action<Type> callback)
+    {
+        if (!_aviableNavKeys.Contains(containerKey))
+        {
+            throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
+        }
+
+        _navigationCallbacks.Add(containerKey, callback);
+    }
+
     private FrameworkElement ExecuteNavigation(object containerKey, FrameworkElement container, Type viewModelType, IViewModel? viewModel = null)
     {
         if (!_viewAdapterForContainers.TryGetValue(containerKey, out var adapter))
@@ -217,6 +229,7 @@ internal class NavigationService : INavigationService
             adapter = _viewAdapters.GetAdapterFor(container.GetType());
             _viewAdapterForContainers[containerKey] = adapter;
         }
+
 
         if (!_viewCache.TryGetValue(containerKey, out var cachedViews))
         {
@@ -243,18 +256,26 @@ internal class NavigationService : INavigationService
 
         if (newView == null)
         {
-            newView ??= _viewProvider.GetView(viewModelType);
+            newView = _viewProvider.GetView(viewModelType);
             cachedViews.Add(newView);
         }
 
-        if (newView.DataContext == null || viewModel != null)
+        if (newView.DataContext == null || viewModel == null)
         {
-            viewModel ??= (IViewModel)_serviceProvider.GetRequiredService(viewModelType);
+            viewModel = (IViewModel)_serviceProvider.GetRequiredService(viewModelType);
             newView.DataContext = viewModel;
         }
 
         backStack.Insert(newView);
         adapter.Select(container, newView);
+
+        if (_navigationCallbacks.TryGetValue(containerKey, out var callbacks))
+        {
+            foreach (var callback in callbacks)
+            {
+                callback(viewModelType);
+            }
+        }
 
         return newView;
     }

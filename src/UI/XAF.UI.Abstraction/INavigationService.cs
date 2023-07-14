@@ -14,6 +14,8 @@ public interface INavigationService
 
     void NavigateTo(Type viewModelType, object containerKey);
 
+    void AddNavigationCallback(object containerKey, Action<Type> callback);
+
     bool CanNavigateBack(object containerKey);
 
     void RegisterCanNavigateBackChangedCallback(object containerKey, Action<bool> callback);
