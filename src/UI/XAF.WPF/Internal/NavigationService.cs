@@ -250,7 +250,7 @@ internal class NavigationService : INavigationService
         if (!_viewAdapterForContainers.TryGetValue(container.GetType(), out var adapter))
         {
             adapter = _viewAdapters.GetAdapterFor(container.GetType());
-            _viewAdapterForContainers[containerKey] = adapter;
+            _viewAdapterForContainers[container.GetType()] = adapter;
         }
 
 
@@ -286,8 +286,14 @@ internal class NavigationService : INavigationService
         if (newView.DataContext == null && viewModel == null)
         {
             viewModel = (IViewModel)_serviceProvider.GetRequiredService(viewModelType);
+            newView.DataContext = viewModel;
         }
-        newView.DataContext = viewModel;
+        else if(viewModel != null)
+        {
+            newView.DataContext = viewModel;
+        }
+
+
 
         backStack.Insert(newView);
         adapter.Select(container, newView);
