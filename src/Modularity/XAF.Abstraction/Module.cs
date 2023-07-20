@@ -17,6 +17,10 @@ public abstract class Module : IModule
         return Task.CompletedTask;
     }
 
-    public abstract Task StartModuleAsync(IServiceProvider services, CancellationToken cancellation);
-    protected abstract void RegisterServices(IServiceCollection services);
+    public virtual Task StartModuleAsync(IServiceProvider services, CancellationToken cancellation)
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual void RegisterServices(IServiceCollection services) { }
 }

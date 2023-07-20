@@ -177,6 +177,28 @@ internal class NavigationService : INavigationService
             {
                 paramVm.OnNavigatedTo(parameter);
             }
+            else if (newView.DataContext is INavigationTarget vm)
+            {
+                vm.OnNavigatedTo(parameter);
+            }
+        });
+    }
+
+    public void NavigateTo(Type viewModelType, object containerKey, object? parameter)
+    {
+        if (!_aviableNavKeys.Contains(containerKey))
+        {
+            throw new InvalidOperationException($"No navigation frame with the key: {containerKey} found.");
+        }
+
+        ViewContainer.ExecuteContainerAction(containerKey, container =>
+        {
+            var newView = ExecuteNavigation(containerKey, container, viewModelType);
+
+            if (newView.DataContext is INavigationTarget vm)
+            {
+                vm.OnNavigatedTo(parameter);
+            }
         });
     }
 

@@ -8,6 +8,7 @@ namespace XAF.UI.Abstraction;
 public interface INavigationTarget : IViewModel
 {
     void OnNavigatedTo();
+    void OnNavigatedTo(object? parameter);
     void OnNavigatedFrom();
 }
 

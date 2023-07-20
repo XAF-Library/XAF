@@ -25,6 +25,6 @@ public abstract class UiModule : Module
         viewCollection.AddViewsFromAssembly(GetType().Assembly);
     }
 
-    public abstract void ComposeView(IViewCompositionService viewCompositionService);
+    public virtual void ComposeView(IViewCompositionService viewCompositionService) { }
 
 }
