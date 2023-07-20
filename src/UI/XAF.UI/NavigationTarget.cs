@@ -12,12 +12,21 @@ public abstract class NavigationTarget : ViewModelBase, INavigationTarget
     {
 
     }
+
+    public virtual void OnNavigatedTo(object? parameter)
+    {
+    }
 }
 
 public abstract class NavigationTarget<T> : NavigationTarget, INavigationTarget<T>
 {
-    public virtual void OnNavigatedTo(T parameter)
+    public override void OnNavigatedTo(object? parameter)
     {
-
+        if (parameter is T tParameter)
+        {
+            OnNavigatedTo(tParameter);
+            return;
+        }
     }
+    public abstract void OnNavigatedTo(T parameter);
 }
