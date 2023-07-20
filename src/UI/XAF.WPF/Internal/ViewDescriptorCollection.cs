@@ -4,6 +4,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;
 using XAF.Utilities.ExtensionMethods;
@@ -45,7 +46,13 @@ internal class ViewDescriptorCollection : IViewDescriptorCollection
 
         foreach (var attribute in descriptor.ViewAttributes)
         {
-            if(!_initilizers.TryGetValue(attribute.GetType(), out var initilizer))
+            var type = attribute.GetType();
+            if(type.IsGenericType && type.BaseType != null)
+            {
+                type = type.BaseType;
+            }
+
+            if (!_initilizers.TryGetValue(type, out var initilizer))
             {
                 continue;
             }
@@ -70,14 +77,20 @@ internal class ViewDescriptorCollection : IViewDescriptorCollection
         {
             foreach (var attribute in descriptor.ViewAttributes.GroupBy(a => a.GetType()))
             {
-                if (_multipleAttributeDecorators.TryGetValue(attribute.Key, out var multiDecorator))
+                var type = attribute.Key;
+                if (type.IsGenericType && type.BaseType != null)
+                {
+                    type = type.BaseType;
+                }
+
+                if (_multipleAttributeDecorators.TryGetValue(type, out var multiDecorator))
                 {
                     var value = multiDecorator.Invoke(attribute);
                     descriptor.AddDecoratorValue(attribute.Key, value);
                     continue;
                 }
 
-                if (_singleAttributeDecorators.TryGetValue(attribute.Key, out var singleDecorator))
+                if (_singleAttributeDecorators.TryGetValue(type, out var singleDecorator))
                 {
                     var value = singleDecorator.Invoke(attribute.First());
                     descriptor.AddDecoratorValue(attribute.Key, value);
@@ -102,7 +115,7 @@ internal class ViewDescriptorCollection : IViewDescriptorCollection
         _multipleAttributeDecorators.Add(typeof(TAttribute), a => action.Invoke(a.OfType<TAttribute>()));
     }
 
-    public void AddDescriptorInitilizer<TAttribute>(Action<TAttribute, ViewDescriptor, IServiceCollection> action) 
+    public void AddDescriptorInitilizer<TAttribute>(Action<TAttribute, ViewDescriptor, IServiceCollection> action)
         where TAttribute : Attribute
     {
         _initilizers.Add(typeof(TAttribute), (a, d, s) => action((TAttribute)a, d, s));

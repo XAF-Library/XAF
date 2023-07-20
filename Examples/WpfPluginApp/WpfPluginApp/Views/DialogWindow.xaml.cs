@@ -10,21 +10,15 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WpfPluginApp.ViewModels;
-using XAF.UI.Abstraction.Attributes;
-using XAF.UI.WPF.Attributes;
 
 namespace WpfPluginApp.Views;
 /// <summary>
-/// Interaktionslogik für DIalogView.xaml
+/// Interaktionslogik für DialogWindow.xaml
 /// </summary>
-[ViewFor<TestDialogViewModel>]
-[DialogWindow<DialogWindow>]
-public partial class DIalogView : UserControl
+public partial class DialogWindow : Window
 {
-    public DIalogView()
+    public DialogWindow()
     {
         InitializeComponent();
     }

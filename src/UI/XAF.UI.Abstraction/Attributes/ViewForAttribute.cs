@@ -1,6 +1,6 @@
 ﻿using XAF.UI.Abstraction;
 
-namespace XAF.UI.WPF.Attributes;
+namespace XAF.UI.Abstraction.Attributes;
 
 public class ViewForAttribute<TViewModel> : ViewForAttribute
     where TViewModel : IViewModel

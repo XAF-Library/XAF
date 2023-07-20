@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XAF.UI.Abstraction.Attributes;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Dialog;
 using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;

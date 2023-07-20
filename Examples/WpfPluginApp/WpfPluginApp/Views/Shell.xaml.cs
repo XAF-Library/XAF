@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using WpfPluginApp.ViewModels;
 using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.Attributes;
 using XAF.UI.WPF.Attributes;
 
 namespace WpfPluginApp.Views;

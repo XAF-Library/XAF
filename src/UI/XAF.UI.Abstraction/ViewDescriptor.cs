@@ -3,10 +3,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
-using XAF.UI.WPF.Attributes;
-using XAF.UI.WPF.ExtensionMethodes;
+using XAF.UI.Abstraction.Attributes;
 
-namespace XAF.UI.WPF.ViewComposition;
+namespace XAF.UI.Abstraction;
 
 public class ViewDescriptor
 {
@@ -20,7 +19,17 @@ public class ViewDescriptor
         ViewType = viewType;
         ViewModelType = viewModelType;
         ViewAttributes = viewAttributes;
-        ViewAttributeTypes = viewAttributes.Select(a => a.GetType()).ToArray();
+        ViewAttributeTypes = viewAttributes
+            .Select(a =>
+            {
+                var type = a.GetType();
+                if(type.IsGenericType && type.BaseType != null)
+                {
+                    type = type.BaseType;
+                }
+                return type;
+            })
+            .ToArray();
     }
 
     public Type ViewType { get; }
@@ -40,27 +49,54 @@ public class ViewDescriptor
             : throw new InvalidCastException($"value of decorator is of type: {value.GetType()}");
     }
 
-    public bool TryGetDecoratorValue<TAttribute, T>([NotNullWhen(true)]out T? value)
+    public bool TryGetDecoratorValue<TAttribute, T>([NotNullWhen(true)] out T? value)
         where TAttribute : Attribute
     {
         value = default;
-        if(!_decoratorValues.TryGetValue(typeof(TAttribute), out var v))
+        if (!_decoratorValues.TryGetValue(typeof(TAttribute), out var v))
         {
             return false;
         }
 
-        if(value is not T tValue)
+        if (v is not T tValue)
         {
             return false;
         }
-        
+
         value = tValue;
-        
+
         return true;
     }
 
-    internal void AddDecoratorValue(Type attributeType, object value)
+    public bool TryGetDecorator<TAttribute>([NotNullWhen(true)] out TAttribute? decorator)
+        where TAttribute : Attribute
     {
+        decorator = null;
+
+        var decoratorAttribute = ViewAttributes
+            .Where(a => a.GetType().IsAssignableTo(typeof(TAttribute)))
+            .FirstOrDefault();
+
+        if (decoratorAttribute is not TAttribute tvalue)
+        {
+            return false;
+        }
+        decorator = tvalue;
+        return true;
+    }
+
+    public IEnumerable<TAttribute> GetDecorators<TAttribute>()
+        where TAttribute : Attribute
+       => ViewAttributes
+            .Where(a => a.GetType().IsAssignableTo(typeof(TAttribute)))
+            .OfType<TAttribute>();
+
+    public void AddDecoratorValue(Type attributeType, object value)
+    {
+        if(attributeType.IsGenericType && attributeType.BaseType != null)
+        {
+            attributeType = attributeType.BaseType;
+        }
         _decoratorValues[attributeType] = value;
     }
 
@@ -68,11 +104,10 @@ public class ViewDescriptor
     {
         ArgumentNullException.ThrowIfNull(viewType);
 
-        if (viewType.IsAssignableFrom(typeof(FrameworkElement)))
-        {
-            throw new NotSupportedException($"view type must be an {typeof(FrameworkElement).FullName}");
-        }
-        var attributes = viewType.GetCustomAttributes().OfType<Attribute>().ToArray();
+        var attributes = viewType
+            .GetCustomAttributes()
+            .OfType<Attribute>()
+            .ToArray();
 
         var viewForAttribute = attributes.OfType<ViewForAttribute>().FirstOrDefault()
             ?? throw new NotSupportedException($"view must be annotated with an {typeof(ViewForAttribute<>).FullName}");

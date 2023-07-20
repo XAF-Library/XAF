@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using XAF.UI.Abstraction;
 
-namespace XAF.UI.WPF.ViewComposition;
+namespace XAF.UI.Abstraction.ViewComposition;
 
 public interface IViewDescriptorProvider
 {
