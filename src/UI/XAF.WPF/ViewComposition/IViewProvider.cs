@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.WPF.ViewComposition;
 public interface IViewProvider

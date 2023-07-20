@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows;
 using XAF.UI.Abstraction;
-using XAF.UI.WPF.Attributes;
+using XAF.UI.Abstraction.Attributes;
 using XAF.UI.WPF.Internal;
 
 namespace XAF.UI.WPF.ViewComposition;

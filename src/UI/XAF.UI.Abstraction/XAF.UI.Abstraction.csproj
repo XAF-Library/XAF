@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\Modularity\XAF.Abstraction\XAF.Modularity.Abstraction.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

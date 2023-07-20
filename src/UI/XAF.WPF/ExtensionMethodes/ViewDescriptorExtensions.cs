@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XAF.UI.WPF.Attributes;
-using XAF.UI.WPF.ViewComposition;
+using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.Attributes;
 
 namespace XAF.UI.WPF.ExtensionMethodes;
 public static class ViewDescriptorExtensions

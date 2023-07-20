@@ -2,6 +2,7 @@
 using System.Windows;
 using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Dialog;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;
 

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using XAF.UI.WPF.Attributes;
+using XAF.UI.Abstraction.Attributes;
 
 namespace XAF.UI.WPF.Behaviors;
 public class ViewContainer : Behavior<FrameworkElement>

@@ -1,4 +1,5 @@
 ﻿using WpfPlugin.ViewModels;
+using XAF.UI.Abstraction.Attributes;
 using XAF.UI.WPF.Attributes;
 
 namespace WpfPlugin.Views;

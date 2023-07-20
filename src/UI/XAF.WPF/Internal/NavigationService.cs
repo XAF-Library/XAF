@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using XAF.UI.Abstraction;
-using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.Behaviors;
 using XAF.UI.WPF.ViewComposition;
 using XAF.UI.WPF.ExtensionMethodes;
 using XAF.Utilities;
 using XAF.Utilities.ExtensionMethods;
+using XAF.UI.Abstraction.Attributes;
+using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.WPF.Internal;
 internal class NavigationService : INavigationService
@@ -15,16 +16,16 @@ internal class NavigationService : INavigationService
     private readonly IViewDescriptorProvider _viewDescriptorProvider;
     private readonly IViewAdapterCollection _viewAdapters;
     private readonly IServiceProvider _serviceProvider;
-    private readonly Dictionary<object, List<Action<Type>>> _navigationCallbacks = new(); 
+    private readonly Dictionary<object, List<Action<ViewDescriptor, IViewModel>>> _navigationCallbacks = new();
     private readonly Dictionary<object, NavigationBackStack> _backStacks = new();
     private readonly Dictionary<object, List<FrameworkElement>> _viewCache = new();
     private readonly Dictionary<object, IViewAdapter> _viewAdapterForContainers = new();
     private readonly HashSet<object> _aviableNavKeys = new HashSet<object>();
     private uint _backStackCapacity = 1;
 
-    public NavigationService(IViewProvider viewProvider, 
-        IViewDescriptorProvider viewDescriptorProvider, 
-        IViewAdapterCollection viewAdapters, 
+    public NavigationService(IViewProvider viewProvider,
+        IViewDescriptorProvider viewDescriptorProvider,
+        IViewAdapterCollection viewAdapters,
         IServiceProvider serviceProvider)
     {
         _viewProvider = viewProvider;
@@ -212,7 +213,7 @@ internal class NavigationService : INavigationService
         });
     }
 
-    public void AddNavigationCallback(object containerKey, Action<Type> callback)
+    public void AddNavigationCallback(object containerKey, Action<ViewDescriptor, IViewModel> callback)
     {
         if (!_aviableNavKeys.Contains(containerKey))
         {
@@ -271,9 +272,10 @@ internal class NavigationService : INavigationService
 
         if (_navigationCallbacks.TryGetValue(containerKey, out var callbacks))
         {
+            var descriptor = _viewDescriptorProvider.GetDescriptorForViewModel(viewModelType);
             foreach (var callback in callbacks)
             {
-                callback(viewModelType);
+                callback(descriptor, viewModel);
             }
         }
 
