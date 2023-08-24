@@ -23,10 +23,10 @@
             </i:Interaction.Behaviors>
         </ContentControl>
 
-        <TabControl Grid.Column="1">
+        <ContentControl Grid.Column="1">
             <i:Interaction.Behaviors>
                 <xaf:ViewContainer Key="PageViews" />
             </i:Interaction.Behaviors>
-        </TabControl>
+        </ContentControl>
     </Grid>
 </Window>

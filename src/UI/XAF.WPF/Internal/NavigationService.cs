@@ -19,7 +19,7 @@ internal class NavigationService : INavigationService
     private readonly Dictionary<object, List<Action<ViewDescriptor, IViewModel>>> _navigationCallbacks = new();
     private readonly Dictionary<object, NavigationBackStack> _backStacks = new();
     private readonly Dictionary<object, List<FrameworkElement>> _viewCache = new();
-    private readonly Dictionary<object, IViewAdapter> _viewAdapterForContainers = new();
+    private readonly Dictionary<Type, IViewAdapter> _viewAdapterForContainers = new();
     private readonly HashSet<object> _aviableNavKeys = new HashSet<object>();
     private uint _backStackCapacity = 1;
 
@@ -110,7 +110,7 @@ internal class NavigationService : INavigationService
         ViewContainer.ExecuteContainerAction(containerKey, container =>
         {
             var entry = _backStacks[containerKey].NavigateBack();
-            var adapter = _viewAdapterForContainers[containerKey];
+            var adapter = _viewAdapterForContainers[container.GetType()];
 
             var oldView = adapter.GetActiveView(container)!;
 
@@ -138,7 +138,7 @@ internal class NavigationService : INavigationService
         ViewContainer.ExecuteContainerAction(containerKey, container =>
         {
             var entry = _backStacks[containerKey].NavigateForward();
-            var adapter = _viewAdapterForContainers[containerKey];
+            var adapter = _viewAdapterForContainers[container.GetType()];
 
             var oldView = adapter.GetActiveView(container)!;
 
@@ -247,10 +247,10 @@ internal class NavigationService : INavigationService
 
     private FrameworkElement ExecuteNavigation(object containerKey, FrameworkElement container, Type viewModelType, IViewModel? viewModel = null)
     {
-        if (!_viewAdapterForContainers.TryGetValue(containerKey, out var adapter))
+        if (!_viewAdapterForContainers.TryGetValue(container.GetType(), out var adapter))
         {
             adapter = _viewAdapters.GetAdapterFor(container.GetType());
-            _viewAdapterForContainers[containerKey] = adapter;
+            _viewAdapterForContainers[container.GetType()] = adapter;
         }
 
 
@@ -283,11 +283,17 @@ internal class NavigationService : INavigationService
             cachedViews.Add(newView);
         }
 
-        if (newView.DataContext == null || viewModel == null)
+        if (newView.DataContext == null && viewModel == null)
         {
             viewModel = (IViewModel)_serviceProvider.GetRequiredService(viewModelType);
             newView.DataContext = viewModel;
         }
+        else if(viewModel != null)
+        {
+            newView.DataContext = viewModel;
+        }
+
+
 
         backStack.Insert(newView);
         adapter.Select(container, newView);
@@ -297,7 +303,7 @@ internal class NavigationService : INavigationService
             var descriptor = _viewDescriptorProvider.GetDescriptorForViewModel(viewModelType);
             foreach (var callback in callbacks)
             {
-                callback(descriptor, viewModel);
+                callback(descriptor, (IViewModel)newView.DataContext);
             }
         }
 
