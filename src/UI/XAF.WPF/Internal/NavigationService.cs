@@ -303,7 +303,7 @@ internal class NavigationService : INavigationService
             var descriptor = _viewDescriptorProvider.GetDescriptorForViewModel(viewModelType);
             foreach (var callback in callbacks)
             {
-                callback(descriptor, viewModel);
+                callback(descriptor, (IViewModel)newView.DataContext);
             }
         }
 
