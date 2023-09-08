@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace XAF.Utilities;
 
-namespace XAF.Utilities;
+/// <summary>
+/// A Simple implementation of the Topological sort
+/// </summary>
 public static class TopologicalSort
 {
+    /// <summary>
+    /// Sort the source in Topological order
+    /// </summary>
+    /// <typeparam name="T">Type of the item</typeparam>
+    /// <param name="source">Items that should be sorted</param>
+    /// <param name="getDependencies">function to get the dependencies of the item</param>
+    /// <returns></returns>
     public static IList<T> Sort<T>(IEnumerable<T> source, Func<T, IEnumerable<T>> getDependencies)
+        where T : notnull
     {
         var sorted = new List<T>();
         var visited = new Dictionary<T, bool>();
@@ -20,8 +26,8 @@ public static class TopologicalSort
         return sorted;
     }
 
-    public static void Visit<T>(T item, Func<T, IEnumerable<T>> getDependencies,
-                   List<T> sorted, Dictionary<T, bool> visited)
+    private static void Visit<T>(T item, Func<T, IEnumerable<T>> getDependencies, List<T> sorted, Dictionary<T, bool> visited)
+        where T : notnull
     {
         bool inProcess;
         var alreadyVisited = visited.TryGetValue(item, out inProcess);
@@ -30,7 +36,7 @@ public static class TopologicalSort
         {
             if (inProcess)
             {
-                throw new ArgumentException("Cyclic dependency found.");
+                throw new ArgumentException($"Cyclic dependency found for '{item}' ");
             }
         }
         else
