@@ -19,7 +19,7 @@ internal class WpfShowSplashScreen : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.CreateFor<WpfShowSplashScreen>()
+        return StartupActionOrderRule.Create<WpfShowSplashScreen>()
             .ExecuteBefore<StartModules>()
             .ExecuteAfter<StartHostedServices>();
     }
@@ -65,7 +65,7 @@ internal class WpfSplashVmExecuteAfterModuleInitialization : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.CreateFor<WpfSplashVmExecuteAfterModuleInitialization>()
+        return StartupActionOrderRule.Create<WpfSplashVmExecuteAfterModuleInitialization>()
             .ExecuteAfter<StartModules>()
             .ExecuteBefore<WpfShowShell>();
     }

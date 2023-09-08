@@ -18,7 +18,7 @@ internal class WpfShowShell : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.CreateFor<WpfShowShell>()
+        return StartupActionOrderRule.Create<WpfShowShell>()
             .ExecuteAfter<StartModules>();
     }
 

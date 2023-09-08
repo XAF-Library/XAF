@@ -1,4 +1,8 @@
 ﻿namespace XAF.Hosting.Abstraction;
+
+/// <summary>
+/// An Action that gets called at the host startup
+/// </summary>
 public interface IHostStartupAction
 {
     /// <summary>
@@ -8,5 +12,9 @@ public interface IHostStartupAction
     /// <returns></returns>
     Task Execute(CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Execution order
+    /// </summary>
+    /// <returns></returns>
     StartupActionOrderRule ConfigureExecutionTime();
 }
