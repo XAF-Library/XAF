@@ -7,17 +7,12 @@ public abstract class BaseValueConverter<TConverter, TFor> : MarkupExtension, IV
         where TConverter : BaseValueConverter<TConverter, TFor>, new()
 {
 
-    private static readonly TConverter _converter;
-
-    static BaseValueConverter()
-    {
-        _converter = new TConverter();
-    }
+    private static readonly TConverter Converter = new();
 
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        return _converter;
+        return Converter;
     }
 
     public abstract object Convert(TFor value, Type targetType, object parameter, CultureInfo culture);
@@ -44,12 +39,7 @@ public abstract class BaseValueConverter<TConverter> : MarkupExtension, IValueCo
     where TConverter : BaseValueConverter<TConverter>, new()
 {
 
-    private static readonly TConverter _converter;
-
-    static BaseValueConverter()
-    {
-        _converter = new TConverter();
-    }
+    private static readonly TConverter Converter = new();
 
     public abstract object Convert(object value, Type targetType, object parameter, CultureInfo culture);
 
@@ -57,7 +47,7 @@ public abstract class BaseValueConverter<TConverter> : MarkupExtension, IValueCo
 
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        return _converter;
+        return Converter;
     }
 
 }

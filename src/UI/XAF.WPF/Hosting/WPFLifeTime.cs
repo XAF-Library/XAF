@@ -12,7 +12,7 @@ public class WpfLifetime : IHostLifetime
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        return _thread.StopAsync(cancellationToken);
     }
 
     public Task WaitForStartAsync(CancellationToken cancellationToken)

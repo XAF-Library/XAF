@@ -105,12 +105,14 @@ internal class ViewDescriptorCollection : IViewDescriptorCollection
         return provider;
     }
 
-    public void AddDecorator<TAttribute, TDecorator>(Func<TAttribute, TDecorator> action) where TAttribute : Attribute
+    public void AddDecorator<TAttribute, TDecorator>(Func<TAttribute, TDecorator> action) 
+        where TAttribute : Attribute
     {
         _singleAttributeDecorators.Add(typeof(TAttribute), a => action.Invoke((TAttribute)a));
     }
 
-    public void AddDecorator<TAttribute, TDecorator>(Func<IEnumerable<TAttribute>, TDecorator> action) where TAttribute : Attribute
+    public void AddDecorator<TAttribute, TDecorator>(Func<IEnumerable<TAttribute>, TDecorator> action) 
+        where TAttribute : Attribute
     {
         _multipleAttributeDecorators.Add(typeof(TAttribute), a => action.Invoke(a.OfType<TAttribute>()));
     }

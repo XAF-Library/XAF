@@ -26,8 +26,7 @@ internal partial class XafHostBuilder : IXafHostBuilder
     public XafHostBuilder(XafHostBuilderSettings settings)
     {
         _settings = settings;
-        Configuration = settings.Configuration;
-        Configuration ??= new();
+        Configuration = settings.Configuration ?? new();
         Services = new ServiceCollection();
         Properties = new Dictionary<object, object>();
 

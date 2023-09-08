@@ -4,10 +4,10 @@ namespace XAF.UI.Commands;
 public class XafCommand<TParam, TResult> : IXafCommand<TParam, TResult>
 {
 
-    private Func<TParam, TResult> _execute;
-    private Predicate<TParam?>? _canExecute;
+    private readonly Func<TParam, TResult> _execute;
+    private readonly Predicate<TParam>? _canExecute;
 
-    internal XafCommand(Func<TParam, TResult> execute, Predicate<TParam?>? canExecute)
+    internal XafCommand(Func<TParam, TResult> execute, Predicate<TParam>? canExecute)
     {
         _canExecute = canExecute;
         _execute = execute;
@@ -16,7 +16,7 @@ public class XafCommand<TParam, TResult> : IXafCommand<TParam, TResult>
     public event EventHandler? CanExecuteChanged;
     public event Action<TResult>? Executed;
 
-    public bool CanExecute(TParam? param)
+    public bool CanExecute(TParam param)
         => _canExecute is null || _canExecute.Invoke(param);
 
 
@@ -44,10 +44,10 @@ public class XafCommand<TParam, TResult> : IXafCommand<TParam, TResult>
 
 public class XafCommand<TParam> : IXafCommand<TParam>
 {
-    private Action<TParam> _execute;
-    private Predicate<TParam?>? _canExecute;
+    private readonly Action<TParam> _execute;
+    private readonly Predicate<TParam>? _canExecute;
 
-    internal XafCommand(Action<TParam> execute, Predicate<TParam?>? canExecute)
+    internal XafCommand(Action<TParam> execute, Predicate<TParam>? canExecute)
     {
         _execute = execute;
         _canExecute = canExecute;
@@ -55,21 +55,21 @@ public class XafCommand<TParam> : IXafCommand<TParam>
 
     public event EventHandler? CanExecuteChanged;
 
-    public bool CanExecute(TParam? param)
+    public bool CanExecute(TParam param)
         => _canExecute is null || _canExecute(param);
 
     public bool CanExecute(object? parameter)
     {
-        if (parameter is null)
+        if(_canExecute is null)
         {
-            return _canExecute is null || _canExecute(default);
+            return true;
         }
 
-        if (parameter is not TParam param)
-        {
-            throw new InvalidCastException($"Commandparameter of type {parameter.GetType()} can't be casted to: {typeof(TParam)}");
-        }
-        return CanExecute(param);
+        ArgumentNullException.ThrowIfNull(parameter);
+
+        return parameter is not TParam param
+            ? throw new InvalidCastException($"Commandparameter of type {parameter.GetType()} can't be casted to: {typeof(TParam)}")
+            : CanExecute(param);
     }
 
     public void Execute(TParam param)
@@ -95,12 +95,12 @@ public class XafCommand<TParam> : IXafCommand<TParam>
 
 public class XafCommand : IXafCommand
 {
-    private Action _execute;
-    private Func<bool>? _canExecute;
+    private readonly Action _execute;
+    private readonly Func<bool>? _canExecute;
 
     public event EventHandler? CanExecuteChanged;
 
-    internal XafCommand(Action execute, Func<bool> canExecute)
+    internal XafCommand(Action execute, Func<bool>? canExecute)
     {
         _execute = execute;
         _canExecute = canExecute;

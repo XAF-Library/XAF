@@ -16,7 +16,6 @@ internal sealed class ModuleCatalog : IModuleCatalog, IReadonlyModuleCatalog
             throw new InvalidOperationException("Plugin collection can't be Modified");
         }
 
-        var type = typeof(T);
         var module = new T();
         _modules.Add(module);
         return module;

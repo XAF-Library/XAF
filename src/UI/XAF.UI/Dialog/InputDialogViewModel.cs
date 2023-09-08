@@ -8,6 +8,8 @@ public abstract class InputDialogViewModel<TResult> : ViewModelBase, IInputDialo
     public abstract TResult? OnDialogClosed();
 
     public abstract void OnDialogOpened();
+
+    void IDialogViewModel.OnDialogClosed(){ }
 }
 
 public abstract class InputDialogViewModel<TParameter, TResult> : ViewModelBase, IInputDialogViewModel<TParameter, TResult>
@@ -17,4 +19,8 @@ public abstract class InputDialogViewModel<TParameter, TResult> : ViewModelBase,
     public abstract TResult? OnDialogClosed();
 
     public abstract void OnDialogOpened(TParameter parameter);
+
+    public void OnDialogOpened(){ }
+
+    void IDialogViewModel.OnDialogClosed(){ }
 }

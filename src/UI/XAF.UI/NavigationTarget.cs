@@ -25,7 +25,6 @@ public abstract class NavigationTarget<T> : NavigationTarget, INavigationTarget<
         if (parameter is T tParameter)
         {
             OnNavigatedTo(tParameter);
-            return;
         }
     }
     public abstract void OnNavigatedTo(T parameter);

@@ -6,7 +6,7 @@ namespace XAF.UI.Reactive.Commands;
 public interface IRxCommand<TParam, TResult> : IObservable<TResult>, ICommand, IDisposable
 {
     bool IsDisposed { get; }
-    IObservable<bool> CanExecute { get; }
+    new IObservable<bool> CanExecute { get; }
 
     IObservable<bool> IsExecuting { get; }
 

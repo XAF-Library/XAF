@@ -5,7 +5,7 @@ using XAF.Modularity.Abstraction;
 namespace XAF.Modularity.StartupActions;
 internal class ModuleInitializer : IHostStartupAction
 {
-    private IModuleCatalog _modules;
+    private readonly IModuleCatalog _modules;
     private readonly IServiceProvider _services;
     private readonly ILogger<ModuleInitializer> _logger;
 
@@ -30,7 +30,7 @@ internal class ModuleInitializer : IHostStartupAction
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error accoured while starting the {moduleName} Module", module.Name);
+                _logger.LogError(ex, "An error accoured while starting the {moduleName} Module", module.GetName());
             }
         }
     }

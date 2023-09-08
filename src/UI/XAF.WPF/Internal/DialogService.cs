@@ -61,7 +61,7 @@ internal class DialogService : IDialogService
     }
 
     private (Window window, T viewmodel) CreateDialogWindow<T>()
-        where T : IViewModel
+        where T : IDialogViewModel
     {
         var descriptor = _viewCollection.GetDescriptorForViewModel(typeof(T));
         if (!descriptor.TryGetDecoratorValue<DialogWindowAttribute, Type>(out var windowType))
@@ -74,6 +74,7 @@ internal class DialogService : IDialogService
         var (view, viewModel) = _viewProvider.GetViewWithViewModel(descriptor);
         window.Content = view;
         var dialogVm = (T)viewModel;
+        window.Title = dialogVm.Title;
 
         return (window, dialogVm);
     }

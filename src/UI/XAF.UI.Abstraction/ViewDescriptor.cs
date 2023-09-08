@@ -74,8 +74,7 @@ public class ViewDescriptor
         decorator = null;
 
         var decoratorAttribute = ViewAttributes
-            .Where(a => a.GetType().IsAssignableTo(typeof(TAttribute)))
-            .FirstOrDefault();
+            .FirstOrDefault(a => a.GetType().IsAssignableTo(typeof(TAttribute)));
 
         if (decoratorAttribute is not TAttribute tvalue)
         {

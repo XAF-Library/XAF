@@ -26,7 +26,6 @@ public sealed class ContentControlAdapter : ViewAdapterBase<ContentControl>
         {
             yield return element;
         }
-        yield break;
     }
 
     public override void Insert(ContentControl container, FrameworkElement view)

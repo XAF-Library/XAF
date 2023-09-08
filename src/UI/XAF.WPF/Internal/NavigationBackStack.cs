@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using XAF.Utilities;
 
 namespace XAF.UI.WPF.Internal;
@@ -48,11 +49,11 @@ public class NavigationBackStack : NotifyPropertyChanged
                 break;
             case 1:
                 _tail = entry;
-                _root.After = _tail;
+                _root!.After = _tail;
                 _tail.Before = _root;
                 break;
             default:
-                _tail.After = entry;
+                _tail!.After = entry;
                 entry.Before = _tail;
                 _tail = entry;
                 break;
@@ -63,8 +64,8 @@ public class NavigationBackStack : NotifyPropertyChanged
         if (_count > Capacity)
         {
 
-            _root = _root.After;
-            _root.Before = null;
+            _root = _root!.After;
+            _root!.Before = null;
             _count--;
         }
 
@@ -83,9 +84,9 @@ public class NavigationBackStack : NotifyPropertyChanged
             throw new InvalidOperationException("cant navigate back");
         }
 
-        _current = _current.Before;
+        _current = _current!.Before;
 
-        CanNavigateBack = _current.Before != null;
+        CanNavigateBack = _current!.Before != null;
         CanNavigateForward = _current.After != null;
 
         return _current;
@@ -98,9 +99,9 @@ public class NavigationBackStack : NotifyPropertyChanged
             throw new InvalidOperationException("cant navigate back");
         }
 
-        _current = _current.After;
+        _current = _current!.After;
 
-        CanNavigateForward = _current.After != null;
+        CanNavigateForward = _current!.After != null;
         CanNavigateBack = _current.Before != null;
 
         return _current;

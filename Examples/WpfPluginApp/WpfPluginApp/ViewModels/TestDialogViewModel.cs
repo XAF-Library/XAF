@@ -6,22 +6,17 @@ using System.Threading.Tasks;
 using XAF.UI.Dialog;
 
 namespace WpfPluginApp.ViewModels;
-public class TestDialogViewModel : DialogViewModel
+public class TestDialogViewModel : InputDialogViewModel<string,string>
 {
-    public override string Title { get; protected set; }
+    public override string Title => "Test";
 
-    public TestDialogViewModel()
+    public override string? OnDialogClosed()
     {
-        Title = "Test";
+        return "Success";
     }
 
-    public override void OnDialogOpened()
+    public override void OnDialogOpened(string input)
     {
-        base.OnDialogOpened();
-    }
-
-    public override void OnDialogClosed()
-    {
-        base.OnDialogClosed();
+        var testInput = input;
     }
 }

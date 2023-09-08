@@ -8,11 +8,11 @@ namespace XAF.UI.Reactive.ReactiveProperty;
 public class ReadOnlyRxProperty<T> : IReadOnlyRxProperty<T>, IObserver<T>
 {
 
-    private IEqualityComparer<T> _comparer;
-    private List<IObserver<T>> _observers = new();
-
-    private IScheduler _eventScheduler;
-    private IDisposable _sourceDisposable;
+    private readonly IEqualityComparer<T> _comparer;
+    private readonly IScheduler _eventScheduler;
+    
+    private readonly List<IObserver<T>> _observers = new();
+    private readonly IDisposable _sourceDisposable;
 
     private bool RaiseLatestValueOnSubscribe => (Settings & RxPropertySettings.RaiseLatestValueOnSubscribe) == RxPropertySettings.RaiseLatestValueOnSubscribe;
     private bool DistinctUntilChanged => (Settings & RxPropertySettings.DistinctUntilChanged) == RxPropertySettings.DistinctUntilChanged;
@@ -127,9 +127,6 @@ public class ReadOnlyRxProperty<T> : IReadOnlyRxProperty<T>, IObserver<T>
                 observer.OnCompleted();
             }
             _sourceDisposable.Dispose();
-
-            _observers = null;
-            _sourceDisposable = null;
         }
 
         IsDisposed = true;

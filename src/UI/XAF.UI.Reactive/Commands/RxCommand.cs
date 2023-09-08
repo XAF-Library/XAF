@@ -19,10 +19,7 @@ public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>
 
     private readonly Func<TParam, IObservable<TResult>> _execute;
 
-    private readonly Subject<ExecutionInfo> _executionInfo;
-
     private readonly IObservable<bool> _isExecuting;
-    private readonly IScheduler _outputScheduler;
     private readonly IObservable<TResult> _results;
     private readonly ISubject<ExecutionInfo, ExecutionInfo> _synchronizedExecutionInfo;
 
@@ -41,18 +38,16 @@ public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>
         ArgumentNullException.ThrowIfNull(canExecute);
 
         _execute = execute;
-        _outputScheduler = outputScheduler ?? Schedulers.TaskPoolScheduler;
-        _executionInfo = new Subject<ExecutionInfo>();
-        _synchronizedExecutionInfo = Subject.Synchronize(_executionInfo, _outputScheduler);
-        _isExecuting = _synchronizedExecutionInfo.Scan(0, (acc, next) =>
-        {
-            return next.Demarcation switch
+        outputScheduler ??= Schedulers.TaskPoolScheduler;
+        var info  = new Subject<ExecutionInfo>();
+        _synchronizedExecutionInfo = Subject.Synchronize(info, outputScheduler);
+        _isExecuting = _synchronizedExecutionInfo.Scan(0, (acc, next) 
+            => next.Demarcation switch
             {
                 ExecutionDemarcation.Begin => acc + 1,
                 ExecutionDemarcation.End => acc - 1,
                 _ => acc
-            };
-        }).Select(count => count > 0)
+            }).Select(count => count > 0)
         .StartWith(false)
         .DistinctUntilChanged()
         .Replay(1)
@@ -106,7 +101,7 @@ public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>
     {
         parameter ??= default(TParam);
 
-        if (parameter is not null && parameter is not TParam tparam)
+        if (parameter is not null && parameter is not TParam)
         {
             throw new InvalidOperationException($"Command expected parameter of type {typeof(TParam).FullName}, but parameter was {parameter.GetType().FullName}");
         }
@@ -202,6 +197,38 @@ public class RxCommand : RxCommand<Unit, Unit>, IRxCommand
         outputSchedulder);
     }
 
+    public static RxCommand<TResult> Create<TResult>(Func<TResult> execute,
+       IObservable<bool>? canExecute = null,
+       IScheduler? outputSchedulder = null)
+    {
+        ArgumentNullException.ThrowIfNull(execute);
+
+        return new RxCommand<TResult>(_ => Observable.Create<TResult>(o =>
+        {
+            o.OnNext(execute());
+            o.OnCompleted();
+            return Disposable.Empty;
+        }),
+        canExecute ?? Observable.Return(true),
+        outputSchedulder);
+    }
+
+    public static RxCommand<TParam, TResult> Create<TParam, TResult>(Func<TParam, TResult> execute,
+       IObservable<bool>? canExecute = null,
+       IScheduler? outputScheduler = null)
+    {
+        ArgumentNullException.ThrowIfNull(execute);
+
+        return new RxCommand<TParam, TResult>(p => Observable.Create<TResult>(o =>
+        {
+            o.OnNext(execute(p));
+            o.OnCompleted();
+            return Disposable.Empty;
+        }),
+        canExecute ?? Observable.Return(true),
+        outputScheduler);
+    }
+
     public static RxCommand CreateFromObservable(Func<IObservable<Unit>> execute,
         IObservable<bool>? canExecute = null,
         IScheduler? outputScheduler = null)
@@ -209,6 +236,28 @@ public class RxCommand : RxCommand<Unit, Unit>, IRxCommand
         return new RxCommand(_ => execute(),
             canExecute ?? Observable.Return(true),
             outputScheduler);
+    }
+
+    public static RxCommand<TResult> CreateFromObservable<TResult>(Func<IObservable<TResult>> execute,
+        IObservable<bool>? canExecute = null,
+        IScheduler? outputScheduler = null)
+    {
+        ArgumentNullException.ThrowIfNull(execute);
+
+        return new RxCommand<TResult>(_ => execute(),
+            canExecute ?? Observable.Return(true),
+            outputScheduler);
+    }
+
+    public static RxCommand<TParam, TResult> CreateFromObservable<TParam, TResult>(Func<TParam, IObservable<TResult>> execute,
+       IObservable<bool>? canExecute = null,
+       IScheduler? outputScheduler = null)
+    {
+
+        ArgumentNullException.ThrowIfNull(execute);
+
+        return new RxCommand<TParam, TResult>(execute,
+            canExecute ?? Observable.Return(true), outputScheduler);
     }
 
     public static RxCommand CreateFromTask(Func<Task> executeAsync,
@@ -229,33 +278,6 @@ public class RxCommand : RxCommand<Unit, Unit>, IRxCommand
         return CreateFromObservable(() => Observable.FromAsync(executeAsync), canExecute, outputScheduler);
     }
 
-    public static RxCommand<TResult> Create<TResult>(Func<TResult> execute,
-        IObservable<bool>? canExecute = null,
-        IScheduler? outputSchedulder = null)
-    {
-        ArgumentNullException.ThrowIfNull(execute);
-
-        return new RxCommand<TResult>(_ => Observable.Create<TResult>(o =>
-        {
-            o.OnNext(execute());
-            o.OnCompleted();
-            return Disposable.Empty;
-        }),
-        canExecute ?? Observable.Return(true),
-        outputSchedulder);
-    }
-
-    public static RxCommand<TResult> CreateFromObservable<TResult>(Func<IObservable<TResult>> execute,
-        IObservable<bool>? canExecute = null,
-        IScheduler? outputScheduler = null)
-    {
-        ArgumentNullException.ThrowIfNull(execute);
-
-        return new RxCommand<TResult>(_ => execute(),
-            canExecute ?? Observable.Return(true),
-            outputScheduler);
-    }
-
     public static RxCommand<TResult> CreateFromTask<TResult>(Func<Task<TResult>> executeAsync,
         IObservable<bool>? canExecute = null,
         IScheduler? outputScheduler = null)
@@ -269,34 +291,6 @@ public class RxCommand : RxCommand<Unit, Unit>, IRxCommand
     {
         ArgumentNullException.ThrowIfNull(execute);
         return CreateFromObservable(() => Observable.FromAsync(execute), canExecute, outputScheduler);
-    }
-
-
-    public static RxCommand<TParam, TResult> Create<TParam, TResult>(Func<TParam, TResult> execute,
-        IObservable<bool>? canExecute = null,
-        IScheduler? outputScheduler = null)
-    {
-        ArgumentNullException.ThrowIfNull(execute);
-
-        return new RxCommand<TParam, TResult>(p => Observable.Create<TResult>(o =>
-        {
-            o.OnNext(execute(p));
-            o.OnCompleted();
-            return Disposable.Empty;
-        }),
-        canExecute ?? Observable.Return(true),
-        outputScheduler);
-    }
-
-    public static RxCommand<TParam, TResult> CreateFromObservable<TParam, TResult>(Func<TParam, IObservable<TResult>> execute,
-        IObservable<bool>? canExecute = null,
-        IScheduler? outputScheduler = null)
-    {
-
-        ArgumentNullException.ThrowIfNull(execute);
-
-        return new RxCommand<TParam, TResult>(execute,
-            canExecute ?? Observable.Return(true), outputScheduler);
     }
 
     public static RxCommand<TParam, TResult> CreateFromTask<TParam, TResult>(Func<TParam, Task<TResult>> executeAsync,

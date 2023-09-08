@@ -12,20 +12,18 @@ using System.Threading.Tasks;
 using XAF.Hosting.Abstraction;
 
 namespace XAF.Hosting.Internal;
-internal class XafHost : IHost
+internal sealed class XafHost : IHost
 {
     private readonly ILogger<XafHost> _logger;
     private readonly IHostLifetime _hostLifetime;
     private readonly ApplicationLifetime _applicationLifetime;
-    private readonly IHostEnvironment _hostEnvironment;
-    private IEnumerable<IHostedService>? _hostedServices;
+    private IEnumerable<IHostedService> _hostedServices;
 
     private volatile bool _stopCalled;
 
     public IServiceProvider Services { get; }
 
     public XafHost(IServiceProvider services,
-                  IHostEnvironment hostEnvironment,
                   IHostApplicationLifetime applicationLifetime,
                   ILogger<XafHost> logger,
                   IHostLifetime hostLifetime)
@@ -38,7 +36,6 @@ internal class XafHost : IHost
         Services = services;
 
         _applicationLifetime = (applicationLifetime as ApplicationLifetime)!;
-        _hostEnvironment = hostEnvironment;
 
         if (_applicationLifetime is null)
         {
@@ -46,6 +43,7 @@ internal class XafHost : IHost
         }
         _logger = logger;
         _hostLifetime = hostLifetime;
+        _hostedServices = Enumerable.Empty<IHostedService>();
     }
 
     public void Dispose()
@@ -105,6 +103,11 @@ internal class XafHost : IHost
 
     public async Task StopAsync(CancellationToken cancellationToken = default)
     {
+        if (_stopCalled)
+        {
+            return;
+        }
+        _stopCalled = true;
         _logger.LogDebug("Application stopping");
         _applicationLifetime!.StopApplication();
 

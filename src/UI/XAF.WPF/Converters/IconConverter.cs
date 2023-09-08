@@ -22,10 +22,10 @@ public class WindowIconConverter : BaseValueConverter<WindowIconConverter, Image
             size = sizeVal;
         }
 
-        return CreateIcon(value, size, targetType);
+        return CreateIcon(value, size);
     }
 
-    private object CreateIcon(ImageSource value, Size size, Type targetType)
+    private object CreateIcon(ImageSource value, Size size)
     {
         var img = new Image
         {

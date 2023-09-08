@@ -7,7 +7,7 @@ public interface IReadOnlyRxProperty : INotifyPropertyChanged
     object? Value { get; }
 }
 
-public interface IReadOnlyRxProperty<T> : IReadOnlyRxProperty, IObservable<T>, IDisposable
+public interface IReadOnlyRxProperty<out T> : IReadOnlyRxProperty, IObservable<T>, IDisposable
 {
     new T Value { get; }
 

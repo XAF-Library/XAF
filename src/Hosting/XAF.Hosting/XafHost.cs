@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using XAF.Hosting.Abstraction;
 
 namespace XAF.Hosting;
-public class XafHost
+public static class XafHost
 {
     public static IXafHostBuilder CreateDefaultBuilder(string[] args)
         => new XafHostBuilder(new XafHostBuilderSettings(

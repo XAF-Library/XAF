@@ -20,6 +20,12 @@ public static class ColorExtensions
                 .ToColor();
     }
 
+    public static SolidColorBrush Darken(this SolidColorBrush brush, uint percentage)
+    {
+        var col = brush.Color;
+        return new SolidColorBrush(col.Darken(percentage));
+    }
+
     /// <summary>
     /// Lightens the color
     /// </summary>
@@ -32,12 +38,6 @@ public static class ColorExtensions
                 .ToHSL()
                 .Lighten(value)
                 .ToColor();
-    }
-
-    public static SolidColorBrush Darken(this SolidColorBrush brush, uint percentage)
-    {
-        var col = brush.Color;
-        return new SolidColorBrush(col.Darken(percentage));
     }
 
     public static SolidColorBrush Lighten(this SolidColorBrush brush, uint percentage)
@@ -66,7 +66,7 @@ public static class ColorExtensions
         return Color.FromArgb(bytes[3], bytes[2], bytes[1], bytes[0]);
     }
 
-    public static HSLColor ToHSL(this Color color)
+    public static HslColor ToHSL(this Color color)
     {
         var r = color.R / 255d;
         var g = color.G / 255d;
@@ -104,7 +104,7 @@ public static class ColorExtensions
             }
         }
 
-        return new HSLColor()
+        return new HslColor()
         {
             H = h * 60,
             S = s,
@@ -112,11 +112,11 @@ public static class ColorExtensions
         };
     }
 
-    public static HSLColor AddValues(this HSLColor hsl, double hue = 0, double saturation = 0, double luminance = 0)
+    public static HslColor AddValues(this HslColor hsl, double hue = 0, double saturation = 0, double luminance = 0)
     {
-        hsl.H = (hsl.H + hue).Clip(0, 360);
-        hsl.S = (hsl.S + saturation).Clip(0, 1);
-        hsl.L = (hsl.L + luminance).Clip(0, 1);
+        hsl.H = (hsl.H + hue).Clamp(0, 360);
+        hsl.S = (hsl.S + saturation).Clamp(0, 1);
+        hsl.L = (hsl.L + luminance).Clamp(0, 1);
 
         return hsl;
     }

@@ -10,12 +10,15 @@ public static class HostBuilderExtensions
     public static void ConfigureModularity(this IXafHostBuilder builder)
     {
         builder.Services.AddStartupActions<ModuleInitializer>();
+        builder.GetModuleCatalog();
     }
 
-    public static void UseModuleCatalog<T>(this IXafHostBuilder builder)
-        where T : IModuleCatalog, new()
+    public static void ConfigureModularity<TCatalog>(this IXafHostBuilder builder)
+        where TCatalog : IModuleCatalog, new()
     {
-        builder.Properties[typeof(IModuleCatalog)] = new T();
+        builder.Services.AddStartupActions<ModuleInitializer>();
+        builder.Properties[typeof(IModuleCatalog)] = new TCatalog();
+        builder.GetModuleCatalog();
     }
 
     public static void UseModuleRegistrationContextBuilder<T>(this IXafHostBuilder builder)
@@ -30,7 +33,7 @@ public static class HostBuilderExtensions
         builder.Properties[typeof(IModuleRegistrationContextBuilder)] = ctxBuilder;
     }
 
-    public static async Task RegisterModuleAsync<T>(this IXafHostBuilder builder, CancellationToken cancellation)
+    public static async Task RegisterModuleAsync<T>(this IXafHostBuilder builder, CancellationToken cancellation = default)
         where T : IModule, new()
     {
         var catalog = builder.GetModuleCatalog();

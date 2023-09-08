@@ -46,15 +46,13 @@ internal class WpfAppSplashScreenInitializer : IHostStartupAction
 
 internal class WpfAppShellAfterModuleInitialization : IHostStartupAction
 {
-    private readonly IWpfThread _wpfThread;
     private readonly ISplashWindowViewModel _splashViewModel;
 
     public int Priority => UiStartupActionPriorities.ShowSplashScreen + 1;
     public HostStartupActionExecution ExecutionTime => HostStartupActionExecution.AfterHostedServicesStarted;
 
-    public WpfAppShellAfterModuleInitialization(IWpfThread wpfThread, ISplashWindowViewModel splashViewModel)
+    public WpfAppShellAfterModuleInitialization(ISplashWindowViewModel splashViewModel)
     {
-        _wpfThread = wpfThread;
         _splashViewModel = splashViewModel;
     }
 

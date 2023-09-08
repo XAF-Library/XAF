@@ -211,8 +211,7 @@ internal class NavigationService : INavigationService
 
         ViewContainer.ExecuteContainerAction(containerKey, container =>
         {
-            var newView = ExecuteNavigation(containerKey, container, viewModel.GetType(), viewModel);
-
+            ExecuteNavigation(containerKey, container, viewModel.GetType(), viewModel);
             viewModel.OnNavigatedTo();
         });
     }
@@ -303,7 +302,7 @@ internal class NavigationService : INavigationService
             var descriptor = _viewDescriptorProvider.GetDescriptorForViewModel(viewModelType);
             foreach (var callback in callbacks)
             {
-                callback(descriptor, (IViewModel)newView.DataContext);
+                callback(descriptor, (IViewModel)newView.DataContext!);
             }
         }
 

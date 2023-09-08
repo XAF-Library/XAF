@@ -5,16 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace XAF.UI.Abstraction.Dialog;
-public interface IInputDialogViewModel<out TResult> : IViewModel
+public interface IInputDialogViewModel<out TResult> : IDialogViewModel
 {
-    string Title { get; }
-    void OnDialogOpened();
-    TResult? OnDialogClosed();
+    new TResult? OnDialogClosed();
 }
 
-public interface IInputDialogViewModel<in TParameter, out TResult> : IViewModel
+public interface IInputDialogViewModel<in TParameter, out TResult> : IDialogViewModel
 {
-    string Title { get; }
     void OnDialogOpened(TParameter parameter);
-    TResult? OnDialogClosed();
+    new TResult? OnDialogClosed();
 }

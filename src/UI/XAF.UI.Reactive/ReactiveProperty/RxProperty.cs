@@ -7,10 +7,11 @@ using XAF.UI.Reactive;
 namespace XAF.UI.Reactive.ReactiveProperty;
 public class RxProperty<T> : IRxProperty<T>
 {
-    private T _value = default;
-    private List<IObserver<T>> _observers = new();
-    private IEqualityComparer<T> _comparer;
-    private IDisposable _sourceDisposable;
+    private readonly List<IObserver<T>> _observers = new();
+    private readonly IEqualityComparer<T> _comparer;
+    private readonly IDisposable _sourceDisposable;
+
+    private T _value;
 
     private bool RaiseLatestValueOnSubscribe => (Settings & RxPropertySettings.RaiseLatestValueOnSubscribe) == RxPropertySettings.RaiseLatestValueOnSubscribe;
     private bool DistinctUntilChanged => (Settings & RxPropertySettings.DistinctUntilChanged) == RxPropertySettings.DistinctUntilChanged;

@@ -30,13 +30,8 @@ public static class ExpressionExtensions
             throw new ArgumentException("Expressions refers to a methode");
         }
 
-        var currentExpr = memberExp.Expression;
-
-        if (currentExpr is null)
-        {
-            throw new InvalidOperationException("Expression was null");
-        }
-
+        var currentExpr = memberExp.Expression ?? throw new InvalidOperationException("Expression was null");
+        
         while (true)
         {
             currentExpr = RemoveUnary(currentExpr!);
