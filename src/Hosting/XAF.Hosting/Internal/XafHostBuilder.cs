@@ -159,6 +159,8 @@ internal partial class XafHostBuilder : IXafHostBuilder
         Services.AddSingleton<IConfigurationBuilder>(Configuration);
         Services.AddSingleton<IHostApplicationLifetime, ApplicationLifetime>();
         Services.AddSingleton<IHost, XafHost>();
+        Services.AddSingleton<OrderedStartupActionCollection>();
+        Services.AddStartupAction<StartHostedServices>();
     }
 
     private sealed record LoggingBuilder(IServiceCollection Services) : ILoggingBuilder;

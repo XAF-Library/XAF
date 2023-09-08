@@ -37,8 +37,8 @@ public static class HostBuilderExtensions
         where TViewModel : class, ISplashWindowViewModel
     {
         builder.Services.AddSingleton<ISplashWindowViewModel, TViewModel>();
-        builder.Services.AddStartupActions<WpfAppSplashScreenInitializer>();
-        builder.Services.AddStartupActions<WpfAppShellAfterModuleInitialization>();
+        builder.Services.AddStartupAction<WpfShowSplashScreen>();
+        builder.Services.AddStartupAction<WpfSplashVmExecuteAfterModuleInitialization>();
         return builder;
     }
 
@@ -51,7 +51,7 @@ public static class HostBuilderExtensions
         viewDescriptorCollection.AddDefaultInitilizers();
 
         builder.Services.AddHostedService<WpfApp>();
-        builder.Services.AddStartupActions<WpfAppInitializer>();
+        builder.Services.AddStartupAction<WpfShowShell>();
 
         builder.Services.AddSingleton<IHostLifetime, WpfLifetime>();
         builder.Services.AddSingleton<IViewAdapterCollection>(viewAdapters);

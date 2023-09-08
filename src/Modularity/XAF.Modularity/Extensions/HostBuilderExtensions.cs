@@ -1,22 +1,22 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity.Abstraction;
+using XAF.Modularity.Abstraction.StartupActions;
 using XAF.Modularity.Internal;
-using XAF.Modularity.StartupActions;
 
 namespace XAF.Modularity.Extensions;
 public static class HostBuilderExtensions
 {
     public static void ConfigureModularity(this IXafHostBuilder builder)
     {
-        builder.Services.AddStartupActions<ModuleInitializer>();
+        builder.Services.AddStartupAction<StartModules>();
         builder.GetModuleCatalog();
     }
 
     public static void ConfigureModularity<TCatalog>(this IXafHostBuilder builder)
         where TCatalog : IModuleCatalog, new()
     {
-        builder.Services.AddStartupActions<ModuleInitializer>();
+        builder.Services.AddStartupAction<StartModules>();
         builder.Properties[typeof(IModuleCatalog)] = new TCatalog();
         builder.GetModuleCatalog();
     }

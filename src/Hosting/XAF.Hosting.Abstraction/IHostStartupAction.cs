@@ -1,13 +1,12 @@
 ﻿namespace XAF.Hosting.Abstraction;
 public interface IHostStartupAction
 {
+    /// <summary>
+    /// The method that gets Executed while startup.
+    /// </summary>
+    /// <param name="cancellationToken">the cancellation token to cancle the execution</param>
+    /// <returns></returns>
+    Task Execute(CancellationToken cancellationToken = default);
 
-    int Priority { get; }
-    HostStartupActionExecution ExecutionTime { get; }
-    Task Execute(CancellationToken cancellation);
-}
-
-public static class HostStartupPriorities
-{
-    public const int Default = 0;
+    StartupActionOrderRule ConfigureExecutionTime();
 }

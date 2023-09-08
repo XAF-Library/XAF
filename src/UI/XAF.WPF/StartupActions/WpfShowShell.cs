@@ -1,22 +1,26 @@
 ﻿using XAF.Hosting.Abstraction;
+using XAF.Modularity.Abstraction.StartupActions;
 using XAF.UI.Abstraction;
 using XAF.UI.WPF.Hosting;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.StartupActions;
-internal class WpfAppInitializer : IHostStartupAction
+internal class WpfShowShell : IHostStartupAction
 {
     private readonly IViewProvider _viewProvider;
     private readonly IWpfThread _wpfThread;
 
-    public WpfAppInitializer(IViewProvider viewProvider, IWpfThread wpfThread)
+    public WpfShowShell(IViewProvider viewProvider, IWpfThread wpfThread)
     {
         _viewProvider = viewProvider;
         _wpfThread = wpfThread;
     }
 
-    public int Priority => UiStartupActionPriorities.ShowMainWindow;
-    public HostStartupActionExecution ExecutionTime => HostStartupActionExecution.AfterHostedServicesStarted;
+    public StartupActionOrderRule ConfigureExecutionTime()
+    {
+        return StartupActionOrderRule.CreateFor<WpfShowShell>()
+            .ExecuteAfter<StartModules>();
+    }
 
     public async Task Execute(CancellationToken cancellation)
     {

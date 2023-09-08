@@ -59,44 +59,13 @@ internal sealed class XafHost : IHost
         await _hostLifetime.WaitForStartAsync(cancellationToken).ConfigureAwait(false);
         token.ThrowIfCancellationRequested();
 
-        var startupActions = Services.GetHostStartupActions()
-            .OrderBy(a => a.Priority);
-        _hostedServices = Services.GetServices<IHostedService>();
+        var actions = Services
+            .GetRequiredService<OrderedStartupActionCollection>()
+            .GetOrderedStartupActions();
 
-        foreach (var action in startupActions
-            .Where(a => a.ExecutionTime == HostStartupActionExecution.BeforeHostedServicesStarted))
+        foreach (var startupAction in actions)
         {
-            try
-            {
-                await action.Execute(token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "StartupAction '{actionName}' faild on app start", action.GetType().FullName);
-            }
-        }
-
-        foreach (var hostedService in _hostedServices)
-        {
-            await hostedService.StartAsync(token).ConfigureAwait(false);
-
-            if (hostedService is BackgroundService backgroundService)
-            {
-                _ = TryExecuteBackgroundServiceAsync(backgroundService);
-            }
-        }
-
-        foreach (var action in startupActions
-            .Where(a => a.ExecutionTime == HostStartupActionExecution.AfterHostedServicesStarted))
-        {
-            try
-            {
-                await action.Execute(token).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "startup action '{actionName}' faild on app start", action.GetType().FullName);
-            }
+            await startupAction.Execute(cancellationToken);
         }
 
     }
@@ -143,31 +112,5 @@ internal sealed class XafHost : IHost
         }
 
         _logger.LogDebug("Application stopped");
-    }
-
-    private async Task TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
-    {
-        // backgroundService.ExecuteTask may not be set (e.g. if the derived class doesn't call base.StartAsync)
-        var backgroundTask = backgroundService.ExecuteTask;
-        if (backgroundTask == null)
-        {
-            return;
-        }
-
-        try
-        {
-            await backgroundTask.ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            // When the host is being stopped, it cancels the background services.
-            // This isn't an error condition, so don't log it as an error.
-            if (_stopCalled && backgroundTask.IsCanceled && ex is OperationCanceledException)
-            {
-                return;
-            }
-
-            _logger.LogError(ex, "Background service: {backgroundService} throwed an exception", backgroundService);
-        }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace XAF.Hosting.Abstraction;
 public static class ServiceExtensions
 {
-    public static IServiceCollection AddStartupActions<TInitializer>(this IServiceCollection services)
+    public static IServiceCollection AddStartupAction<TInitializer>(this IServiceCollection services)
         where TInitializer : class, IHostStartupAction
     {
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostStartupAction, TInitializer>());

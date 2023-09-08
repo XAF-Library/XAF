@@ -1,23 +1,25 @@
 ﻿using Microsoft.Extensions.Logging;
 using XAF.Hosting.Abstraction;
-using XAF.Modularity.Abstraction;
 
-namespace XAF.Modularity.StartupActions;
-internal class ModuleInitializer : IHostStartupAction
+namespace XAF.Modularity.Abstraction.StartupActions;
+public class StartModules : IHostStartupAction
 {
     private readonly IModuleCatalog _modules;
     private readonly IServiceProvider _services;
-    private readonly ILogger<ModuleInitializer> _logger;
+    private readonly ILogger<StartModules> _logger;
 
-    public ModuleInitializer(IModuleCatalog modules, IServiceProvider services, ILogger<ModuleInitializer> logger)
+    public StartModules(IModuleCatalog modules, IServiceProvider services, ILogger<StartModules> logger)
     {
         _modules = modules;
         _services = services;
         _logger = logger;
     }
 
-    public HostStartupActionExecution ExecutionTime { get; set; } = HostStartupActionExecution.AfterHostedServicesStarted;
-    public int Priority => ModuleStartupActionPriorities.ModuleInitialization;
+    public StartupActionOrderRule ConfigureExecutionTime()
+    {
+        return StartupActionOrderRule.CreateFor<StartModules>()
+            .ExecuteAfter<StartHostedServices>();
+    }
 
     public async Task Execute(CancellationToken cancellation)
     {
@@ -30,7 +32,7 @@ internal class ModuleInitializer : IHostStartupAction
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error accoured while starting the {moduleName} Module", module.GetName());
+                _logger.LogError(ex, "An error occurred while starting the {moduleName} Module", module.GetName());
             }
         }
     }
