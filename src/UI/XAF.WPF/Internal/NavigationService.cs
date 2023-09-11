@@ -78,28 +78,6 @@ internal class NavigationService : INavigationService
         return backStack.CanNavigateForward;
     }
 
-    public void RegisterCanNavigateBackChangedCallback(object containerKey, Action<bool> callback)
-    {
-        if (!_backStacks.TryGetValue(containerKey, out var backStack))
-        {
-            backStack = new(_backStackCapacity);
-            _backStacks[containerKey] = backStack;
-        }
-
-        backStack.AddValueChangedCallBack(b => b.CanNavigateBack, callback);
-    }
-
-    public void ReigsterCanNavigateForwardChangedCallback(object containerKey, Action<bool> callback)
-    {
-        if (!_backStacks.TryGetValue(containerKey, out var backStack))
-        {
-            backStack = new(_backStackCapacity);
-            _backStacks[containerKey] = backStack;
-        }
-
-        backStack.AddValueChangedCallBack(b => b.CanNavigateBack, callback);
-    }
-
     public void NavigateBack(object containerKey)
     {
         if (!CanNavigateBack(containerKey))

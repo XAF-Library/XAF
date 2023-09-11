@@ -16,8 +16,7 @@ internal sealed class XafHost : IHost
 {
     private readonly ILogger<XafHost> _logger;
     private readonly IHostLifetime _hostLifetime;
-    private readonly ApplicationLifetime _applicationLifetime;
-    private IEnumerable<IHostedService> _hostedServices;
+    private readonly ApplicationLifetime _applicationLifetime;    
 
     private volatile bool _stopCalled;
 
@@ -43,7 +42,6 @@ internal sealed class XafHost : IHost
         }
         _logger = logger;
         _hostLifetime = hostLifetime;
-        _hostedServices = Enumerable.Empty<IHostedService>();
     }
 
     public void Dispose()
@@ -81,8 +79,8 @@ internal sealed class XafHost : IHost
         _applicationLifetime!.StopApplication();
 
         var exceptions = new List<Exception>();
-
-        foreach (var hostedService in _hostedServices)
+        var services = Services.GetServices<IHostedService>();
+        foreach (var hostedService in services)
         {
             try
             {

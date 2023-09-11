@@ -17,7 +17,7 @@ public class StartModules : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.Create<StartModules>()
+        return StartupActionOrderRule.Create()
             .ExecuteAfter<StartHostedServices>();
     }
 

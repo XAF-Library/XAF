@@ -20,12 +20,10 @@ internal class XafCommand<TParam> : IXafCommand<TParam>
 
     public bool CanExecute(object? parameter)
     {
-        if(_canExecute is null)
+        if(parameter is null)
         {
-            return true;
+            return CanExecute(default);
         }
-
-        ArgumentNullException.ThrowIfNull(parameter);
 
         return parameter is not TParam param
             ? throw new InvalidCastException($"Commandparameter of type {parameter.GetType()} can't be casted to: {typeof(TParam)}")

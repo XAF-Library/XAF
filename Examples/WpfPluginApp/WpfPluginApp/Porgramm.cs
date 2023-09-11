@@ -17,7 +17,6 @@ builder.AddSplashWindow<SplashWindowViewModel>();
 await builder.RegisterModuleAsync<WPFModule>(default);
 
 var app = builder.Build();
-
 var uiSyncContext = await app.GetUiSyncContext();
 app.AddRx(uiSyncContext);
 

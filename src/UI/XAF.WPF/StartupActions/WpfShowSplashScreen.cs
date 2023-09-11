@@ -6,7 +6,7 @@ using XAF.UI.WPF.Hosting;
 using XAF.Modularity.Abstraction.StartupActions;
 
 namespace XAF.UI.WPF.StartupActions;
-internal class WpfShowSplashScreen : IHostStartupAction
+public class WpfShowSplashScreen : IHostStartupAction
 {
     private readonly IWpfThread _wpfThread;
     private readonly ISplashWindowViewModel _splashViewModel;
@@ -19,7 +19,7 @@ internal class WpfShowSplashScreen : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.Create<WpfShowSplashScreen>()
+        return StartupActionOrderRule.Create()
             .ExecuteBefore<StartModules>()
             .ExecuteAfter<StartHostedServices>();
     }
@@ -65,7 +65,7 @@ internal class WpfSplashVmExecuteAfterModuleInitialization : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.Create<WpfSplashVmExecuteAfterModuleInitialization>()
+        return StartupActionOrderRule.Create()
             .ExecuteAfter<StartModules>()
             .ExecuteBefore<WpfShowShell>();
     }

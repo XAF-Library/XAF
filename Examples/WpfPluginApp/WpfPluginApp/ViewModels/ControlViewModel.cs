@@ -24,6 +24,6 @@ public class ControlViewModel : ViewModelBase
         // Create a command that executes a Navigation.
         NavigateToViewACommand = RxCommand.Create(() => navigationService.NavigateTo("PageViews", viewAVm));
 
-        OpenDialogCommand = XafCommand.CreateCommand(() => dialogService.ShowInputDialog<TestDialogViewModel, string, string>("Test"));
+        OpenDialogCommand = XafCommand.Create(() => dialogService.ShowInputDialog<TestDialogViewModel, string, string>("Test"));
     }
 }

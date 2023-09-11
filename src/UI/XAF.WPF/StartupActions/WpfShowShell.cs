@@ -5,7 +5,7 @@ using XAF.UI.WPF.Hosting;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.StartupActions;
-internal class WpfShowShell : IHostStartupAction
+public class WpfShowShell : IHostStartupAction
 {
     private readonly IViewProvider _viewProvider;
     private readonly IWpfThread _wpfThread;
@@ -18,7 +18,7 @@ internal class WpfShowShell : IHostStartupAction
 
     public StartupActionOrderRule ConfigureExecutionTime()
     {
-        return StartupActionOrderRule.Create<WpfShowShell>()
+        return StartupActionOrderRule.Create()
             .ExecuteAfter<StartModules>();
     }
 

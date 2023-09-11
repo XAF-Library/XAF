@@ -20,11 +20,7 @@ public interface INavigationService
 
     bool CanNavigateBack(object containerKey);
 
-    void RegisterCanNavigateBackChangedCallback(object containerKey, Action<bool> callback);
-
     bool CanNavigateForward(object containerKey);
-
-    void ReigsterCanNavigateForwardChangedCallback(object containerKey, Action<bool> callback);
 
     void NavigateBack(object containerKey);
 
