@@ -2,14 +2,16 @@
 public interface IDialogService
 {
     void ShowDialog<T>()
-        where T : IDialogViewModel;
+        where T : IActivatableViewModel;
 
-    void ShowDialog<TViewmodel, TParameter>(TParameter parameter)
-        where TViewmodel : IDialogViewModel<TParameter>;
+    void ShowDialog<TViewModel, TParameter>(TParameter parameter)
+        where TViewModel : IActivatableViewModel<TParameter>;
 
     TResult? ShowInputDialog<TViewModel, TResult>()
-        where TViewModel : IInputDialogViewModel<TResult>;
+        where TViewModel : IResultViewModel<TResult>;
 
-    TResult? ShowInputDialog<TViewModel, TParameter, TResult>(TParameter parameter)
-        where TViewModel: IInputDialogViewModel<TParameter,TResult>;
+    TResult? ShowInputDialog<TViewModel, TParameter,TResult>(TParameter parameter)
+        where TViewModel: IResultViewModel<TResult, TParameter>;
+
+    void CloseCurrentDialog();
 }

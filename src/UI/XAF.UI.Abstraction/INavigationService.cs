@@ -4,23 +4,21 @@ public interface INavigationService
     uint BackStackCapacity { get; set; }
 
     void NavigateTo<TViewModel>(object containerKey)
-        where TViewModel : INavigationTarget;
+        where TViewModel : IActivatableViewModel;
 
     void NavigateTo<TViewModel>(object containerKey, TViewModel viewModel)
-        where TViewModel : INavigationTarget;
+        where TViewModel : IActivatableViewModel;
 
     void NavigateTo<TViewModel, TParameter>(object containerKey, TParameter parameter)
-        where TViewModel : INavigationTarget<TParameter>;
+        where TViewModel : IActivatableViewModel<TParameter>;
 
-    void NavigateTo(Type viewModelType, object containerKey);
-
-    void NavigateTo(Type viewModelType, object containerKey, object? parameter);
+    void NavigateTo(Type viewModelType, object containerKey);    
 
     void AddNavigationCallback(object containerKey, Action<ViewDescriptor, IViewModel> callback);
 
     bool CanNavigateBack(object containerKey);
 
-    bool CanNavigateForward(object containerKey);
+    bool CanNavigateForward(object containerKey);    
 
     void NavigateBack(object containerKey);
 

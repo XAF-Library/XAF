@@ -5,7 +5,7 @@ using XAF.UI.Reactive.Commands;
 using XAF.UI.Reactive.ReactiveProperty;
 
 namespace WpfPlugin.ViewModels;
-public class ViewAViewModel : NavigationTarget
+public class ViewAViewModel : ViewModelBase, IActivatableViewModel
 {
     public RxProperty<string> Message { get; } = new();
 
@@ -20,12 +20,12 @@ public class ViewAViewModel : NavigationTarget
             Message.Select(s => !string.IsNullOrWhiteSpace(s)));
     }
 
-    public override void OnNavigatedFrom()
+    public void OnDeactivated()
     {
         // Do Some stuff after navigating away from this view.
     }
 
-    public override void OnNavigatedTo()
+    public void OnActivated()
     {
         // Do Some stuff after navigating to this view.
         Message.Value = string.Empty;
