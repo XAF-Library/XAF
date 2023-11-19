@@ -1,45 +1,30 @@
-﻿using System.Windows;
+﻿using DynamicData;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Resources.Extensions;
+using System.Windows;
 using System.Windows.Controls;
+using XAF.UI.Abstraction.ViewComposition;
+using XAF.UI.ViewComposition;
 using XAF.UI.WPF.ExtensionMethodes;
+using XAF.UI.WPF.ExtensionMethods;
+using XAF.Utilities.ExtensionMethods;
 
 namespace XAF.UI.WPF.ViewAdapters;
 public sealed class ContentControlAdapter : ViewAdapterBase<ContentControl>
 {
-    public override void Clear(ContentControl container)
+    public override void Adapt(IViewPresenter presenter, ContentControl target, CompositeDisposable disposables)
     {
-        container.Content = null;
-    }
-
-    public override bool Contains(ContentControl container, FrameworkElement view)
-    {
-        return container.Content == view;
-    }
-
-    public override FrameworkElement? GetActiveView(ContentControl container)
-    {
-        return container.Content as FrameworkElement;
-    }
-
-    public override IEnumerable<FrameworkElement> GetElements(ContentControl container)
-    {
-        if(container.Content is FrameworkElement element)
+        if(target.Content != null || target.HasBinding(ContentControl.ContentProperty))
         {
-            yield return element;
+            throw new InvalidOperationException("the ContentControl's Content property is not empty");
         }
-    }
-
-    public override void Insert(ContentControl container, FrameworkElement view)
-    {
-        container.Content = view;
-    }
-
-    public override void Remove(ContentControl container, FrameworkElement view)
-    {
-        container.Content = null;
-    }
-
-    public override void Select(ContentControl container, FrameworkElement view)
-    {
-        container.Content = view;
+        
+        presenter.ActiveViews
+            .Connect()
+            .Sort(presenter.Comparer)
+            .QueryWhenChanged()
+            .Subscribe(c => target.Content = c.FirstOrDefault())
+            .DiposeWith(disposables);
     }
 }

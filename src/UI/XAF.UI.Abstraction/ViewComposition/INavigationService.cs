@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XAF.UI.Abstraction.Dialog;
-public interface IDialogProperties
+namespace XAF.UI.Abstraction.ViewComposition;
+public interface INavigationService
 {
-    string Title { get; }
 }
