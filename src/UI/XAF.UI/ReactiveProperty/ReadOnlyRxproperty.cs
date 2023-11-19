@@ -2,15 +2,15 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Runtime.ExceptionServices;
-using XAF.UI.Reactive;
+using XAF.UI.Abstraction.ReactiveProperty;
 
-namespace XAF.UI.Reactive.ReactiveProperty;
+namespace XAF.UI.ReactiveProperty;
 public class ReadOnlyRxProperty<T> : IReadOnlyRxProperty<T>, IObserver<T>
 {
 
     private readonly IEqualityComparer<T> _comparer;
     private readonly IScheduler _eventScheduler;
-    
+
     private readonly List<IObserver<T>> _observers = new();
     private readonly IDisposable _sourceDisposable;
 

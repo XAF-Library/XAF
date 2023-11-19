@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using XAF.UI.Abstraction;
 
-namespace XAF.UI.Abstraction.ViewComposition;
+namespace XAF.UI.Abstraction;
 
 public interface IViewDescriptorCollection
 {

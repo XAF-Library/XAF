@@ -9,7 +9,7 @@ using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Commands;
 using XAF.UI.Abstraction.Dialog;
 using XAF.UI.Commands;
-using XAF.UI.Reactive.Commands;
+using XAF.UI.ReactiveCommands;
 
 namespace WpfPluginApp.ViewModels;
 public class ControlViewModel : ViewModelBase

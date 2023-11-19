@@ -1,4 +1,4 @@
-﻿namespace XAF.UI.Reactive.ReactiveProperty;
+﻿namespace XAF.UI.Abstraction.ReactiveProperty;
 
 [Flags]
 public enum RxPropertySettings

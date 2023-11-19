@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Attributes;
-using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.Internal;
 

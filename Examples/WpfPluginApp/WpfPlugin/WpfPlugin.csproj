@@ -15,7 +15,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\src\UI\XAF.UI.Reactive\XAF.UI.Reactive.csproj" />
 	  <ProjectReference Include="..\..\..\src\UI\XAF.WPF\XAF.UI.WPF.csproj" />
 	</ItemGroup>
 

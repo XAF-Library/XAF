@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Concurrency;
+using XAF.UI.Abstraction.ReactiveProperty;
 
-namespace XAF.UI.Reactive.ReactiveProperty;
+namespace XAF.UI.ReactiveProperty;
 public static class RxPropertyExtensions
 {
     public static RxProperty<TProperty> ToRxProperty<TProperty>(this TProperty property,

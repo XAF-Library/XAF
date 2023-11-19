@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using XAF.UI.Abstraction;
-using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.ViewComposition;
 using XAF.Utilities.ExtensionMethods;
 

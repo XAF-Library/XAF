@@ -7,7 +7,6 @@ using XAF.UI.WPF.ExtensionMethodes;
 using XAF.Utilities;
 using XAF.Utilities.ExtensionMethods;
 using XAF.UI.Abstraction.Attributes;
-using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.WPF.Internal;
 internal class NavigationService : INavigationService

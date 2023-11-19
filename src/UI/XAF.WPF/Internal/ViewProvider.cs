@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using XAF.UI.Abstraction;
-using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.Internal;

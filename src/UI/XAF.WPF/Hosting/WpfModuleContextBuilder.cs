@@ -1,7 +1,7 @@
 ﻿using System.CodeDom;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity;
-using XAF.UI.Abstraction.ViewComposition;
+using XAF.UI.Abstraction;
 using XAF.UI.WPF.ViewComposition;
 
 namespace XAF.UI.WPF.Hosting;

@@ -7,8 +7,9 @@ using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Reflection;
 using System.Windows.Input;
+using XAF.UI.Abstraction.ReactiveCommands;
 
-namespace XAF.UI.Reactive.Commands;
+namespace XAF.UI.ReactiveCommands;
 
 
 public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>
@@ -39,9 +40,9 @@ public class RxCommand<TParam, TResult> : IRxCommand<TParam, TResult>
 
         _execute = execute;
         outputScheduler ??= Schedulers.TaskPoolScheduler;
-        var info  = new Subject<ExecutionInfo>();
+        var info = new Subject<ExecutionInfo>();
         _synchronizedExecutionInfo = Subject.Synchronize(info, outputScheduler);
-        _isExecuting = _synchronizedExecutionInfo.Scan(0, (acc, next) 
+        _isExecuting = _synchronizedExecutionInfo.Scan(0, (acc, next)
             => next.Demarcation switch
             {
                 ExecutionDemarcation.Begin => acc + 1,

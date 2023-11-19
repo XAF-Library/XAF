@@ -1,6 +1,5 @@
 ﻿using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Attributes;
-using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.Behaviors;
 using XAF.UI.WPF.ExtensionMethodes;
 using XAF.UI.WPF.ViewComposition;

@@ -2,9 +2,9 @@
 using System.Diagnostics.Contracts;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
-using XAF.UI.Reactive;
+using XAF.UI.Abstraction.ReactiveProperty;
 
-namespace XAF.UI.Reactive.ReactiveProperty;
+namespace XAF.UI.ReactiveProperty;
 public class RxProperty<T> : IRxProperty<T>
 {
     private readonly List<IObserver<T>> _observers = new();

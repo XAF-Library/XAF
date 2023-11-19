@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XAF.UI.Abstraction.Attributes;
-using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI;
 using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;
+using XAF.UI.Abstraction;
 
 namespace XAF.UI.WPF.ExtensionMethodes;
 public static class ViewDescriptorCollectionExtensions

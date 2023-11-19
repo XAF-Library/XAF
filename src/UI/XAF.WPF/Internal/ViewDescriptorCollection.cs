@@ -4,7 +4,6 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using XAF.UI.Abstraction;
-using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.ViewComposition;
 using XAF.Utilities.ExtensionMethods;
