@@ -34,7 +34,7 @@ public abstract class ViewPresenter<TView> : IViewPresenter where TView : class
     {
         Connect(Target, 
             Views.Connect().Sort(Comparer),
-            ActiveViews.Connect().Sort(Comparer);
+            ActiveViews.Connect().Sort(Comparer));
     }
 
     public abstract void Connect(

@@ -1,7 +1,7 @@
 ﻿using XAF.UI.Abstraction.ViewModels;
 
 namespace XAF.UI.Abstraction.ViewComposition;
-public interface IViewCompositionService
+public interface IViewService
 {
     IViewPresenter GetPresenter(object key);
 
@@ -27,6 +27,12 @@ public interface IViewCompositionService
         where TViewModel : IXafViewModel;
 
     void Deactivate<TViewModel>(TViewModel viewModel, object key)
+        where TViewModel : IXafViewModel;
+
+    void Show<TViewModel>()
+        where TViewModel : IXafViewModel;
+
+    void Show<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
 
 }
