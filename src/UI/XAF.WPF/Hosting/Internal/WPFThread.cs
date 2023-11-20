@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
+using System.Reactive.Concurrency;
 using System.Windows;
 using System.Windows.Threading;
+using XAF.UI.Abstraction;
 
 namespace XAF.UI.WPF.Hosting.Internal;
 internal class WpfThread : IWpfThread
@@ -25,7 +27,6 @@ internal class WpfThread : IWpfThread
     public bool AppCreated { get; private set; }
     public Dispatcher? UiDispatcher { get; private set; }
     public Window? SplashWindow { get; set; }
-    public SynchronizationContext? UiSyncContext { get; private set; }
 
     public WpfThread(IHostApplicationLifetime applicationLifetime, IServiceProvider serviceProvider)
     {
@@ -47,7 +48,9 @@ internal class WpfThread : IWpfThread
     private void InternalThread()
     {
         UiDispatcher = Dispatcher.CurrentDispatcher;
-        UiSyncContext = new DispatcherSynchronizationContext(UiDispatcher);
+        var syncContext = new DispatcherSynchronizationContext(UiDispatcher);
+        SynchronizationContext.SetSynchronizationContext(syncContext);
+        Schedulers.MainScheduler = Scheduler.CurrentThread;
 
         Application = _serviceProvider.GetRequiredService<Application>();
         AppCreated = true;

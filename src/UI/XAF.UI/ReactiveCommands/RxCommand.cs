@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Reflection;
 using System.Windows.Input;
+using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.ReactiveCommands;
 
 namespace XAF.UI.ReactiveCommands;

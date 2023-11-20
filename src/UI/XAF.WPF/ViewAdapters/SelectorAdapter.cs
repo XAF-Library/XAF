@@ -1,52 +1,27 @@
-﻿using System.Windows;
+﻿using DynamicData;
+using System.Reactive.Linq;
+using System.Windows;
 using System.Windows.Controls.Primitives;
+using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.ExtensionMethods;
+using XAF.UI.ViewComposition;
+using XAF.Utilities.ExtensionMethods;
 
 namespace XAF.UI.WPF.ViewAdapters;
-public class SelectorAdapter : ViewAdapterBase<Selector>
+public class SelectorAdapter : SingleActiveViewPresenter<Selector>
 {
-    public override void Clear(Selector container)
+    public override void Connect(Selector view)
     {
-        container.Items.Clear();
-    }
+        Views.Connect()
+            .PrepareForViewChange(this)
+            .Bind(out var views)
+            .Subscribe()
+            .DisposeWith(Disposables);
+        view.ItemsSource = views;
 
-    public override bool Contains(Selector container, FrameworkElement view)
-    {
-        return container.Items.Contains(view);
-    }
-
-    public override FrameworkElement? GetActiveView(Selector container)
-    {
-        return container.SelectedItem as FrameworkElement;
-    }
-
-    public override IEnumerable<FrameworkElement> GetElements(Selector container)
-    {
-        return container.Items.OfType<FrameworkElement>();
-    }
-
-    public override void Insert(Selector container, FrameworkElement view)
-    {
-        if (!Contains(container, view))
-        {
-            container.Items.Add(view);
-        }
-    }
-
-    public override void Remove(Selector container, FrameworkElement view)
-    {
-        if (Contains(container, view))
-        {
-            container.Items.Remove(view);
-        }
-    }
-
-    public override void Select(Selector container, FrameworkElement view)
-    {
-        if (!Contains(container, view))
-        {
-            Insert(container, view);
-        }
-
-        container.SelectedItem = view;
+        ActiveViews.Connect()
+            .PrepareForViewChange(this)
+            .QueryWhenChanged(c => view.SelectedItem = c.FirstOrDefault()?.View)
+            .Subscribe();
     }
 }

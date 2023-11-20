@@ -23,7 +23,6 @@ public interface IWpfThread
     SynchronizationContext? UiSyncContext { get; }
     Dispatcher? UiDispatcher { get; }
 
-
     Task StartAsync(CancellationToken cancellation);
     Task StopAsync(CancellationToken cancellation);
 

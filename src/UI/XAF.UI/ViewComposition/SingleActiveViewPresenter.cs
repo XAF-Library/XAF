@@ -9,11 +9,7 @@ namespace XAF.UI.ViewComposition;
 public abstract class SingleActiveViewPresenter<TView> : ViewPresenter<TView>
     where TView : class
 {
-    protected SingleActiveViewPresenter(object key, TView targetView) : base(key, targetView)
-    {
-    }
-
-    public override void Activate(IXafView view)
+    public override void Activate(IXafViewBundle view)
     {
         var currentActive = ActiveViews.Items.FirstOrDefault();
 
@@ -23,5 +19,14 @@ public abstract class SingleActiveViewPresenter<TView> : ViewPresenter<TView>
         }
 
         base.Activate(view);
+    }
+
+    public override void Add(IXafViewBundle view)
+    {
+        base.Add(view);
+        if (ActiveViews.Count == 0)
+        {
+            Activate(view);
+        }
     }
 }

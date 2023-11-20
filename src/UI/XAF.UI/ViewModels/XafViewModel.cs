@@ -8,12 +8,12 @@ using XAF.UI.Abstraction.ViewModels;
 namespace XAF.UI.ViewModels;
 public abstract class XafViewModel : IXafViewModel
 {
-    public abstract void PreInitialize();
+    public abstract void Preload();
     
-    public abstract Task Initialize();
+    public abstract Task Load();
 }
 
 public abstract class XafViewModel<TParameter> : IXafViewModel<TParameter>
 {
-    public abstract void PreInitialize(TParameter parameter);
+    public abstract void Preload(TParameter parameter);
 }

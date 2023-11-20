@@ -5,34 +5,29 @@ public interface IViewService
 {
     IViewPresenter GetPresenter(object key);
 
-    void Add<TViewModel>(object key)
+    void AddPresenter(IViewPresenter presenter, object key);
+
+    Task AddViewAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    void Add<TViewModel>(TViewModel viewModel, object key)
+    Task AddViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
 
-    void Remove<TViewModel>(object key)
+    Task RemoveViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    void Remove<TViewModel>(TViewModel viewModel, object key)
+    Task RemoveViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
 
-    void Activate<TViewModel>(object key)
+    Task ActivateViewAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    void Activate<TViewModel>(TViewModel viewModel, object key)
+    Task ActivateViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
 
-    void Deactivate<TViewModel>(object key)
+    Task DeactivateViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    void Deactivate<TViewModel>(TViewModel viewModel, object key)
+    Task DeactivateViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
-
-    void Show<TViewModel>()
-        where TViewModel : IXafViewModel;
-
-    void Show<TViewModel>(TViewModel viewModel)
-        where TViewModel : IXafViewModel;
-
 }

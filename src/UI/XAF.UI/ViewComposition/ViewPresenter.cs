@@ -4,45 +4,28 @@ using System.Reactive.Subjects;
 using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.ViewComposition;
-public abstract class ViewPresenter<TView> : IViewPresenter where TView : class
+public abstract class ViewPresenter<TView> : IViewPresenter<TView> where TView : class
 {
-    private readonly SourceList<IXafView> _views;
-    private readonly SourceList<IXafView> _activeViews;
+    private readonly SourceList<IXafViewBundle> _views;
+    private readonly SourceList<IXafViewBundle> _activeViews;
     private bool _disposedValue;
 
-    public object Key { get; }
     public CompositeDisposable Disposables { get; }
-    public ISubject<IComparer<IXafView>> Comparer { get; }
-    public IObservableList<IXafView> Views => _views;
-    public IObservableList<IXafView> ActiveViews => _activeViews;
-    public TView Target { get; }
+    public ISubject<IComparer<IXafViewBundle>> Comparer { get; }
+    public IObservableList<IXafViewBundle> Views => _views;
+    public IObservableList<IXafViewBundle> ActiveViews => _activeViews;
 
-    object IViewPresenter.Target => Target;
-
-    protected ViewPresenter(object key, TView targetView)
+    protected ViewPresenter()
     {
-        Key = key;
-        Target = targetView;
-
-        Comparer = new BehaviorSubject<IComparer<IXafView>>(Comparer<IXafView>.Default);
+        Comparer = new BehaviorSubject<IComparer<IXafViewBundle>>(Comparer<IXafViewBundle>.Default);
         Disposables = new CompositeDisposable();
-        _views = new SourceList<IXafView>();
-        _activeViews = new SourceList<IXafView>();
+        _views = new SourceList<IXafViewBundle>();
+        _activeViews = new SourceList<IXafViewBundle>();
     }
 
-    public virtual void Connect(object targetView)
-    {
-        Connect(Target, 
-            Views.Connect().Sort(Comparer),
-            ActiveViews.Connect().Sort(Comparer));
-    }
+    public abstract void Connect(TView view);
 
-    public abstract void Connect(
-        TView view,
-        IObservable<IChangeSet<IXafView>> views,
-        IObservable<IChangeSet<IXafView>> activeViews);
-
-    public virtual void Add(IXafView view)
+    public virtual void Add(IXafViewBundle view)
     {
         if (!_views.Items.Contains(view))
         {
@@ -50,13 +33,13 @@ public abstract class ViewPresenter<TView> : IViewPresenter where TView : class
         }
     }
 
-    public virtual void Remove(IXafView view)
+    public virtual void Remove(IXafViewBundle view)
     {
         _activeViews.Remove(view);
         _views.Remove(view);
     }
 
-    public virtual void Activate(IXafView view)
+    public virtual void Activate(IXafViewBundle view)
     {
         if (!_views.Items.Contains(view))
         {
@@ -66,7 +49,7 @@ public abstract class ViewPresenter<TView> : IViewPresenter where TView : class
         _activeViews.Add(view);
     }
 
-    public virtual void Deactivate(IXafView view)
+    public virtual void Deactivate(IXafViewBundle view)
     {
         _activeViews.Remove(view);
     }

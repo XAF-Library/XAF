@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace XAF.UI.Abstraction.ViewModels;
 public interface IXafViewModel
 {
-    void PreInitialize();
-    Task Initialize();
+    void Preload();
+    Task Load();
+    Task Unload();
 }
 
 public interface IXafViewModel<in TParameter>
 {
-    void PreInitialize(TParameter parameter);
+    void Preload(TParameter parameter);
 }

@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using XAF.UI.Abstraction.ViewModels;
 
 namespace XAF.UI.Abstraction.ViewComposition;
-public interface IXafView
+public interface IXafViewBundle
 {
+    IViewMetadata ViewMetadata { get; }
+
     IXafViewModel ViewModel { get; }
+
+    object View { get; }
 }
 
-public interface IXafView<TViewModel> : IXafViewModel
+public interface IXafViewBundle<TViewModel> : IXafViewBundle
     where TViewModel : IXafViewModel
 {
     TViewModel ViewModel { get; }

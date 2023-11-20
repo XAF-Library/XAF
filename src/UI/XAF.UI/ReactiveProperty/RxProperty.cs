@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
+using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.ReactiveProperty;
 
 namespace XAF.UI.ReactiveProperty;
