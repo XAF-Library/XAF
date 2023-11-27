@@ -4,28 +4,32 @@ using System.Reactive.Subjects;
 using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.ViewComposition;
-public abstract class ViewPresenter<TView> : IViewPresenter<TView> where TView : class
+public class ViewPresenter : IViewPresenter
 {
-    private readonly SourceList<IXafViewBundle> _views;
-    private readonly SourceList<IXafViewBundle> _activeViews;
+    private readonly SourceList<IXafBundle> _views;
+    private readonly SourceList<IXafBundle> _activeViews;
+    private readonly IViewAdapterCollection _viewAdapters;
     private bool _disposedValue;
+    private readonly Dictionary<object, CompositeDisposable> _viewDisposables;
 
-    public CompositeDisposable Disposables { get; }
-    public ISubject<IComparer<IXafViewBundle>> Comparer { get; }
-    public IObservableList<IXafViewBundle> Views => _views;
-    public IObservableList<IXafViewBundle> ActiveViews => _activeViews;
+    public ISubject<IComparer<IXafBundle>> Comparer { get; }
+    public IObservableList<IXafBundle> Views => _views;
+    public IObservableList<IXafBundle> ActiveViews => _activeViews;
 
-    protected ViewPresenter()
+    public IBundleProvider BundleProvider { get; }
+
+    public ViewPresenter(IViewAdapterCollection viewAdapters, IBundleProvider bundleProvider)
     {
-        Comparer = new BehaviorSubject<IComparer<IXafViewBundle>>(Comparer<IXafViewBundle>.Default);
-        Disposables = new CompositeDisposable();
-        _views = new SourceList<IXafViewBundle>();
-        _activeViews = new SourceList<IXafViewBundle>();
+        Comparer = new BehaviorSubject<IComparer<IXafBundle>>(Comparer<IXafBundle>.Default);
+
+        _viewDisposables = new();
+        _views = new SourceList<IXafBundle>();
+        _activeViews = new SourceList<IXafBundle>();
+        _viewAdapters = viewAdapters;
+        BundleProvider = bundleProvider;
     }
 
-    public abstract void Connect(TView view);
-
-    public virtual void Add(IXafViewBundle view)
+    public virtual void Add(IXafBundle view)
     {
         if (!_views.Items.Contains(view))
         {
@@ -33,13 +37,13 @@ public abstract class ViewPresenter<TView> : IViewPresenter<TView> where TView :
         }
     }
 
-    public virtual void Remove(IXafViewBundle view)
+    public virtual void Remove(IXafBundle view)
     {
         _activeViews.Remove(view);
         _views.Remove(view);
     }
 
-    public virtual void Activate(IXafViewBundle view)
+    public virtual void Activate(IXafBundle view)
     {
         if (!_views.Items.Contains(view))
         {
@@ -49,7 +53,7 @@ public abstract class ViewPresenter<TView> : IViewPresenter<TView> where TView :
         _activeViews.Add(view);
     }
 
-    public virtual void Deactivate(IXafViewBundle view)
+    public virtual void Deactivate(IXafBundle view)
     {
         _activeViews.Remove(view);
     }
@@ -60,7 +64,10 @@ public abstract class ViewPresenter<TView> : IViewPresenter<TView> where TView :
         {
             if (disposing)
             {
-                Disposables.Dispose();
+                foreach (var disposables in _viewDisposables.Values)
+                {
+                    disposables.Dispose();
+                }
             }
 
             _disposedValue = true;
@@ -71,5 +78,22 @@ public abstract class ViewPresenter<TView> : IViewPresenter<TView> where TView :
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    public void Connect(object view)
+    {
+        var disposables = new CompositeDisposable();
+        _viewDisposables.Add(view, disposables);
+        var adapter = _viewAdapters.GetAdapterFor(view.GetType());
+        adapter.Adapt(view, this, disposables);
+    }
+
+    public void Disconnect(object view)
+    {
+        if(_viewDisposables.TryGetValue(view, out var disposables))
+        {
+            disposables.Dispose();
+            _viewDisposables.Remove(view);
+        }
     }
 }

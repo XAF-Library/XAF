@@ -11,7 +11,7 @@ using XAF.UI.Abstraction.ViewComposition;
 namespace XAF.UI.Abstraction.ExtensionMethods;
 public static class XafBundleExtensions
 {
-    public static IObservable<IChangeSet<IXafViewBundle>> PrepareForViewChange(this IObservable<IChangeSet<IXafViewBundle>> observable, IViewPresenter viewPresenter)
+    public static IObservable<IChangeSet<IXafBundle>> PrepareForViewChange(this IObservable<IChangeSet<IXafBundle>> observable, IViewPresenter viewPresenter)
     {
         return observable.Sort(viewPresenter.Comparer)
             .ObserveOn(Schedulers.MainScheduler);

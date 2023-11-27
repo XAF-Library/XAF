@@ -1,21 +1,21 @@
 ﻿using DynamicData;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Controls;
-using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.ExtensionMethods;
 using XAF.UI.ViewComposition;
 using XAF.Utilities.ExtensionMethods;
 
 namespace XAF.UI.WPF.ViewAdapters;
-public sealed class ContentControlPresenter : SingleActiveViewPresenter<ContentControl>
+public sealed class ContentControlAdapter : ViewAdapter<ContentControl, SingleActiveViewPresenter>
 {
-    public override void Connect(ContentControl view)
+    public override void Adapt(ContentControl view, SingleActiveViewPresenter viewPresenter, CompositeDisposable disposables)
     {
-        ActiveViews
+        viewPresenter.ActiveViews
             .Connect()
-            .PrepareForViewChange(this)
+            .PrepareForViewChange(viewPresenter)
             .QueryWhenChanged(c => view.Content = c.FirstOrDefault()?.View)
             .Subscribe()
-            .DisposeWith(Disposables);
+            .DisposeWith(disposables);
     }
 }

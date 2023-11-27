@@ -8,12 +8,20 @@ using XAF.UI.Abstraction.ViewModels;
 namespace XAF.UI.ViewModels;
 public abstract class XafViewModel : IXafViewModel
 {
-    public abstract void Preload();
-    
-    public abstract Task Load();
+    public virtual void Preload() { }
+
+    public virtual Task Load()
+    {
+        return Task.CompletedTask;
+    }
+
+    public virtual Task Unload()
+    {
+        return Task.CompletedTask;
+    }
 }
 
-public abstract class XafViewModel<TParameter> : IXafViewModel<TParameter>
+public abstract class XafViewModel<TParameter> : XafViewModel, IXafViewModel<TParameter>
 {
     public abstract void Preload(TParameter parameter);
 }

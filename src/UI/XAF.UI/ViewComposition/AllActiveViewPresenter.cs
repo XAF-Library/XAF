@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.ViewComposition;
-public abstract class AllActiveViewPresenter<TView> : ViewPresenter<TView>
-    where TView : class
+public class AllActiveViewPresenter: ViewPresenter
 {
-    public override void Add(IXafViewBundle view)
+    public override void Add(IXafBundle view)
     {
         base.Add(view);
         Activate(view);
     }
 
-    public override void Activate(IXafViewBundle view)
+    public override void Activate(IXafBundle view)
     {
         throw new InvalidOperationException("Could not activate view in an all active view presenter");
     }
 
-    public override void Deactivate(IXafViewBundle view)
+    public override void Deactivate(IXafBundle view)
     {
         throw new InvalidOperationException("Could not deactivate view in an all active view presenter");
     }

@@ -7,29 +7,40 @@ using XAF.Hosting.Abstraction;
 using XAF.Modularity.Extensions;
 using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Dialog;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.ExtensionMethodes;
 using XAF.UI.WPF.Hosting.Internal;
 using XAF.UI.WPF.Internal;
 using XAF.UI.WPF.StartupActions;
 using XAF.UI.WPF.ViewAdapters;
 using XAF.UI.WPF.ViewComposition;
+using XAF.UI.WPF.ViewComposition.Internal;
 
 namespace XAF.UI.WPF.Hosting;
 public static class HostBuilderExtensions
 {
-    public static IXafHostBuilder ConfigureWPF(this IXafHostBuilder builder)
+    public static IXafHostBuilder UseWPF(this IXafHostBuilder builder)
     {
-        SetupBaseApp(builder);
-        builder.Services.TryAddSingleton<Application, Application>();
-        return builder;
+        return builder.UseWpf<Application>();
     }
 
-    public static IXafHostBuilder ConfigureWpf<TApplication>(this IXafHostBuilder builder)
+    public static IXafHostBuilder UseWpf<TApplication>(this IXafHostBuilder builder)
         where TApplication : Application
     {
 
-        SetupBaseApp(builder);
         builder.Services.TryAddSingleton<Application, TApplication>();
+
+        builder.Services.AddHostedService<WpfApp>();
+        builder.Services.AddStartupAction<WpfShowShell>();
+
+        builder.Services.AddSingleton<IHostLifetime, WpfLifetime>();
+
+        builder.Services.TryAddSingleton<IWpfThread, WpfThread>();
+        builder.Services.TryAddTransient<IBundleProvider, BundleProvider>();
+
+        builder.Services.AddTransient<DialogWindow>();
+        builder.ConfigureModularity();
+
         return builder;
     }
 
@@ -40,39 +51,5 @@ public static class HostBuilderExtensions
         builder.Services.AddStartupAction<WpfShowSplashScreen>();
         builder.Services.AddStartupAction<WpfSplashVmExecuteAfterModuleInitialization>();
         return builder;
-    }
-
-    private static void SetupBaseApp(IXafHostBuilder builder)
-    {
-        var viewAdapters = new ViewAdapterCollection();
-        var viewDescriptorCollection = new ViewDescriptorCollection(builder.Services);
-
-        viewDescriptorCollection.AddDefaultDecorators();
-        viewDescriptorCollection.AddDefaultInitilizers();
-
-        builder.Services.AddHostedService<WpfApp>();
-        builder.Services.AddStartupAction<WpfShowShell>();
-
-        builder.Services.AddSingleton<IHostLifetime, WpfLifetime>();
-        builder.Services.AddSingleton<IViewAdapterCollection>(viewAdapters);
-        builder.Services.AddSingleton(s => viewDescriptorCollection.BuildViewDescriptorProvider());
-
-        builder.Services.TryAddSingleton<IWpfThread, WpfThread>();
-        builder.Services.TryAddSingleton<IViewCompositionService, ViewCompositionService>();
-        builder.Services.TryAddSingleton<IViewProvider, ViewProvider>();
-        builder.Services.TryAddSingleton<INavigationService, NavigationService>();
-        builder.Services.TryAddSingleton<IViewCompositionService, ViewCompositionService>();
-        builder.Services.TryAddSingleton<IDialogService, DialogService>();
-
-        builder.Services.AddTransient<DialogWindow>();
-
-        var executingAssembly = Assembly.GetEntryAssembly()!;
-
-        viewDescriptorCollection.AddViewsFromAssembly(executingAssembly);
-        viewAdapters.AddAdaptersFromAssembly(executingAssembly);
-        viewAdapters.AddAdaptersFromAssembly(Assembly.GetAssembly(typeof(ContentControlAdapter))!);
-
-        builder.ConfigureModularity();
-        builder.UseModuleRegistrationContextBuilder(new WpfModuleContextBuilder(viewDescriptorCollection, viewAdapters));
     }
 }

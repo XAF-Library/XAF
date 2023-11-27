@@ -11,25 +11,23 @@ using XAF.UI.Abstraction.ViewModels;
 namespace XAF.UI.Abstraction.ViewComposition;
 public interface IViewPresenter : IDisposable
 {
-    CompositeDisposable Disposables { get; }
+    void Add(IXafBundle view);
 
-    void Add(IXafViewBundle view);
+    void Remove(IXafBundle view);
 
-    void Remove(IXafViewBundle view);
+    void Activate(IXafBundle view);
 
-    void Activate(IXafViewBundle view);
+    void Deactivate(IXafBundle view);
 
-    void Deactivate(IXafViewBundle view);
+    void Connect(object view);
 
-    ISubject<IComparer<IXafViewBundle>> Comparer { get; }
+    void Disconnect(object view);
 
-    IObservableList<IXafViewBundle> Views { get; }
+    IBundleProvider BundleProvider { get; }
 
-    IObservableList<IXafViewBundle> ActiveViews { get; }
-}
+    ISubject<IComparer<IXafBundle>> Comparer { get; }
 
-public interface IViewPresenter<TView> : IViewPresenter
-    where TView : class
-{
-    void Connect(TView targetView);
+    IObservableList<IXafBundle> Views { get; }
+
+    IObservableList<IXafBundle> ActiveViews { get; }
 }

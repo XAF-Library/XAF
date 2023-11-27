@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using XAF.UI.Abstraction.ViewModels;
 
 namespace XAF.UI.Abstraction.ViewComposition;
-public interface IXafViewBundle
+public interface IXafBundle
 {
-    IViewMetadata ViewMetadata { get; }
-
     IXafViewModel ViewModel { get; }
 
     object View { get; }
+
+    IBundleMetadata Metadata { get; }
 }
 
-public interface IXafViewBundle<TViewModel> : IXafViewBundle
-    where TViewModel : IXafViewModel
+public interface IXafBundle<TViewModel> : IXafBundle
+    where TViewModel : IXafViewModel 
 {
-    TViewModel ViewModel { get; }
+    new TViewModel ViewModel { get; }
 }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.ViewComposition;
-public abstract class SingleActiveViewPresenter<TView> : ViewPresenter<TView>
-    where TView : class
+public class SingleActiveViewPresenter : ViewPresenter
 {
-    public override void Activate(IXafViewBundle view)
+    public override void Activate(IXafBundle view)
     {
         var currentActive = ActiveViews.Items.FirstOrDefault();
 
@@ -21,7 +20,7 @@ public abstract class SingleActiveViewPresenter<TView> : ViewPresenter<TView>
         base.Activate(view);
     }
 
-    public override void Add(IXafViewBundle view)
+    public override void Add(IXafBundle view)
     {
         base.Add(view);
         if (ActiveViews.Count == 0)

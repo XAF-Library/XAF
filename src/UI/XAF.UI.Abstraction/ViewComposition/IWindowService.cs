@@ -31,4 +31,6 @@ public interface IWindowService
 
     Task CloseAsync<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
+
+    Task ShowShell();
 }

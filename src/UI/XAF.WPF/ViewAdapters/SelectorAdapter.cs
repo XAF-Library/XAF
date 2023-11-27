@@ -1,27 +1,27 @@
 ﻿using DynamicData;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows;
 using System.Windows.Controls.Primitives;
-using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.ExtensionMethods;
 using XAF.UI.ViewComposition;
 using XAF.Utilities.ExtensionMethods;
 
 namespace XAF.UI.WPF.ViewAdapters;
-public class SelectorAdapter : SingleActiveViewPresenter<Selector>
+public class SelectorAdapter : ViewAdapter<Selector, SingleActiveViewPresenter>
 {
-    public override void Connect(Selector view)
+    public override void Adapt(Selector view, SingleActiveViewPresenter viewPresenter, CompositeDisposable disposables)
     {
-        Views.Connect()
-            .PrepareForViewChange(this)
+        viewPresenter.Views.Connect()
+            .PrepareForViewChange(viewPresenter)
             .Bind(out var views)
             .Subscribe()
-            .DisposeWith(Disposables);
+            .DisposeWith(disposables);
         view.ItemsSource = views;
 
-        ActiveViews.Connect()
-            .PrepareForViewChange(this)
+        viewPresenter.ActiveViews.Connect()
+            .PrepareForViewChange(viewPresenter)
             .QueryWhenChanged(c => view.SelectedItem = c.FirstOrDefault()?.View)
-            .Subscribe();
+            .Subscribe()
+            .DisposeWith(disposables);
     }
 }

@@ -12,7 +12,7 @@ public interface IXafViewModel
     Task Unload();
 }
 
-public interface IXafViewModel<in TParameter>
+public interface IXafViewModel<in TParameter> : IXafViewModel
 {
     void Preload(TParameter parameter);
 }

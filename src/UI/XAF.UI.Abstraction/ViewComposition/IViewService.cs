@@ -19,11 +19,20 @@ public interface IViewService
     Task RemoveViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
 
-    Task ActivateViewAsync<TViewModel>(object key)
+    Task ActivateViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
     Task ActivateViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
+
+    Task ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, TViewModel viewModel, object key)
+        where TViewModel : IXafViewModel<TParameter>;
+
+    Task ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, object key)
+        where TViewModel : IXafViewModel<TParameter>;
+
+    Task ActivateViewsAsync<TViewModel, TParameter>(TParameter parameter, object key)
+        where TViewModel : IXafViewModel<TParameter>;
 
     Task DeactivateViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
