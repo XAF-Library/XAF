@@ -31,7 +31,7 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
             return;
         }
 
-        var vmType = bundleDecorators.GetDecorator<ViewForAttribute>().ViewModelType;
+        var vmType = bundleDecorators.GetDecoratorFirst<ViewForAttribute>().ViewModelType;
         IBundleMetadata metadata = new BundleMetadata(vmType, viewTyp, bundleDecorators);
         _metadataByViewModelType.Add(vmType, metadata);
         

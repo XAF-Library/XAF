@@ -8,7 +8,7 @@ namespace XAF.UI.Abstraction.ViewModels;
 public interface IXafViewModel
 {
     void Preload();
-    Task Load();
+    Task LoadAsync();
     Task Unload();
 }
 

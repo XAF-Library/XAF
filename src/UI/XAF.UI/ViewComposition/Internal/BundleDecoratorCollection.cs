@@ -29,7 +29,7 @@ internal class BundleDecoratorCollection : IBundleDecoratorCollection
         return _decorators[typeof(TViewDecorator)].OfType<TViewDecorator>();
     }
 
-    public TViewDecorator GetDecorator<TViewDecorator>() where TViewDecorator : BundleDecoratorAttribute
+    public TViewDecorator GetDecoratorFirst<TViewDecorator>() where TViewDecorator : BundleDecoratorAttribute
     {
         return (TViewDecorator)_decorators[typeof(TViewDecorator)].First();
     }

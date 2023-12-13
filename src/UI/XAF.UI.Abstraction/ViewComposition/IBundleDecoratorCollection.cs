@@ -8,7 +8,7 @@ public interface IBundleDecoratorCollection
     bool Contains<TViewDecorator>()
         where TViewDecorator : BundleDecoratorAttribute;
 
-    TViewDecorator GetDecorator<TViewDecorator>()
+    TViewDecorator GetDecoratorFirst<TViewDecorator>()
         where TViewDecorator : BundleDecoratorAttribute;
 
     bool TryGetDecorator<TViewDecorator>([NotNullWhen(true)] out TViewDecorator? decorator)

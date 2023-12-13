@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Abstraction.ViewModels;
 
@@ -56,8 +60,18 @@ internal class WindowService : IWindowService
         throw new NotImplementedException();
     }
 
-    public Task ShowShell()
+    public async Task ShowShell()
     {
-        _bundleProvider.Cre
+        var bundle = _bundleProvider.CreateBundleWithDecoratorAsync<ShellAttribute>();
+        var window = bundle.View as Window;
+
+        if (window is null)
+        {
+            throw new InvalidOperationException("registered shell is not a window");
+        }
+
+        bundle.ViewModel.Preload();
+        Schedulers.MainScheduler.Schedule(window.Show);
+        await bundle.ViewModel.LoadAsync();
     }
 }

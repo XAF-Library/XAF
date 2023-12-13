@@ -10,7 +10,7 @@ public abstract class XafViewModel : IXafViewModel
 {
     public virtual void Preload() { }
 
-    public virtual Task Load()
+    public virtual Task LoadAsync()
     {
         return Task.CompletedTask;
     }

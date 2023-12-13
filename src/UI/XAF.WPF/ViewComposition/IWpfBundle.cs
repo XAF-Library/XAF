@@ -14,3 +14,8 @@ internal interface IWpfBundle<TViewModel> : IXafBundle<TViewModel>
 {
     new public FrameworkElement View { get; }
 }
+
+internal interface IWpfBundle : IXafBundle
+{
+    new public FrameworkElement View { get; }
+}
