@@ -4,26 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
-using XAF.UI;
-using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Commands;
-using XAF.UI.Abstraction.Dialog;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Commands;
 using XAF.UI.ReactiveCommands;
+using XAF.UI.ViewModels;
 
 namespace WpfPluginApp.ViewModels;
-public class ControlViewModel : ViewModelBase
+public class ControlViewModel : XafViewModel
 {
     public RxCommand NavigateToViewACommand { get; }
 
     public IXafCommand OpenDialogCommand { get; }
 
-    public ControlViewModel(INavigationService navigationService, IDialogService dialogService)
+    public ControlViewModel(INavigationService navigationService)
     {
         var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
-        NavigateToViewACommand = RxCommand.Create(() => navigationService.NavigateTo("PageViews", viewAVm));
-
-        OpenDialogCommand = XafCommand.Create(() => dialogService.ShowInputDialog<TestDialogViewModel, string, string>("Test"));
+        NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateTo(viewAVm, "PageViews"));
     }
 }

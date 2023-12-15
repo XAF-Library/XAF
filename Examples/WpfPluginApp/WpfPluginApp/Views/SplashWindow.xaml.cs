@@ -11,15 +11,22 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using XAF.UI.WPF.ViewComposition;
 
 namespace WpfPluginApp.Views;
 /// <summary>
 /// Interaktionslogik für SplashWindow.xaml
 /// </summary>
-public partial class SplashWindow : Window
+public partial class SplashScreen : SplashWindow
 {
-    public SplashWindow()
+    public SplashScreen()
     {
         InitializeComponent();
+    }
+
+    public override async Task OnAppLoadAsync()
+    {
+        await base.OnAppLoadAsync();
+        await Task.Delay(2000);
     }
 }

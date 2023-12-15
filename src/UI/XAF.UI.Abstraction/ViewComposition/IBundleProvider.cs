@@ -21,7 +21,7 @@ public interface IBundleProvider
     Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
-    Task<IXafBundle> CreateBundleWithDecoratorAsync<TViewDecorator>()
+    IAsyncEnumerable<IXafBundle> CreateBundlesWithDecoratorAsync<TViewDecorator>()
         where TViewDecorator : BundleDecoratorAttribute;
 
     Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>(TViewModel viewModel)

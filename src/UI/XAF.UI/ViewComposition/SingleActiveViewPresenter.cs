@@ -8,6 +8,11 @@ using XAF.UI.Abstraction.ViewComposition;
 namespace XAF.UI.ViewComposition;
 public class SingleActiveViewPresenter : ViewPresenter
 {
+    public SingleActiveViewPresenter(IViewAdapterCollection viewAdapters, IBundleProvider bundleProvider) 
+        : base(viewAdapters, bundleProvider)
+    {
+    }
+
     public override void Activate(IXafBundle view)
     {
         var currentActive = ActiveViews.Items.FirstOrDefault();

@@ -18,6 +18,7 @@ public class ViewForAttribute : BundleDecoratorAttribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 public class ViewForAttribute<TViewModel> : ViewForAttribute
     where TViewModel : IXafViewModel
 {

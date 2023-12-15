@@ -2,19 +2,14 @@
 using XAF.UI;
 using XAF.UI.Abstraction;
 using XAF.UI.ReactiveProperty;
+using XAF.UI.ViewModels;
 
 namespace WpfPlugin.ViewModels;
-public class ViewBViewModel : IActivatableViewModel<string>
+public class ViewBViewModel : XafViewModel<string>
 {
     public RxProperty<string> Message { get; } = new("Default Message");
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public void OnDeactivated()
-    {
-    }
-
-    public void OnActivated(string parameter)
+    public override void Preload(string parameter)
     {
         Message.Value = parameter;
     }

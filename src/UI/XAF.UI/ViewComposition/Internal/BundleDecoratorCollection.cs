@@ -67,7 +67,6 @@ internal class BundleDecoratorCollection : IBundleDecoratorCollection
     public void AddFromType(Type type)
     {
         var attributes = type.GetCustomAttributes<BundleDecoratorAttribute>();
-
         foreach (var attribute in attributes)
         {
             Add(attribute);

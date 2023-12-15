@@ -9,7 +9,7 @@ using XAF.UI.Abstraction.ViewModels;
 namespace XAF.UI.Abstraction.ViewComposition;
 public interface IBundleMetadataCollection
 {
-    void AddFromView(object view);
+    void AddFromViewType(Type viewType);
 
     IEnumerable<IBundleMetadata> GetMetadataForDecorator<TViewDecorator>()
         where TViewDecorator : BundleDecoratorAttribute;

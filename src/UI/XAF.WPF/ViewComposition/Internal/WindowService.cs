@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reactive.Concurrency;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,15 +10,19 @@ using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Abstraction.ViewModels;
+using XAF.UI.WPF.Hosting;
 
 namespace XAF.UI.WPF.ViewComposition.Internal;
 internal class WindowService : IWindowService
 {
     private readonly IBundleProvider _bundleProvider;
+    private readonly IWpfThread _wpfThread;
+    private readonly List<IXafBundle> _shells = new();
 
-    public WindowService(IBundleProvider bundleProvider)
+    public WindowService(IBundleProvider bundleProvider, IWpfThread wpfThread)
     {
         _bundleProvider = bundleProvider;
+        _wpfThread = wpfThread;
     }
 
     public Task CloseAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -60,18 +65,41 @@ internal class WindowService : IWindowService
         throw new NotImplementedException();
     }
 
-    public async Task ShowShell()
+    public async Task ShowShells()
     {
-        var bundle = _bundleProvider.CreateBundleWithDecoratorAsync<ShellAttribute>();
-        var window = bundle.View as Window;
-
-        if (window is null)
+        bool hasShell = false;
+        foreach (var bundle in _shells)
         {
-            throw new InvalidOperationException("registered shell is not a window");
+            if(bundle.View is not Window window)
+            {
+                continue;
+            }
+
+            bundle.ViewModel.Preload();
+            
+            _wpfThread.UiDispatcher!.Invoke(() =>
+            {
+                window.Show();
+                _wpfThread.Application!.MainWindow = window;
+            });
+
+            await bundle.ViewModel.LoadAsync();
+            hasShell = true;
         }
 
-        bundle.ViewModel.Preload();
-        Schedulers.MainScheduler.Schedule(window.Show);
-        await bundle.ViewModel.LoadAsync();
+        if (!hasShell)
+        {
+            throw new InvalidOperationException("No shell window found");
+        }
+
+    }
+
+    public async Task CreateShells()
+    {
+        var bundles = _bundleProvider.CreateBundlesWithDecoratorAsync<ShellAttribute>();
+        await foreach (var bundle in bundles)
+        {
+            _shells.Add(bundle);
+        }
     }
 }

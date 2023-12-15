@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using XAF.UI.Abstraction.Attributes;
+﻿using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Abstraction.ViewModels;
 using XAF.Utilities.ExtensionMethods;
@@ -18,13 +12,13 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
     public BundleMetadataCollection()
     {
         _metadataByViewModelType = new();
+        _metadataByDecoratorType = new(); 
     }
 
-    public void AddFromView(object view)
+    public void AddFromViewType(Type viewType)
     {
-        var viewTyp = view.GetType();
         var bundleDecorators = new BundleDecoratorCollection();
-        bundleDecorators.AddFromType(viewTyp);
+        bundleDecorators.AddFromType(viewType);
 
         if (!bundleDecorators.Contains<ViewForAttribute>())
         {
@@ -32,7 +26,7 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
         }
 
         var vmType = bundleDecorators.GetDecoratorFirst<ViewForAttribute>().ViewModelType;
-        IBundleMetadata metadata = new BundleMetadata(vmType, viewTyp, bundleDecorators);
+        IBundleMetadata metadata = new BundleMetadata(vmType, viewType, bundleDecorators);
         _metadataByViewModelType.Add(vmType, metadata);
         
         foreach (var decoratorType in bundleDecorators.GetAllDecoratorTypes())

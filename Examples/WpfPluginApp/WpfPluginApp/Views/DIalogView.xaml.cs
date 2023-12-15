@@ -20,7 +20,6 @@ namespace WpfPluginApp.Views;
 /// <summary>
 /// Interaktionslogik für DIalogView.xaml
 /// </summary>
-[ViewFor<TestDialogViewModel>]
 public partial class DIalogView : UserControl
 {
     public DIalogView()

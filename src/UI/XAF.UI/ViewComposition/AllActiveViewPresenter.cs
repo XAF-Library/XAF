@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 using XAF.UI.Abstraction.ViewComposition;
 
 namespace XAF.UI.ViewComposition;
-public class AllActiveViewPresenter: ViewPresenter
+public class AllActiveViewPresenter : ViewPresenter
 {
+    public AllActiveViewPresenter(IViewAdapterCollection viewAdapters, IBundleProvider bundleProvider) 
+        : base(viewAdapters, bundleProvider)
+    {
+    }
+
     public override void Add(IXafBundle view)
     {
         base.Add(view);

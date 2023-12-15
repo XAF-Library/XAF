@@ -19,8 +19,6 @@ internal class WpfBundle : IWpfBundle
         View = view;
         ViewModel = viewModel;
         Metadata = metadata;
-
-        View.DataContext = ViewModel;
     }
 }
 

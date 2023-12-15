@@ -23,3 +23,4 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.Converters")]
 [assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF")]
 [assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.Behaviors")]
+[assembly: XmlnsDefinition(@"https://XAF-Library.com/XAF/WPF", "XAF.UI.WPF.ViewComposition")]

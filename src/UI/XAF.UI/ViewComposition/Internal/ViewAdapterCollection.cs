@@ -11,14 +11,15 @@ namespace XAF.UI.ViewComposition.Internal;
 internal class ViewAdapterCollection : IViewAdapterCollection
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly Dictionary<Type, IViewAdapter> _adaptersByViewType;
+    private readonly Dictionary<Type, IViewAdapter> _adaptersByViewType = new();
 
     public ViewAdapterCollection(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
-    public void AddAdapter<TViewAdapter>() where TViewAdapter : IViewAdapter
+    public void AddAdapter<TViewAdapter>()
+        where TViewAdapter : IViewAdapter
     {
         var adapter = (IViewAdapter)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, typeof(TViewAdapter));
         _adaptersByViewType.Add(adapter.ViewType, adapter);

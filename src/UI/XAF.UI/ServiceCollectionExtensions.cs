@@ -12,11 +12,12 @@ using XAF.UI.ViewComposition.Internal;
 namespace XAF.UI;
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection UseDefaultUiServices(this IServiceCollection services)
+    public static IServiceCollection AddDefaultUiServices(this IServiceCollection services)
     {
         services.TryAddSingleton<IViewAdapterCollection, ViewAdapterCollection>();
         services.TryAddSingleton<IViewService, ViewService>();
         services.TryAddSingleton<IBundleMetadataCollection, BundleMetadataCollection>();
+        services.TryAddSingleton<INavigationService, NavigationService>();
 
         return services;
     }

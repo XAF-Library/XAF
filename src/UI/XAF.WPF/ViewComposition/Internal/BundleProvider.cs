@@ -20,13 +20,16 @@ internal class BundleProvider : IBundleProvider
         _bundleMetadata = bundleMetadata;
         _serviceProvider = serviceProvider;
         _wpfThread = wpfThread;
+        
+        _bundlesByViewModelTypes = new();
+        _bundleByViewModel = new();
     }
 
     public async Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>() where TViewModel : IXafViewModel
     {
         var metadata = _bundleMetadata.GetMetadataForViewModel<TViewModel>();
-        var view = await CreateViewAsync(metadata.ViewType).ConfigureAwait(false);
-        var vm = _serviceProvider.GetRequiredService<TViewModel>();
+        var vm = (TViewModel)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, metadata.ViewModelType);
+        var view = await CreateViewAsync(metadata.ViewType, vm).ConfigureAwait(false);
         var bundle = new WpfBundle<TViewModel>(view, vm, metadata);
 
         _bundlesByViewModelTypes.Add(typeof(TViewModel), (IXafBundle)bundle);
@@ -38,7 +41,7 @@ internal class BundleProvider : IBundleProvider
     public async Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
         var metadata = _bundleMetadata.GetMetadataForViewModel<TViewModel>();
-        var view = await CreateViewAsync(metadata.ViewType).ConfigureAwait(false);
+        var view = await CreateViewAsync(metadata.ViewType, viewModel).ConfigureAwait(false);
         var bundle = new WpfBundle<TViewModel>(view, viewModel, metadata);
 
         _bundlesByViewModelTypes.Add(typeof(TViewModel), (IXafBundle)bundle);
@@ -47,17 +50,19 @@ internal class BundleProvider : IBundleProvider
         return bundle;
     }
 
-    public async Task<IXafBundle> CreateBundleWithDecoratorAsync<TViewDecorator>() where TViewDecorator : BundleDecoratorAttribute
+    public async IAsyncEnumerable<IXafBundle> CreateBundlesWithDecoratorAsync<TViewDecorator>() where TViewDecorator : BundleDecoratorAttribute
     {
-        var metadata = _bundleMetadata.GetMetadataForDecorator<TViewDecorator>().First();
-        var view = await CreateViewAsync(metadata.ViewType).ConfigureAwait(false);
-        var vm = (IXafViewModel)_serviceProvider.GetRequiredService(metadata.ViewModelType);
-        var bundle = new WpfBundle(view, vm, metadata);
+        var metadata = _bundleMetadata.GetMetadataForDecorator<TViewDecorator>();
+        foreach (var item in metadata)
+        {
+            var vm = (IXafViewModel)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider,item.ViewModelType);
+            var view = await CreateViewAsync(item.ViewType, vm).ConfigureAwait(false);
+            var bundle = new WpfBundle(view, vm, item);
 
-        _bundlesByViewModelTypes.Add(vm.GetType(), (IXafBundle)bundle);
-        _bundleByViewModel.Add(vm, bundle);
-
-        return bundle;
+            _bundlesByViewModelTypes.Add(vm.GetType(), (IXafBundle)bundle);
+            _bundleByViewModel.Add(vm, bundle);
+            yield return bundle;
+        }
     }
 
     public Task<IXafBundle<TViewModel>> GetBundleAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
@@ -92,9 +97,14 @@ internal class BundleProvider : IBundleProvider
         return CreateBundleAsync<TViewModel>();
     }
 
-    private async Task<FrameworkElement> CreateViewAsync(Type ViewType)
+    private async Task<FrameworkElement> CreateViewAsync(Type ViewType, IXafViewModel viewModel)
     {
         await _wpfThread.WaitForAppCreation();
-        return await _wpfThread.UiDispatcher.InvokeAsync(() => (FrameworkElement)_serviceProvider.GetRequiredService(ViewType));
+        return _wpfThread.UiDispatcher.Invoke(() =>
+        {
+            var view = (FrameworkElement)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, ViewType);
+            view.DataContext = viewModel;
+            return view;
+        });
     }
 }

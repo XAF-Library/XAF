@@ -5,7 +5,7 @@ using System.Windows.Threading;
 namespace XAF.UI.WPF.Hosting;
 public interface IWpfThread
 {
-    bool AppIsRunnning { get; }
+    bool AppIsRunning { get; }
 
     [MemberNotNullWhen(true, nameof(Application))]
     [MemberNotNullWhen(true, nameof(UiDispatcher))]

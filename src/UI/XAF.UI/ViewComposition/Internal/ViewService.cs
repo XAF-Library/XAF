@@ -10,7 +10,7 @@ using XAF.UI.Abstraction.ViewModels;
 namespace XAF.UI.ViewComposition.Internal;
 internal class ViewService : IViewService
 {
-    private readonly Dictionary<object, IViewPresenter> _viewPresenters;
+    private readonly Dictionary<object, IViewPresenter> _viewPresenters = new();
 
     public void AddPresenter(IViewPresenter presenter, object key)
     {
