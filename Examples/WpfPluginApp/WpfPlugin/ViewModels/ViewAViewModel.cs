@@ -20,9 +20,9 @@ public class ViewAViewModel : XafViewModel
             Message.Select(s => !string.IsNullOrWhiteSpace(s)));
     }
 
-    public override void Preload()
+    public override void Prepare()
     {
-        base.Preload();
+        base.Prepare();
         Message.Value = string.Empty;
     }
 }

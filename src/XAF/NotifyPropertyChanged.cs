@@ -23,8 +23,8 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
     /// <param name="value">the new value of the property</param>
     /// <param name="propertyName">the name of the property</param>
     /// <returns>a value that indicates whether the value was changed or not</returns>
-    protected virtual bool Set<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
-        => Set(ref backingField, value, EqualityComparer<T>.Default, propertyName);
+    protected virtual bool SetProperty<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
+        => SetProperty(ref backingField, value, EqualityComparer<T>.Default, propertyName);
 
     /// <summary>
     /// A method to set a property an rise the <see cref="PropertyChangedEventHandler"/>
@@ -35,7 +35,7 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
     /// <param name="comparer">the <see cref="IEqualityComparer{T}"/> to compare the current value with the new value to</param>
     /// <param name="propertyName">the name of the property</param>
     /// <returns>a value indicating whether the value has been changed or not</returns>
-    protected virtual bool Set<T>(ref T backingField, T value, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
+    protected virtual bool SetProperty<T>(ref T backingField, T value, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
     {
         ArgumentNullException.ThrowIfNull(comparer);
         ArgumentNullException.ThrowIfNull(propertyName);
@@ -59,9 +59,9 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
     /// <param name="callback">a method that gets called if the value has been updated</param>
     /// <param name="propertyName">the name of the property</param>
     /// <returns>a value indicating whether the value has been changed or not</returns>
-    protected virtual bool Set<T>(ref T backingField, T value, Action<T> callback, [CallerMemberName] string? propertyName = null)
+    protected virtual bool SetProperty<T>(ref T backingField, T value, Action<T> callback, [CallerMemberName] string? propertyName = null)
     {
-        if (Set(ref backingField, value, propertyName))
+        if (SetProperty(ref backingField, value, propertyName))
         {
             callback(value);
             return true;
@@ -80,14 +80,14 @@ public abstract class NotifyPropertyChanged : INotifyPropertyChanged
     /// <param name="comparer">the <see cref="IEqualityComparer{T}"/> to compare the current value with the new value to</param>
     /// <param name="propertyName">the name of the property</param>
     /// <returns>a value indicating whether the value has been changed or not</returns>
-    protected virtual bool Set<T>(
+    protected virtual bool SetProperty<T>(
         ref T backingField,
         T value,
         Action<T> callback,
         IEqualityComparer<T> comparer,
         [CallerMemberName] string? propertyName = null)
     {
-        if (Set(ref backingField, value, comparer, propertyName))
+        if (SetProperty(ref backingField, value, comparer, propertyName))
         {
             callback(value);
             return true;

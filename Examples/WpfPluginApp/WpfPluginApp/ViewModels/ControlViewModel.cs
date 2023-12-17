@@ -17,10 +17,12 @@ public class ControlViewModel : XafViewModel
 
     public IXafCommand OpenDialogCommand { get; }
 
-    public ControlViewModel(INavigationService navigationService)
+    public ControlViewModel(INavigationService navigationService, IWindowService windowService)
     {
         var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
         NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateTo(viewAVm, "PageViews"));
+
+        OpenDialogCommand = XafCommand.Create(() => windowService.ShowDialogAsync<DialogViewModel, string>("Navigated"));
     }
 }

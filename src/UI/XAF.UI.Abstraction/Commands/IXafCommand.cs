@@ -6,25 +6,20 @@ namespace XAF.UI.Abstraction.Commands;
 /// An extension to the <see cref="ICommand"/> interface to handle typed parameters
 /// </summary>
 /// <typeparam name="TParam">type of the parameter</typeparam>
-public interface IXafCommand<in TParam> : ICommand
+public interface IXafCommand<in TParam> : IXafCommand
 {
     /// <summary>
     /// Checks if the command can be executed
     /// </summary>
     /// <param name="param">the typed parameter</param>
     /// <returns></returns>
-    bool CanExecute(TParam param);
+    bool CanExecute(TParam? param);
 
     /// <summary>
     /// Execute the command
     /// </summary>
     /// <param name="param">the typed parameter</param>
-    void Execute(TParam param);
-
-    /// <summary>
-    /// Rais the can execute changed event
-    /// </summary>
-    void RaiseCanExecuteChanged();
+    void Execute(TParam? param);
 }
 
 /// <summary>
@@ -33,18 +28,7 @@ public interface IXafCommand<in TParam> : ICommand
 public interface IXafCommand : ICommand
 {
     /// <summary>
-    /// Checks if the command can be executed
-    /// </summary>
-    /// <returns></returns>
-    bool CanExecute();
-
-    /// <summary>
-    /// Execute the command
-    /// </summary>
-    void Execute();
-
-    /// <summary>
     /// Rais the can execute changed event
     /// </summary>
-    void RaiseCanExecuteChanged();
+    void NotifyCanExecuteChanged();
 }

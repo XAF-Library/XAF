@@ -9,7 +9,7 @@ public class ViewBViewModel : XafViewModel<string>
 {
     public RxProperty<string> Message { get; } = new("Default Message");
 
-    public override void Preload(string parameter)
+    public override void Prepare(string parameter)
     {
         Message.Value = parameter;
     }

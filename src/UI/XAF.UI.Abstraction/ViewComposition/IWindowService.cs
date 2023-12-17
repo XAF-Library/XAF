@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using XAF.UI.Abstraction.ViewModels;
@@ -14,6 +15,8 @@ public interface IWindowService
     Task ShowAsync<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
 
+    Task ShowAsync(IXafBundle bundle);
+
     Task ShowDialogAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
@@ -26,6 +29,10 @@ public interface IWindowService
     Task ShowDialogAsync<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter)
     where TViewModel : IXafViewModel<TParameter>;
 
+    Task ShowDialogAsync(IXafBundle bundle);
+
+    Task ShowDialogAsync<TParameter>(IXafBundle bundle, TParameter parameter);
+
     Task CloseAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
@@ -35,4 +42,9 @@ public interface IWindowService
     Task ShowShells();
 
     Task CreateShells();
+
+    void SetDefaultWindowType<TWindow>()
+        where TWindow : class;
+
+    void SetDefaultWindowType(Type type);
 }

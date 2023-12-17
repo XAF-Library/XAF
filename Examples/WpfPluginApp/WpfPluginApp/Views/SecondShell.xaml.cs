@@ -10,20 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfPluginApp.ViewModels;
 using XAF.UI.Abstraction.Attributes;
-using XAF.UI.WPF.Attributes;
 
 namespace WpfPluginApp.Views;
 /// <summary>
-/// Interaktionslogik für DialogView.xaml
+/// Interaktionslogik für SecondShell.xaml
 /// </summary>
-[ViewFor<DialogViewModel>]
-public partial class DialogView : UserControl
+[Shell]
+[ViewFor<SecondShellViewModel>]
+public partial class SecondShell : Window
 {
-    public DialogView()
+    public SecondShell()
     {
         InitializeComponent();
     }

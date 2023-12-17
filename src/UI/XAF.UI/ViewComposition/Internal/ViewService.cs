@@ -33,7 +33,7 @@ internal class ViewService : IViewService
         {
             foreach (var bundle in bundles)
             {
-                bundle.ViewModel.Preload();
+                bundle.ViewModel.Prepare();
                 viewPresenter.Activate(bundle);
                 await bundle.ViewModel.LoadAsync();
             }
@@ -42,7 +42,7 @@ internal class ViewService : IViewService
         }
 
         var newBundle = await viewPresenter.BundleProvider.CreateBundleAsync<TViewModel>();
-        newBundle.ViewModel.Preload();
+        newBundle.ViewModel.Prepare();
         viewPresenter.Activate(newBundle);
         await newBundle.ViewModel.LoadAsync();
     }
@@ -52,7 +52,7 @@ internal class ViewService : IViewService
 
         var viewPresenter = _viewPresenters[key];
         var bundle = await viewPresenter.BundleProvider.GetOrCreateBundleAsync(viewModel);
-        bundle.ViewModel.Preload();
+        bundle.ViewModel.Prepare();
         viewPresenter.Activate(bundle);
         await viewModel.LoadAsync();
     }
@@ -61,8 +61,8 @@ internal class ViewService : IViewService
     {
         var viewPresenter = _viewPresenters[key];
         var bundle = await viewPresenter.BundleProvider.GetOrCreateBundleAsync(viewModel);
-        viewModel.Preload();
-        viewModel.Preload(parameter);
+        viewModel.Prepare();
+        viewModel.Prepare(parameter);
         viewPresenter.Activate(bundle);
         await viewModel.LoadAsync();
     }
@@ -71,8 +71,8 @@ internal class ViewService : IViewService
     {
         var viewPresenter = _viewPresenters[key];
         var bundle = await viewPresenter.BundleProvider.GetOrCreateBundleAsync<TViewModel>();
-        bundle.ViewModel.Preload();
-        bundle.ViewModel.Preload(parameter);
+        bundle.ViewModel.Prepare();
+        bundle.ViewModel.Prepare(parameter);
         viewPresenter.Activate(bundle);
         await bundle.ViewModel.LoadAsync();
     }
@@ -87,8 +87,8 @@ internal class ViewService : IViewService
         {
             foreach (var bundle in bundles)
             {
-                bundle.ViewModel.Preload();
-                bundle.ViewModel.Preload(parameter);
+                bundle.ViewModel.Prepare();
+                bundle.ViewModel.Prepare(parameter);
                 viewPresenter.Activate(bundle);
                 await bundle.ViewModel.LoadAsync();
             }
@@ -97,8 +97,8 @@ internal class ViewService : IViewService
         }
 
         var newBundle = await viewPresenter.BundleProvider.CreateBundleAsync<TViewModel>();
-        newBundle.ViewModel.Preload();
-        newBundle.ViewModel.Preload(parameter);
+        newBundle.ViewModel.Prepare();
+        newBundle.ViewModel.Prepare(parameter);
         viewPresenter.Activate(newBundle);
         await newBundle.ViewModel.LoadAsync();
     }
