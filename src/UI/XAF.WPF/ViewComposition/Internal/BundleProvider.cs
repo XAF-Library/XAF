@@ -25,6 +25,17 @@ internal class BundleProvider : IBundleProvider
         _bundleByViewModel = new();
     }
 
+    public void AddBundle(IXafBundle bundle)
+    {
+        if (_bundleByViewModel.ContainsKey(bundle.ViewModel))
+        {
+            return;
+        }
+
+        _bundleByViewModel.Add(bundle.ViewModel, bundle);
+        _bundlesByViewModelTypes.Add(bundle.Metadata.ViewModelType, bundle);
+    }
+
     public async Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>() where TViewModel : IXafViewModel
     {
         var metadata = _bundleMetadata.GetMetadataForViewModel<TViewModel>();
@@ -77,6 +88,11 @@ internal class BundleProvider : IBundleProvider
             : Task.FromResult(_bundlesByViewModelTypes[typeof(TViewModel)].OfType<IXafBundle<TViewModel>>());
     }
 
+    public Task<IXafBundle<TViewModel>?> GetFirstBundleAsync<TViewModel>() where TViewModel : IXafViewModel
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IXafBundle<TViewModel>> GetOrCreateBundleAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
         return _bundleByViewModel.TryGetValue(viewModel, out var bundle)
@@ -91,7 +107,7 @@ internal class BundleProvider : IBundleProvider
             var bundle = bundles.FirstOrDefault();
             if (bundle != null)
             {
-                return Task.FromResult((IXafBundle<TViewModel>)bundles.First());
+                return Task.FromResult((IXafBundle<TViewModel>)bundle);
             }
         }
         return CreateBundleAsync<TViewModel>();

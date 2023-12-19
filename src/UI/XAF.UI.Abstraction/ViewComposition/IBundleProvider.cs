@@ -6,7 +6,12 @@ namespace XAF.UI.Abstraction.ViewComposition;
 
 public interface IBundleProvider
 {
+    void AddBundle(IXafBundle bundle);
+
     Task<IEnumerable<IXafBundle<TViewModel>>> GetBundlesAsync<TViewModel>()
+        where TViewModel : IXafViewModel;
+
+    Task<IXafBundle<TViewModel>?> GetFirstBundleAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
     Task<IXafBundle<TViewModel>> GetBundleAsync<TViewModel>(TViewModel viewModel)

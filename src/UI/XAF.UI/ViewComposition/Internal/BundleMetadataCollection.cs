@@ -26,7 +26,8 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
         }
 
         var vmType = bundleDecorators.GetDecoratorFirst<ViewForAttribute>().ViewModelType;
-        IBundleMetadata metadata = new BundleMetadata(vmType, viewType, bundleDecorators);
+        var parameterType = vmType.IsGenericType ? vmType.GetGenericArguments()[0] : null;
+        IBundleMetadata metadata = new BundleMetadata(vmType, viewType, bundleDecorators, parameterType);
         _metadataByViewModelType.Add(vmType, metadata);
         
         foreach (var decoratorType in bundleDecorators.GetAllDecoratorTypes())
@@ -51,4 +52,4 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
     }
 }
 
-internal record BundleMetadata(Type ViewModelType, Type ViewType, IBundleDecoratorCollection ViewDecorators) : IBundleMetadata;
+internal record BundleMetadata(Type ViewModelType, Type ViewType, IBundleDecoratorCollection ViewDecorators, Type? ParameterType) : IBundleMetadata;

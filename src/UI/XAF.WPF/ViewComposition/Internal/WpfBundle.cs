@@ -20,9 +20,19 @@ internal class WpfBundle : IWpfBundle
         ViewModel = viewModel;
         Metadata = metadata;
     }
+
+    public int CompareTo(IXafBundle? other)
+    {
+        if (other != null)
+        {
+            return ViewModel.CompareTo(other.ViewModel);
+        }
+
+        return 1;
+    }
 }
 
-internal class WpfBundle<TViewModel> : WpfBundle,IWpfBundle<TViewModel>
+internal class WpfBundle<TViewModel> : WpfBundle, IWpfBundle<TViewModel>
     where TViewModel : IXafViewModel
 {
     new public TViewModel ViewModel { get; }

@@ -20,6 +20,11 @@ public abstract class XafViewModel : NotifyPropertyChanged, IXafViewModel
     {
         return Task.CompletedTask;
     }
+
+    public virtual int CompareTo(IXafViewModel? other)
+    {
+        return 0;
+    }
 }
 
 public abstract class XafViewModel<TParameter> : XafViewModel, IXafViewModel<TParameter>

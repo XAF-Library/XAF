@@ -13,11 +13,11 @@ public interface IViewPresenter : IDisposable
 {
     void Add(IXafBundle view);
 
-    void Remove(IXafBundle view);
+    bool Remove(IXafBundle view);
 
     void Activate(IXafBundle view);
 
-    void Deactivate(IXafBundle view);
+    bool Deactivate(IXafBundle view);
 
     void Connect(object view);
 

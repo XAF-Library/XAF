@@ -20,7 +20,8 @@ public class ViewPresenter : IViewPresenter
 
     public ViewPresenter(IViewAdapterCollection viewAdapters, IBundleProvider bundleProvider)
     {
-        Comparer = new BehaviorSubject<IComparer<IXafBundle>>(Comparer<IXafBundle>.Default);
+        var comparer = Comparer<IXafBundle>.Default;
+        Comparer = new BehaviorSubject<IComparer<IXafBundle>>(comparer);
 
         _viewDisposables = new();
         _views = new SourceList<IXafBundle>();
@@ -34,13 +35,14 @@ public class ViewPresenter : IViewPresenter
         if (!_views.Items.Contains(view))
         {
             _views.Add(view);
+            BundleProvider.AddBundle(view);
         }
     }
 
-    public virtual void Remove(IXafBundle view)
+    public virtual bool Remove(IXafBundle view)
     {
         _activeViews.Remove(view);
-        _views.Remove(view);
+        return _views.Remove(view);
     }
 
     public virtual void Activate(IXafBundle view)
@@ -50,12 +52,15 @@ public class ViewPresenter : IViewPresenter
             _views.Add(view);
         }
 
-        _activeViews.Add(view);
+        if (!_activeViews.Items.Contains(view))
+        {
+            _activeViews.Add(view);
+        }
     }
 
-    public virtual void Deactivate(IXafBundle view)
+    public virtual bool Deactivate(IXafBundle view)
     {
-        _activeViews.Remove(view);
+        return _activeViews.Remove(view);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -90,7 +95,7 @@ public class ViewPresenter : IViewPresenter
 
     public void Disconnect(object view)
     {
-        if(_viewDisposables.TryGetValue(view, out var disposables))
+        if (_viewDisposables.TryGetValue(view, out var disposables))
         {
             disposables.Dispose();
             _viewDisposables.Remove(view);

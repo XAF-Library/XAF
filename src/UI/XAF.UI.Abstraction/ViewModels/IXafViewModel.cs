@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace XAF.UI.Abstraction.ViewModels;
-public interface IXafViewModel
+public interface IXafViewModel : IComparable<IXafViewModel>
 {
     void Prepare();
     Task LoadAsync();

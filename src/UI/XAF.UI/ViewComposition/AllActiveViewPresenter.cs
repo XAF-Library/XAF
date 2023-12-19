@@ -24,7 +24,7 @@ public class AllActiveViewPresenter : ViewPresenter
         throw new InvalidOperationException("Could not activate view in an all active view presenter");
     }
 
-    public override void Deactivate(IXafBundle view)
+    public override bool Deactivate(IXafBundle view)
     {
         throw new InvalidOperationException("Could not deactivate view in an all active view presenter");
     }

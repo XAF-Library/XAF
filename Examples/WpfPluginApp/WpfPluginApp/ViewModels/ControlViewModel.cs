@@ -15,6 +15,10 @@ public class ControlViewModel : XafViewModel
 {
     public RxCommand NavigateToViewACommand { get; }
 
+    public RxCommand NavigateForwardCommand { get; }
+
+    public RxCommand NavigateBackCommand { get; }
+
     public IXafCommand OpenDialogCommand { get; }
 
     public ControlViewModel(INavigationService navigationService, IWindowService windowService)
@@ -24,5 +28,7 @@ public class ControlViewModel : XafViewModel
         NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateTo(viewAVm, "PageViews"));
 
         OpenDialogCommand = XafCommand.Create(() => windowService.ShowDialogAsync<DialogViewModel, string>("Navigated"));
+        NavigateBackCommand = RxCommand.CreateFromTask(() => navigationService.NavigateBack("PageViews"), navigationService.CanNavigateBack("PageViews"));
+        NavigateForwardCommand = RxCommand.CreateFromTask(() => navigationService.NavigateForward("PageViews"), navigationService.CanNavigateForward("PageViews"));
     }
 }

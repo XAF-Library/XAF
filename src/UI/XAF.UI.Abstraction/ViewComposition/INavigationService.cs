@@ -24,6 +24,10 @@ public interface INavigationService
     Task NavigateTo<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter, object viewPresenterKey)
         where TViewModel : IXafViewModel<TParameter>;
 
+    Task NavigateTo(IXafBundle bundle, object viewPresenterKey);
+
+    Task NavigateTo(IXafBundle bundle, object parameter, object viewPresenterKey);
+
     IObservable<bool> CanNavigateBack(object viewPresenterKey);
 
     IObservable<bool> CanNavigateForward(object viewPresenterKey);

@@ -5,5 +5,7 @@ public interface IBundleMetadata
 
     Type ViewType { get; }
 
+    Type? ParameterType { get; }
+
     IBundleDecoratorCollection ViewDecorators { get; }
 }

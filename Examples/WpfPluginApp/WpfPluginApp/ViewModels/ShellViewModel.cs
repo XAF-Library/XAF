@@ -7,6 +7,6 @@ public class ShellViewModel : XafViewModel
 {
     public override async Task LoadAsync()
     {
-        await Task.Delay(200);
+        await Task.Delay(2000);
     }
 }

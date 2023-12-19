@@ -5,13 +5,17 @@ public interface IViewService
 {
     IViewPresenter GetPresenter(object key);
 
+    bool ContainsPresenter(object key);
+
     void AddPresenter(IViewPresenter presenter, object key);
 
-    Task AddViewAsync<TViewModel>(object key)
+    Task<IXafBundle<TViewModel>> AddViewAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    Task AddViewAsync<TViewModel>(TViewModel viewModel, object key)
+    Task<IXafBundle<TViewModel>> AddViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
+
+    Task AddViewAsync(IXafBundle bundle, object key);
 
     Task RemoveViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
@@ -19,19 +23,31 @@ public interface IViewService
     Task RemoveViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
 
-    Task ActivateViewsAsync<TViewModel>(object key)
+    Task RemoveViewAsync(IXafBundle bundle, object key);
+
+    Task<IEnumerable<IXafBundle<TViewModel>>> ActivateViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    Task ActivateViewAsync<TViewModel>(TViewModel viewModel, object key)
+    Task<IXafBundle<TViewModel>> ActivateFirstViewAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
 
-    Task ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, TViewModel viewModel, object key)
+    Task<IXafBundle<TViewModel>> ActivateViewAsync<TViewModel>(TViewModel viewModel, object key)
+        where TViewModel : IXafViewModel;
+
+    Task ActivateViewAsync(IXafBundle bundle, object key);
+
+    Task<IXafBundle<TViewModel>> ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, TViewModel viewModel, object key)
         where TViewModel : IXafViewModel<TParameter>;
 
-    Task ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, object key)
+    Task ActivateViewAsync(IXafBundle bundle, object parameter, object key);
+
+    Task<IXafBundle<TViewModel>> ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, object key)
         where TViewModel : IXafViewModel<TParameter>;
 
-    Task ActivateViewsAsync<TViewModel, TParameter>(TParameter parameter, object key)
+    Task<IEnumerable<IXafBundle<TViewModel>>> ActivateViewsAsync<TViewModel, TParameter>(TParameter parameter, object key)
+        where TViewModel : IXafViewModel<TParameter>;
+
+    Task<IXafBundle<TViewModel>> ActivateFirstViewAsync<TViewModel, TParameter>(TParameter parameter, object key)
         where TViewModel : IXafViewModel<TParameter>;
 
     Task DeactivateViewsAsync<TViewModel>(object key)
@@ -39,4 +55,6 @@ public interface IViewService
 
     Task DeactivateViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
+
+    Task DeactivateViewAsync(IXafBundle bundle, object key);
 }
