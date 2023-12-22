@@ -1,17 +1,17 @@
 ﻿using System.Windows.Media;
 
 namespace XAF.UI.WPF;
-public struct HSLColor
+public struct HslColor
 {
     public double H { get; set; }
     public double S { get; set; }
     public double L { get; set; }
 
-    public HSLColor()
+    public HslColor()
     {
     }
 
-    public HSLColor(double h, double s, double l)
+    public HslColor(double h, double s, double l)
     {
         H = h;
         S = s;
@@ -44,14 +44,14 @@ public struct HSLColor
         return Color.FromRgb(r, g, b);
     }
 
-    public HSLColor Darken(double value)
+    public HslColor Darken(double value)
     {
         if (value > 1 || value < 0)
         {
             throw new ArgumentException("value must be between 0 and 1");
         }
 
-        return new HSLColor
+        return new HslColor
         {
             H = H,
             S = S,
@@ -59,7 +59,7 @@ public struct HSLColor
         };
     }
 
-    public HSLColor Lighten(double value)
+    public HslColor Lighten(double value)
     {
         if (value < 0)
         {
@@ -72,7 +72,7 @@ public struct HSLColor
             l = 1;
         }
 
-        return new HSLColor
+        return new HslColor
         {
             H = H,
             S = S,
@@ -110,9 +110,9 @@ public struct HSLColor
         return v1;
     }
 
-    public HSLColor Invert()
+    public HslColor Invert()
     {
-        return new HSLColor()
+        return new HslColor()
         {
             H = (H + 180) % 360,
             S = S,

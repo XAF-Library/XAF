@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DynamicData" Version="8.1.1" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.9.0.77355">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Modularity\XAF.Abstraction\XAF.Modularity.Abstraction.csproj" />
+    <ProjectReference Include="..\..\XAF\XAF.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

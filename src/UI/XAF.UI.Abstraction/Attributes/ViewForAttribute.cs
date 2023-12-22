@@ -1,23 +1,32 @@
-﻿using XAF.UI.Abstraction;
+﻿using System.ComponentModel;
+using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.ViewModels;
 
 namespace XAF.UI.Abstraction.Attributes;
 
-public class ViewForAttribute<TViewModel> : ViewForAttribute
-    where TViewModel : IViewModel
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public class ViewForAttribute : BundleDecoratorAttribute
 {
+    public Type ViewModelType { get; }
+
+    public ViewForAttribute(Type forType)
+    {
+        ViewModelType = forType;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+public class ViewForAttribute<TViewModel> : ViewForAttribute
+    where TViewModel : IXafViewModel
+{
+    public Type ViewModelType { get; }
+    
     public ViewForAttribute()
         : base(typeof(TViewModel))
     {
     }
-}
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public class ViewForAttribute : Attribute
-{
-    public Type ViewModelType { get; }
-
-    public ViewForAttribute(Type viewModelType)
-    {
-        ViewModelType = viewModelType;
-    }
 }

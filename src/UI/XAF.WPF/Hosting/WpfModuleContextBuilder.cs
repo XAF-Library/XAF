@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity;
+using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.ViewComposition;
 
@@ -8,12 +9,12 @@ namespace XAF.UI.WPF.Hosting;
 
 public class WpfModuleContextBuilder : ModuleRegistrationContextBuilder
 {
-    private readonly IViewDescriptorCollection _viewCollection;
+    private readonly IBundleMetadataCollection _viewCollection;
     private readonly IViewAdapterCollection _viewAdapterCollection;
 
-    public WpfModuleContextBuilder(IViewDescriptorCollection viewCollection, IViewAdapterCollection viewAdapterCollection)
+    public WpfModuleContextBuilder(IBundleMetadataCollection metadataCollection, IViewAdapterCollection viewAdapterCollection)
     {
-        _viewCollection = viewCollection;
+        _viewCollection = metadataCollection;
         _viewAdapterCollection = viewAdapterCollection;
     }
 

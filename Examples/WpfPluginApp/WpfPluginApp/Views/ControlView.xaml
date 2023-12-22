@@ -21,5 +21,13 @@
             Command="{Binding OpenDialogCommand}"
             Content="Open Dialog" />
 
+        <Button Margin="5"
+                Command="{Binding NavigateBackCommand}"
+                Content="Navigate Back"/>
+
+        <Button Margin="5"
+        Command="{Binding NavigateForwardCommand}"
+        Content="Navigate Forward"/>
+
     </StackPanel>
 </UserControl>

@@ -18,13 +18,12 @@ using XAF.UI.WPF.Attributes;
 
 namespace WpfPluginApp.Views;
 /// <summary>
-/// Interaktionslogik für DIalogView.xaml
+/// Interaktionslogik für DialogView.xaml
 /// </summary>
-[ViewFor<TestDialogViewModel>]
-[DialogWindow<DialogWindow>]
-public partial class DIalogView : UserControl
+[ViewFor<DialogViewModel>]
+public partial class DialogView : UserControl
 {
-    public DIalogView()
+    public DialogView()
     {
         InitializeComponent();
     }

@@ -2,6 +2,7 @@
 using WpfPluginApp.ViewModels;
 using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Attributes;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.Attributes;
 
 namespace WpfPluginApp.Views;
@@ -10,13 +11,11 @@ namespace WpfPluginApp.Views;
 /// </summary>
 [Shell]
 [ViewFor<ShellViewModel>]
-[ContainsViewContainer("PageViews")]
-[ContainsViewContainer("ControlView")]
 public partial class Shell : Window
 {
-    public Shell(IViewCompositionService compositionService)
+    public Shell(IViewService compositionService)
     {
         InitializeComponent();
-        compositionService.InsertView<ControlViewModel>("ControlView");
+        compositionService.AddViewAsync<ControlViewModel>("ControlView").Wait();
     }
 }

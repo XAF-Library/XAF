@@ -1,12 +1,15 @@
-﻿using XAF.UI;
-using XAF.UI.Reactive.ReactiveProperty;
+﻿using System.ComponentModel;
+using XAF.UI;
+using XAF.UI.Abstraction;
+using XAF.UI.ReactiveProperty;
+using XAF.UI.ViewModels;
 
 namespace WpfPlugin.ViewModels;
-public class ViewBViewModel : NavigationTarget<string>
+public class ViewBViewModel : XafViewModel<string>
 {
     public RxProperty<string> Message { get; } = new("Default Message");
 
-    public override void OnNavigatedTo(string parameter)
+    public override void Prepare(string parameter)
     {
         Message.Value = parameter;
     }

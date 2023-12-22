@@ -1,11 +1,11 @@
 ﻿using System.Reactive.Linq;
-using XAF.UI;
-using XAF.UI.Abstraction;
-using XAF.UI.Reactive.Commands;
-using XAF.UI.Reactive.ReactiveProperty;
+using XAF.UI.Abstraction.ViewComposition;
+using XAF.UI.ReactiveCommands;
+using XAF.UI.ReactiveProperty;
+using XAF.UI.ViewModels;
 
 namespace WpfPlugin.ViewModels;
-public class ViewAViewModel : NavigationTarget
+public class ViewAViewModel : XafViewModel
 {
     public RxProperty<string> Message { get; } = new();
 
@@ -15,19 +15,14 @@ public class ViewAViewModel : NavigationTarget
     {
         // Executes navigation to View B. 
         // Can only be executed if Message is not empty.
-        NavigateToViewBCommand = RxCommand.Create(
-            () => navigationService.NavigateTo<ViewBViewModel, string>("PageViews", Message),
+        NavigateToViewBCommand = RxCommand.CreateFromTask(
+            () => navigationService.NavigateTo<ViewBViewModel, string>(Message, "PageViews"),
             Message.Select(s => !string.IsNullOrWhiteSpace(s)));
     }
 
-    public override void OnNavigatedFrom()
+    public override void Prepare()
     {
-        // Do Some stuff after navigating away from this view.
-    }
-
-    public override void OnNavigatedTo()
-    {
-        // Do Some stuff after navigating to this view.
+        base.Prepare();
         Message.Value = string.Empty;
     }
 }

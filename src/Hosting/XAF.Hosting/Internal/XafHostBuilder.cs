@@ -26,8 +26,7 @@ internal partial class XafHostBuilder : IXafHostBuilder
     public XafHostBuilder(XafHostBuilderSettings settings)
     {
         _settings = settings;
-        Configuration = settings.Configuration;
-        Configuration ??= new();
+        Configuration = settings.Configuration ?? new();
         Services = new ServiceCollection();
         Properties = new Dictionary<object, object>();
 
@@ -160,6 +159,8 @@ internal partial class XafHostBuilder : IXafHostBuilder
         Services.AddSingleton<IConfigurationBuilder>(Configuration);
         Services.AddSingleton<IHostApplicationLifetime, ApplicationLifetime>();
         Services.AddSingleton<IHost, XafHost>();
+        Services.AddSingleton<OrderedStartupActionCollection>();
+        Services.AddStartupAction<StartHostedServices>();
     }
 
     private sealed record LoggingBuilder(IServiceCollection Services) : ILoggingBuilder;

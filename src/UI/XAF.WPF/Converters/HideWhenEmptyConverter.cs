@@ -11,7 +11,10 @@ public class HideWhenEmptyConverter : BaseValueConverter<HideWhenEmptyConverter>
         var empty = false;
         var invert = false;
         if (parameter != null)
+        {
             bool.TryParse(parameter.ToString(), out invert);
+        }
+
         switch (value)
         {
             case null:
@@ -22,8 +25,11 @@ public class HideWhenEmptyConverter : BaseValueConverter<HideWhenEmptyConverter>
                 empty = true;
                 break;
         }
-        if (invert == true)
+
+        if (invert)
+        {
             empty = !empty;
+        }
 
         return empty ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
     }

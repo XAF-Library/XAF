@@ -6,8 +6,6 @@ using XAF.UI.WPF.Hosting;
 namespace XAF.UI.WPF.Hosting.Internal;
 public class WpfApp : IHostedService
 {
-    private Window? _splashWindow;
-    private ISplashWindowViewModel? _splashViewModel;
     private readonly IWpfThread _wpfThread;
 
     public WpfApp(IWpfThread wpfThread)
@@ -15,14 +13,14 @@ public class WpfApp : IHostedService
         _wpfThread = wpfThread;
     }
 
-    public async Task StartAsync(CancellationToken cancellation)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await _wpfThread.StartAsync(cancellation).ConfigureAwait(false);
+        await _wpfThread.StartAsync(cancellationToken).ConfigureAwait(false);
         await _wpfThread.WaitForAppStart().ConfigureAwait(false);
     }
 
-    public Task StopAsync(CancellationToken cancellation)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
-        return _wpfThread.StopAsync(cancellation);
+        return _wpfThread.StopAsync(cancellationToken);
     }
 }

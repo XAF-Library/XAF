@@ -1,10 +1,12 @@
-﻿using XAF.UI;
+﻿using System.Threading.Tasks;
+using XAF.UI;
+using XAF.UI.ViewModels;
 
 namespace WpfPluginApp.ViewModels;
-public class ShellViewModel : ViewModelBase
+public class ShellViewModel : XafViewModel
 {
-    public ShellViewModel()
+    public override async Task LoadAsync()
     {
-        
+        await Task.Delay(2000);
     }
 }

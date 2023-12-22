@@ -4,26 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
-using XAF.UI;
-using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Commands;
-using XAF.UI.Abstraction.Dialog;
+using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Commands;
-using XAF.UI.Reactive.Commands;
+using XAF.UI.ReactiveCommands;
+using XAF.UI.ViewModels;
 
 namespace WpfPluginApp.ViewModels;
-public class ControlViewModel : ViewModelBase
+public class ControlViewModel : XafViewModel
 {
     public RxCommand NavigateToViewACommand { get; }
 
+    public RxCommand NavigateForwardCommand { get; }
+
+    public RxCommand NavigateBackCommand { get; }
+
     public IXafCommand OpenDialogCommand { get; }
 
-    public ControlViewModel(INavigationService navigationService, IDialogService dialogService)
+    public ControlViewModel(INavigationService navigationService, IWindowService windowService)
     {
         var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
-        NavigateToViewACommand = RxCommand.Create(() => navigationService.NavigateTo("PageViews", viewAVm));
+        NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateTo(viewAVm, "PageViews"));
 
-        OpenDialogCommand = XafCommand.CreateCommand(dialogService.ShowDialog<TestDialogViewModel>);
+        OpenDialogCommand = XafCommand.Create(() => windowService.ShowDialogAsync<DialogViewModel, string>("Navigated"));
+        NavigateBackCommand = RxCommand.CreateFromTask(() => navigationService.NavigateBack("PageViews"), navigationService.CanNavigateBack("PageViews"));
+        NavigateForwardCommand = RxCommand.CreateFromTask(() => navigationService.NavigateForward("PageViews"), navigationService.CanNavigateForward("PageViews"));
     }
 }

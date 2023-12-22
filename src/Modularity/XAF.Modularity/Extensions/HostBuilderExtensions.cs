@@ -1,21 +1,24 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XAF.Hosting.Abstraction;
 using XAF.Modularity.Abstraction;
+using XAF.Modularity.Abstraction.StartupActions;
 using XAF.Modularity.Internal;
-using XAF.Modularity.StartupActions;
 
 namespace XAF.Modularity.Extensions;
 public static class HostBuilderExtensions
 {
     public static void ConfigureModularity(this IXafHostBuilder builder)
     {
-        builder.Services.AddStartupActions<ModuleInitializer>();
+        builder.Services.AddStartupAction<StartModules>();
+        builder.GetModuleCatalog();
     }
 
-    public static void UseModuleCatalog<T>(this IXafHostBuilder builder)
-        where T : IModuleCatalog, new()
+    public static void ConfigureModularity<TCatalog>(this IXafHostBuilder builder)
+        where TCatalog : IModuleCatalog, new()
     {
-        builder.Properties[typeof(IModuleCatalog)] = new T();
+        builder.Services.AddStartupAction<StartModules>();
+        builder.Properties[typeof(IModuleCatalog)] = new TCatalog();
+        builder.GetModuleCatalog();
     }
 
     public static void UseModuleRegistrationContextBuilder<T>(this IXafHostBuilder builder)
@@ -30,7 +33,7 @@ public static class HostBuilderExtensions
         builder.Properties[typeof(IModuleRegistrationContextBuilder)] = ctxBuilder;
     }
 
-    public static async Task RegisterModuleAsync<T>(this IXafHostBuilder builder, CancellationToken cancellation)
+    public static async Task RegisterModuleAsync<T>(this IXafHostBuilder builder, CancellationToken cancellation = default)
         where T : IModule, new()
     {
         var catalog = builder.GetModuleCatalog();

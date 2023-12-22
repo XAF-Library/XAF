@@ -31,26 +31,20 @@ internal static class HostBuilderExtensions
 
     public static (IHostEnvironment, IFileProvider) CreateHostEnvironment(IConfiguration configuration)
     {
-        var env = new XafHostEnvironment()
-        {
-            EnvironmentName = configuration[HostDefaults.EnvironmentKey] ?? Environments.Production,
-            ContentRootPath = ResolveContentRootPath(configuration[HostDefaults.ContentRootKey], AppContext.BaseDirectory)
-        };
-
         var appName = configuration[HostDefaults.ApplicationKey];
 
         if (string.IsNullOrEmpty(appName))
         {
-            appName = Assembly.GetEntryAssembly()?.GetName().Name;
+            appName = Assembly.GetEntryAssembly()?.GetName().Name!;
         }
+        var contentRootPath = ResolveContentRootPath(configuration[HostDefaults.ContentRootKey], AppContext.BaseDirectory);
+        var fileProvider = new PhysicalFileProvider(contentRootPath);
 
-        if (appName is not null)
-        {
-            env.ApplicationName = appName;
-        }
-
-        var fileProvider = new PhysicalFileProvider(env.ContentRootPath);
-        env.ContentRootFileProvider = fileProvider;
+        var env = new XafHostEnvironment(
+            configuration[HostDefaults.EnvironmentKey] ?? Environments.Production,
+            appName, 
+            contentRootPath,
+            fileProvider);
 
         return (env, fileProvider);
     }

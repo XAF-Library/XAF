@@ -2,87 +2,118 @@
 using System.Runtime.CompilerServices;
 
 namespace XAF.Utilities;
+
+/// <summary>
+/// A base implementation for the <see cref="INotifyPropertyChanged"/> interface
+/// </summary>
 public abstract class NotifyPropertyChanged : INotifyPropertyChanged
 {
-    protected readonly Dictionary<string, List<Action<object?>>> PropertyChangedCallbacks;
-
-    public NotifyPropertyChanged()
-    {
-        PropertyChangedCallbacks = new();
-    }
-
+ 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
 
-    protected virtual void Set<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
-        => Set(ref backingField, value, EqualityComparer<T>.Default, propertyName);
+    /// <summary>
+    /// A method to set a property an rise the <see cref="PropertyChangedEventHandler"/>
+    /// </summary>
+    /// <typeparam name="T">the type of the property</typeparam>
+    /// <param name="backingField">a reference to the backing field</param>
+    /// <param name="value">the new value of the property</param>
+    /// <param name="propertyName">the name of the property</param>
+    /// <returns>a value that indicates whether the value was changed or not</returns>
+    protected virtual bool SetProperty<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
+        => SetProperty(ref backingField, value, EqualityComparer<T>.Default, propertyName);
 
-    protected virtual void Set<T>(ref T backingField, T value, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
+    /// <summary>
+    /// A method to set a property an rise the <see cref="PropertyChangedEventHandler"/>
+    /// </summary>
+    /// <typeparam name="T">the type of the property</typeparam>
+    /// <param name="backingField">a reference to the backing field</param>
+    /// <param name="value">the new value of the property</param>
+    /// <param name="comparer">the <see cref="IEqualityComparer{T}"/> to compare the current value with the new value to</param>
+    /// <param name="propertyName">the name of the property</param>
+    /// <returns>a value indicating whether the value has been changed or not</returns>
+    protected virtual bool SetProperty<T>(ref T backingField, T value, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
     {
         ArgumentNullException.ThrowIfNull(comparer);
         ArgumentNullException.ThrowIfNull(propertyName);
 
         if (comparer.Equals(backingField, value))
         {
-            return;
+            return false;
         }
         OnPropertyChanging(propertyName, backingField, value);
         backingField = value;
         OnPropertyChanged(propertyName, value);
+        return true;
     }
 
+    /// <summary>
+    /// A method to set a property an rise the <see cref="PropertyChangedEventHandler"/>
+    /// </summary>
+    /// <typeparam name="T">the type of the property</typeparam>
+    /// <param name="backingField">a reference to the backing field</param>
+    /// <param name="value">the new value of the property</param>
+    /// <param name="callback">a method that gets called if the value has been updated</param>
+    /// <param name="propertyName">the name of the property</param>
+    /// <returns>a value indicating whether the value has been changed or not</returns>
+    protected virtual bool SetProperty<T>(ref T backingField, T value, Action<T> callback, [CallerMemberName] string? propertyName = null)
+    {
+        if (SetProperty(ref backingField, value, propertyName))
+        {
+            callback(value);
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// A method to set a property an rise the <see cref="PropertyChangedEventHandler"/>
+    /// </summary>
+    /// <typeparam name="T">the type of the property</typeparam>
+    /// <param name="backingField">a reference to the backing field</param>
+    /// <param name="value">the new value of the property</param>
+    /// <param name="callback">a method that gets called if the value has been updated</param>
+    /// <param name="comparer">the <see cref="IEqualityComparer{T}"/> to compare the current value with the new value to</param>
+    /// <param name="propertyName">the name of the property</param>
+    /// <returns>a value indicating whether the value has been changed or not</returns>
+    protected virtual bool SetProperty<T>(
+        ref T backingField,
+        T value,
+        Action<T> callback,
+        IEqualityComparer<T> comparer,
+        [CallerMemberName] string? propertyName = null)
+    {
+        if (SetProperty(ref backingField, value, comparer, propertyName))
+        {
+            callback(value);
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// A Method that is called when a property is changing
+    /// </summary>
+    /// <param name="propertyName">the name of the updated property</param>
+    /// <param name="oldValue">the old value</param>
+    /// <param name="newValue">the new value</param>
     protected virtual void OnPropertyChanging(string propertyName, object? oldValue, object? newValue)
     {
 
     }
 
+    /// <summary>
+    /// A Method that is called when a property has been changed
+    /// </summary>
+    /// <param name="propertyName">the name of the updated property</param>
+    /// <param name="newValue">the new value</param>
     protected virtual void OnPropertyChanged(string propertyName, object? newValue)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-       CallPropertyChangedCallBacks(propertyName, newValue);
-    }
-
-    protected virtual void CallPropertyChangedCallBacks(string propertyName, object? newValue)
-    {
-        if (PropertyChangedCallbacks.TryGetValue(propertyName, out var callbacks))
-        {
-            foreach (var callback in callbacks)
-            {
-                callback(newValue);
-            }
-        }
-    }
-
-    protected virtual void AddCallBack<T>(T property,
-        Action<T> callback,
-        [CallerArgumentExpression(nameof(property))] string? propertyName = null)
-    {
-        ArgumentNullException.ThrowIfNull(propertyName);
-        AddCallBack(callback, propertyName);
-    }
-
-    internal void AddCallBack<T>(Action<T?> callback, string propertyName)
-    {
-        ArgumentNullException.ThrowIfNull(callback);
-        ArgumentNullException.ThrowIfNull(propertyName);
-
-        if (!PropertyChangedCallbacks.TryGetValue(propertyName, out var callbacks))
-        {
-            callbacks = new();
-            PropertyChangedCallbacks.Add(propertyName, callbacks);
-        }
-
-        callbacks.Add(o =>
-        {
-            if(o is null)
-            {
-                callback(default);
-            }
-            if(o is not T value)
-            {
-                throw new InvalidCastException($"property '{propertyName}' can't be casted to {typeof(T)} ");
-            }
-            callback(value);
-        });
     }
 }
