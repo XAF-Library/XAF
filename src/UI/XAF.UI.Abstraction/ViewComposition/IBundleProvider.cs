@@ -1,4 +1,5 @@
 ﻿using DynamicData;
+using System.Diagnostics.CodeAnalysis;
 using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewModels;
 
@@ -8,19 +9,19 @@ public interface IBundleProvider
 {
     void AddBundle(IXafBundle bundle);
 
-    Task<IEnumerable<IXafBundle<TViewModel>>> GetBundlesAsync<TViewModel>()
+    IEnumerable<IXafBundle<TViewModel>> GetBundles<TViewModel>()
         where TViewModel : IXafViewModel;
 
-    Task<IXafBundle<TViewModel>?> GetFirstBundleAsync<TViewModel>()
+    bool TryGetFirstBundle<TViewModel>([NotNullWhen(true)] out IXafBundle<TViewModel>? bundle)
         where TViewModel : IXafViewModel;
 
-    Task<IXafBundle<TViewModel>> GetBundleAsync<TViewModel>(TViewModel viewModel)
+    bool TryGetBundle<TViewModel>(TViewModel viewModel, [NotNullWhen(true)] out IXafBundle<TViewModel>? bundle)
         where TViewModel : IXafViewModel;
 
-    Task<IXafBundle<TViewModel>> GetOrCreateBundleAsync<TViewModel>(TViewModel viewModel)
+    ValueTask<IXafBundle<TViewModel>> GetOrCreateBundleAsync<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
 
-    Task<IXafBundle<TViewModel>> GetOrCreateBundleAsync<TViewModel>()
+    ValueTask<IXafBundle<TViewModel>> GetOrCreateBundleAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
     Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>()

@@ -18,7 +18,6 @@ namespace WpfPluginApp.Views;
 /// <summary>
 /// Interaktionslogik für SecondShell.xaml
 /// </summary>
-[Shell]
 [ViewFor<SecondShellViewModel>]
 public partial class SecondShell : Window
 {
