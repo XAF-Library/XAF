@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modularity\XAF.Abstraction\XAF.Modularity.Abstraction.csproj" />
     <ProjectReference Include="..\..\XAF\XAF.Utilities.csproj" />
   </ItemGroup>
 

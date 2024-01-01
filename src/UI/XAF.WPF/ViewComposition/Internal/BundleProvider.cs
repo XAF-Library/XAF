@@ -12,16 +12,15 @@ internal class BundleProvider : IBundleProvider
 {
     private readonly IBundleMetadataCollection _bundleMetadata;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IWpfThread _wpfThread;
+    private readonly IWpfEnvironment _wpfEnvironment;
     private readonly Dictionary<IXafViewModel, IXafBundle> _bundleByViewModel;
     private readonly Dictionary<Type, List<IXafBundle>> _bundlesByViewModelTypes;
 
-    public BundleProvider(IBundleMetadataCollection bundleMetadata, IServiceProvider serviceProvider, IWpfThread wpfThread)
+    public BundleProvider(IBundleMetadataCollection bundleMetadata, IServiceProvider serviceProvider, IWpfEnvironment wpfEnvironment)
     {
         _bundleMetadata = bundleMetadata;
         _serviceProvider = serviceProvider;
-        _wpfThread = wpfThread;
-
+        _wpfEnvironment = wpfEnvironment;
         _bundlesByViewModelTypes = new();
         _bundleByViewModel = new();
     }
@@ -131,8 +130,8 @@ internal class BundleProvider : IBundleProvider
 
     private async Task<FrameworkElement> CreateViewAsync(Type ViewType, IXafViewModel viewModel)
     {
-        await _wpfThread.WaitForAppCreation();
-        return _wpfThread.UiDispatcher.Invoke(() =>
+        await _wpfEnvironment.WaitForAppStart();
+        return _wpfEnvironment.WpfDispatcher.Invoke(() =>
         {
             var view = (FrameworkElement)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, ViewType);
             view.DataContext = viewModel;

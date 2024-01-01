@@ -5,4 +5,6 @@ public interface IViewAdapterCollection
 
     void AddAdapter<TViewAdapter>()
         where TViewAdapter : IViewAdapter;
+
+    void AddAdapter(Type adapterType);
 }

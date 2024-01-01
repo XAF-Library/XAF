@@ -20,17 +20,17 @@ namespace XAF.UI.WPF.ViewComposition.Internal;
 internal class WindowService : IWindowService
 {
     private readonly IBundleProvider _bundleProvider;
-    private readonly IWpfThread _wpfThread;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IWpfEnvironment _wpfEnvironment;
     private readonly List<IXafBundle> _shells = new();
     private readonly List<IXafBundle> _openWindows = new();
     private Type _defaultWindowType = typeof(Window);
 
-    public WindowService(IBundleProvider bundleProvider, IWpfThread wpfThread, IServiceProvider serviceProvider)
+    public WindowService(IBundleProvider bundleProvider, IServiceProvider serviceProvider, IWpfEnvironment wpfEnvironment)
     {
         _bundleProvider = bundleProvider;
-        _wpfThread = wpfThread;
         _serviceProvider = serviceProvider;
+        _wpfEnvironment = wpfEnvironment;
     }
 
     public async Task CloseAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -138,7 +138,7 @@ internal class WindowService : IWindowService
         }
 
         var vm = (IXafViewModel<TParameter>)bundle.ViewModel
-            ?? throw new Exception("Wrong type");
+            ?? throw new ArgumentException($"The bundle ViewModle is not an {typeof(IXafViewModel<TParameter>)}");
 
         vm.Prepare();
         vm.Prepare(parameter);
@@ -161,7 +161,10 @@ internal class WindowService : IWindowService
             Schedulers.MainScheduler.Schedule(() =>
             {
                 window.Show();
-                _wpfThread.Application!.MainWindow = window;
+                if (!hasShell)
+                {
+                    _wpfEnvironment.WpfApp!.MainWindow = window;
+                }
             });
 
             await bundle.ViewModel.LoadAsync();
@@ -172,7 +175,6 @@ internal class WindowService : IWindowService
         {
             throw new InvalidOperationException("No shell window found");
         }
-
     }
 
     public async Task CreateShells()

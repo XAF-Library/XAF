@@ -23,7 +23,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\src\Hosting\XAF.Hosting\XAF.Hosting.csproj" />
 		<ProjectReference Include="..\..\..\src\UI\XAF.WPF\XAF.UI.WPF.csproj" />
 		<ProjectReference Include="..\WpfPlugin\WpfPlugin.csproj" />
 	</ItemGroup>

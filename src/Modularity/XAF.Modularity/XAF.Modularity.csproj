@@ -18,15 +18,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
 	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\Hosting\XAF.Hosting.Abstraction\XAF.Hosting.Abstraction.csproj" />
-	  <ProjectReference Include="..\XAF.Abstraction\XAF.Modularity.Abstraction.csproj" />
 	</ItemGroup>
 
 </Project>

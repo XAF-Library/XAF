@@ -4,17 +4,16 @@ using WpfPlugin;
 using WpfPluginApp;
 using WpfPluginApp.ViewModels;
 using WpfPluginApp.Views;
-using XAF.Hosting;
-using XAF.Hosting.Abstraction;
 using XAF.Modularity.Extensions;
 using XAF.UI.WPF.Hosting;
 
-var builder = XafHost.CreateDefaultBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddWpfApp<App>();
 
 builder.AddSplashWindow<SplashScreen>();
-await builder.RegisterModuleAsync<WPFModule>(default);
+builder.AddModule<WpfModule>();
+
 var app = builder.Build();
 
 await app.RunAsync();
