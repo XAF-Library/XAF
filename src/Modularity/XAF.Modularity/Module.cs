@@ -10,16 +10,7 @@ public abstract class Module : IModule
 {
     public virtual void Configure(IServiceCollection services, ILoggingBuilder logging, IConfigurationManager configuration, IHostEnvironment environment)
     {
-        ConfigureServices(services, environment);
-        ConfigureLogging(logging, environment);
-        ConfigureConfiguration(configuration, environment);
     }
-
-    protected virtual void ConfigureServices(IServiceCollection services, IHostEnvironment environment) { }
-
-    protected virtual void ConfigureLogging(ILoggingBuilder logging, IHostEnvironment environment) { }
-
-    protected virtual void ConfigureConfiguration(IConfigurationManager configuration, IHostEnvironment environment) { }
 
     public virtual string GetName()
     {

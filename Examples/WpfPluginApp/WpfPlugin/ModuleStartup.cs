@@ -12,23 +12,22 @@ using XAF.UI.WPF.Modules;
 
 namespace WpfPlugin;
 
-public class WpfModule : Module<ModuleStartup>
+public class WpfModule : WpfModule<Startup>
 {
 }
 
-public class ModuleStartup : WpfModuleStartUp
+public class Startup : IModuleStartup
 {
-    public ModuleStartup(
-        IBundleMetadataCollection metadataCollection,
-        IViewAdapterCollection adapterCollection,
-        IViewService viewService)
-        : base(metadataCollection, adapterCollection, viewService)
+    private readonly IViewService _viewService;
+
+    public Startup(IViewService viewService)
     {
+        _viewService = viewService;
     }
 
-    protected override async Task ComposeViewsAsync(IViewService viewService)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await viewService.AddViewAsync<ViewAViewModel>("PageViews");
-        await viewService.AddViewAsync<ViewBViewModel>("PageViews");
+        await _viewService.AddViewAsync<ViewAViewModel>("PageViews");
+        await _viewService.AddViewAsync<ViewBViewModel>("PageViews");
     }
 }
