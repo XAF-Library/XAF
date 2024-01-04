@@ -16,4 +16,6 @@ public interface IBundleMetadataCollection
 
     IBundleMetadata GetMetadataForViewModel<TViewModel>()
         where TViewModel : IXafViewModel;
+
+    IBundleMetadata GetMetadataForViewModel(Type viewModelType);
 }

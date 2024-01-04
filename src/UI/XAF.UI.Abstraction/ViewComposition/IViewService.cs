@@ -14,11 +14,16 @@ public interface IViewService
 
     Task<IXafBundle<TViewModel>> AddViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
+    Task<IXafBundle> AddViewAsync(Type viewModelType,  object key);
 
     Task AddViewAsync(IXafBundle bundle, object key);
 
     Task RemoveViewsAsync<TViewModel>(object key)
         where TViewModel : IXafViewModel;
+
+    Task RemoveViewsAsync(Type viewModelType, object key);
+
+    Task RemoveAllAsync(object key);
 
     Task RemoveViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
@@ -33,6 +38,8 @@ public interface IViewService
 
     Task<IXafBundle<TViewModel>> ActivateViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
+
+    Task<IXafBundle> ActivateViewAsync(Type viewModelType, object key);
 
     Task ActivateViewAsync(IXafBundle bundle, object key);
 
@@ -55,6 +62,8 @@ public interface IViewService
 
     Task DeactivateViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
+
+    Task DeactivateViewsAsync(Type viewModelType, object key);
 
     Task DeactivateViewAsync(IXafBundle bundle, object key);
 }

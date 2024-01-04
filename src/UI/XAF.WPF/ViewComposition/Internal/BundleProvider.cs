@@ -49,6 +49,19 @@ internal class BundleProvider : IBundleProvider
         return bundle;
     }
 
+    public async Task<IXafBundle> CreateBundleAsync(Type viewModelType)
+    {
+        var metadata = _bundleMetadata.GetMetadataForViewModel(viewModelType);
+        var vm = (IXafViewModel)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, metadata.ViewModelType);
+        var view = await CreateViewAsync(metadata.ViewType, vm).ConfigureAwait(false);
+        var bundle = new WpfBundle(view, vm, metadata);
+
+        _bundlesByViewModelTypes.Add(viewModelType, (IXafBundle)bundle);
+        _bundleByViewModel.Add(vm, bundle);
+
+        return bundle;
+    }
+
     public async Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
         var metadata = _bundleMetadata.GetMetadataForViewModel<TViewModel>();
@@ -90,21 +103,43 @@ internal class BundleProvider : IBundleProvider
 
     public IEnumerable<IXafBundle<TViewModel>> GetBundles<TViewModel>() where TViewModel : IXafViewModel
     {
-        return !_bundlesByViewModelTypes.ContainsKey(typeof(TViewModel))
-            ? Enumerable.Empty<IXafBundle<TViewModel>>()
-            : _bundlesByViewModelTypes[typeof(TViewModel)].OfType<IXafBundle<TViewModel>>();
+        return _bundlesByViewModelTypes.GetOrEmpty<Type, List<IXafBundle>, IXafBundle>(typeof(TViewModel))
+            .OfType<IXafBundle<TViewModel>>();
+    }
+
+    public IEnumerable<IXafBundle> GetBundles(Type viewModelType)
+    {
+        return _bundlesByViewModelTypes.GetOrEmpty<Type, List<IXafBundle>, IXafBundle>(viewModelType);
+    }
+
+    public IEnumerable<IXafBundle> GetBundles()
+    {
+        return _bundlesByViewModelTypes.Values.SelectMany(b => b);
     }
 
     public bool TryGetFirstBundle<TViewModel>(out IXafBundle<TViewModel>? bundle) where TViewModel : IXafViewModel
     {
         bundle = null;
-        
-        if(!_bundlesByViewModelTypes.TryGetValue(typeof(TViewModel), out var bundles))
+
+        if (!_bundlesByViewModelTypes.TryGetValue(typeof(TViewModel), out var bundles))
         {
             return false;
         }
 
         bundle = bundles.OfType<IXafBundle<TViewModel>>().FirstOrDefault();
+        return bundle is not null;
+    }
+
+    public bool TryGetFirstBundle(Type viewModelType, [NotNullWhen(true)] out IXafBundle? bundle)
+    {
+        bundle = null;
+
+        if (!_bundlesByViewModelTypes.TryGetValue(viewModelType, out var bundles))
+        {
+            return false;
+        }
+
+        bundle = bundles.FirstOrDefault();
         return bundle is not null;
     }
 
@@ -126,6 +161,19 @@ internal class BundleProvider : IBundleProvider
             }
         }
         return new ValueTask<IXafBundle<TViewModel>>(CreateBundleAsync<TViewModel>());
+    }
+
+    public ValueTask<IXafBundle> GetOrCreateBundleAsync(Type viewModelType)
+    {
+        if (_bundlesByViewModelTypes.TryGetValue(viewModelType, out var bundles))
+        {
+            var bundle = bundles.FirstOrDefault();
+            if (bundle != null)
+            {
+                return new ValueTask<IXafBundle>(bundle);
+            }
+        }
+        return new ValueTask<IXafBundle>(CreateBundleAsync(viewModelType));
     }
 
     private async Task<FrameworkElement> CreateViewAsync(Type ViewType, IXafViewModel viewModel)

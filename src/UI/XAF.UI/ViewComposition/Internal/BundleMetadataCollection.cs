@@ -50,6 +50,11 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
     {
         return _metadataByViewModelType[typeof(TViewModel)];
     }
+
+    public IBundleMetadata GetMetadataForViewModel(Type viewModelType)
+    {
+        return _metadataByViewModelType[viewModelType];
+    }
 }
 
 internal record BundleMetadata(Type ViewModelType, Type ViewType, IBundleDecoratorCollection ViewDecorators, Type? ParameterType) : IBundleMetadata;

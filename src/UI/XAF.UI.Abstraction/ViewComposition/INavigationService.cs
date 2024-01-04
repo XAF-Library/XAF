@@ -12,21 +12,23 @@ public interface INavigationService
 
     Task NavigateForward(object viewPresenterKey);
 
-    Task NavigateTo<TViewModel>(object viewPresenterKey)
+    Task NavigateAsync<TViewModel>(object viewPresenterKey)
         where TViewModel : IXafViewModel;
 
-    Task NavigateTo<TViewModel, TParameter>(TParameter parameter, object viewPresenterKey)
+    Task NavigateAsync<TViewModel, TParameter>(TParameter parameter, object viewPresenterKey)
         where TViewModel : IXafViewModel<TParameter>;
 
-    Task NavigateTo<TViewModel>(TViewModel viewModel, object viewPresenterKey)
+    Task NavigateAsync<TViewModel>(TViewModel viewModel, object viewPresenterKey)
         where TViewModel : IXafViewModel;
 
-    Task NavigateTo<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter, object viewPresenterKey)
+    Task NavigateAsync<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter, object viewPresenterKey)
         where TViewModel : IXafViewModel<TParameter>;
 
-    Task NavigateTo(IXafBundle bundle, object viewPresenterKey);
+    Task NavigateAsync(IXafBundle bundle, object viewPresenterKey);
 
-    Task NavigateTo(IXafBundle bundle, object parameter, object viewPresenterKey);
+    Task NavigateAsync(IXafBundle bundle, object parameter, object viewPresenterKey);
+
+    Task NavigateAsync(Type viewModelType,  object viewPresenterKey);
 
     IObservable<bool> CanNavigateBack(object viewPresenterKey);
 

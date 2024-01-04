@@ -25,7 +25,7 @@ public class ControlViewModel : XafViewModel
     {
         var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
-        NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateTo(viewAVm, "PageViews"));
+        NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateAsync(viewAVm, "PageViews"));
 
         OpenDialogCommand = XafCommand.Create(() => windowService.ShowDialogAsync<DialogViewModel, string>("Navigated"));
         NavigateBackCommand = RxCommand.CreateFromTask(() => navigationService.NavigateBack("PageViews"), navigationService.CanNavigateBack("PageViews"));
