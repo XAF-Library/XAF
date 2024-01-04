@@ -91,22 +91,25 @@ internal class WindowService : IWindowService
 
     }
 
-    public async Task ShowDialogAsync<TViewModel>() where TViewModel : IXafViewModel
+    public async Task<TViewModel> ShowDialogAsync<TViewModel>() where TViewModel : IXafViewModel
     {
         var bundle = await _bundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
-        await ShowDialogAsync(bundle);
+        await ShowDialogAsync(bundle).ConfigureAwait(false);
+        return bundle.ViewModel;
     }
 
     public async Task ShowDialogAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
         var bundle = await _bundleProvider.CreateBundleAsync(viewModel).ConfigureAwait(false);
-        await ShowDialogAsync(bundle);
+        await ShowDialogAsync(bundle)
+            .ConfigureAwait(false);
     }
 
-    public async Task ShowDialogAsync<TViewModel, TParameter>(TParameter parameter) where TViewModel : IXafViewModel<TParameter>
+    public async Task<TViewModel> ShowDialogAsync<TViewModel, TParameter>(TParameter parameter) where TViewModel : IXafViewModel<TParameter>
     {
         var bundle = await _bundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
-        await ShowDialogAsync(bundle, parameter);
+        await ShowDialogAsync(bundle, parameter).ConfigureAwait(false);
+        return bundle.ViewModel;
     }
 
     public async Task ShowDialogAsync<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter) where TViewModel : IXafViewModel<TParameter>
