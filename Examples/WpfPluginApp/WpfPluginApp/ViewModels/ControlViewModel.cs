@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using WpfPlugin.ViewModels;
 using XAF.UI.Abstraction.Commands;
 using XAF.UI.Abstraction.ViewComposition;
+using XAF.UI.Abstraction.ViewModels;
 using XAF.UI.Commands;
 using XAF.UI.ReactiveCommands;
-using XAF.UI.ViewModels;
 
 namespace WpfPluginApp.ViewModels;
 public class ControlViewModel : XafViewModel

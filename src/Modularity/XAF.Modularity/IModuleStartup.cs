@@ -9,4 +9,6 @@ namespace XAF.Modularity;
 public interface IModuleStartup
 {
     Task StartAsync(CancellationToken cancellationToken);
+
+    Task PrepareAsync(CancellationToken cancellationToken);
 }

@@ -9,7 +9,7 @@ using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.WPF.ExtensionMethods;
 
 namespace XAF.UI.WPF.Modules.Internal;
-internal class DefaultWpfStartup : IModuleStartup
+public class DefaultWpfStartup : IModuleStartup
 {
     private readonly Assembly _assembly;
     private readonly IBundleMetadataCollection _metadataCollection;
@@ -25,10 +25,15 @@ internal class DefaultWpfStartup : IModuleStartup
         _viewAdapterCollection = viewAdapterCollection;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task PrepareAsync(CancellationToken cancellationToken)
     {
         _metadataCollection.AddFromAssembly(_assembly);
         _viewAdapterCollection.AddAdaptersFromAssembly(_assembly);
+        return Task.CompletedTask;
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
         return Task.CompletedTask;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using XAF.UI;
-using XAF.UI.ViewModels;
+using XAF.UI.Abstraction.ViewModels;
 
 namespace WpfPluginApp.ViewModels;
 public class ShellViewModel : XafViewModel

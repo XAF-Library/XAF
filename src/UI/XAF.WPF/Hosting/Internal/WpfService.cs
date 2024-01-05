@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 using XAF.Modularity;
 using XAF.UI.Abstraction;
@@ -54,10 +52,17 @@ public class WpfService : IHostedService
         await _wpfEnvironment.WaitForAppStart().ConfigureAwait(false);
         var moduleStartups = _serviceProvider.GetServices<IModuleStartup>();
 
+        foreach (var moduleStartup in moduleStartups)
+        {
+            await moduleStartup.PrepareAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         await windowService.CreateShells().ConfigureAwait(false);
 
-        var tasks = moduleStartups.Select(m => m.StartAsync(cancellationToken));
-        await Task.WhenAll(tasks);
+        foreach (var moduleStartup in moduleStartups)
+        {
+            await moduleStartup.StartAsync(cancellationToken).ConfigureAwait(false);
+        }
 
         if (_splashWindow is not null)
         {
