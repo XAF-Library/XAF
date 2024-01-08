@@ -11,7 +11,6 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddWpfApp<App>();
 
-builder.AddSplashWindow<SplashScreen>();
 builder.AddModule<WpfModule>();
 
 var app = builder.Build();

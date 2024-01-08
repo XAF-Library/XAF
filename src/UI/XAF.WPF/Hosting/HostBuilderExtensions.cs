@@ -31,12 +31,4 @@ public static class HostBuilderExtensions
 
         return builder;
     }
-
-    public static IHostApplicationBuilder AddSplashWindow<TWindow>(this IHostApplicationBuilder builder)
-        where TWindow : SplashWindow
-    {
-        builder.Services.AddSingleton<SplashWindow, TWindow>();
-        //builder.Services.AddStartupAction<WpfShowSplashScreen>();
-        return builder;
-    }
 }

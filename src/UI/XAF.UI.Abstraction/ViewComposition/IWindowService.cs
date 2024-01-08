@@ -38,10 +38,13 @@ public interface IWindowService
 
     Task CloseAsync<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
+    
+    Task PrepareShells();
 
     Task ShowShells();
 
-    Task CreateShells();
+    Task LoadShells();
+
 
     void SetDefaultWindowType<TWindow>()
         where TWindow : class;

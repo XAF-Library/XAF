@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using WpfPlugin.ViewModels;
 using XAF.Modularity;
 using XAF.UI.Abstraction.ViewComposition;
@@ -16,16 +17,18 @@ public class WpfModule : WpfModule<Startup>
 {
 }
 
-public class Startup : IModuleStartup
+public class Startup : ModuleStartup
 {
     private readonly IViewService _viewService;
+    private readonly INavigationService _navigationService;
 
-    public Startup(IViewService viewService)
+    public Startup(IViewService viewService, INavigationService navigationService)
     {
         _viewService = viewService;
+        _navigationService = navigationService;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public override async Task StartAsync(CancellationToken cancellationToken)
     {
         await _viewService.AddViewAsync<ViewAViewModel>("PageViews");
         await _viewService.AddViewAsync<ViewBViewModel>("PageViews");

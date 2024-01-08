@@ -14,6 +14,8 @@ namespace WpfPluginApp.ViewModels;
 public class ControlViewModel : XafViewModel
 {
     public RxCommand NavigateToViewACommand { get; }
+    
+    public RxCommand NavigateToViewBCommand { get; }
 
     public RxCommand NavigateForwardCommand { get; }
 
@@ -26,7 +28,7 @@ public class ControlViewModel : XafViewModel
         var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
         NavigateToViewACommand = RxCommand.CreateFromTask(() => navigationService.NavigateAsync(viewAVm, "PageViews"));
-
+        NavigateToViewBCommand = RxCommand.CreateFromTask(() => navigationService.NavigateAsync(typeof(ViewBViewModel), "Test", "PageViews"));
         OpenDialogCommand = XafCommand.Create(() => windowService.ShowDialogAsync<DialogViewModel, string>("Navigated"));
         NavigateBackCommand = RxCommand.CreateFromTask(() => navigationService.NavigateBack("PageViews"), navigationService.CanNavigateBack("PageViews"));
         NavigateForwardCommand = RxCommand.CreateFromTask(() => navigationService.NavigateForward("PageViews"), navigationService.CanNavigateForward("PageViews"));

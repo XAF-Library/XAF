@@ -7,13 +7,15 @@ namespace XAF.UI.Abstraction.ViewComposition;
 
 public interface IBundleProvider
 {
+    bool CacheBundles { get; set; }
+
     void AddBundle(IXafBundle bundle);
 
     IEnumerable<IXafBundle<TViewModel>> GetBundles<TViewModel>()
         where TViewModel : IXafViewModel;
 
     IEnumerable<IXafBundle> GetBundles(Type viewModelType);
-    
+
     IEnumerable<IXafBundle> GetBundles();
 
     bool TryGetFirstBundle<TViewModel>([NotNullWhen(true)] out IXafBundle<TViewModel>? bundle)

@@ -31,6 +31,8 @@ internal class WindowService : IWindowService
         _bundleProvider = bundleProvider;
         _serviceProvider = serviceProvider;
         _wpfEnvironment = wpfEnvironment;
+
+        _bundleProvider.CacheBundles = false;
     }
 
     public async Task CloseAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -42,7 +44,6 @@ internal class WindowService : IWindowService
             {
                 continue;
             }
-
             window.Close();
             await bundle.ViewModel.Unload().ConfigureAwait(false);
         }
@@ -159,8 +160,6 @@ internal class WindowService : IWindowService
                 continue;
             }
 
-            bundle.ViewModel.Prepare();
-
             Schedulers.MainScheduler.Schedule(() =>
             {
                 window.Show();
@@ -170,7 +169,6 @@ internal class WindowService : IWindowService
                 }
             });
 
-            await bundle.ViewModel.LoadAsync();
             hasShell = true;
         }
 
@@ -180,12 +178,21 @@ internal class WindowService : IWindowService
         }
     }
 
-    public async Task CreateShells()
+    public async Task PrepareShells()
     {
         var bundles = _bundleProvider.CreateBundlesWithDecoratorAsync<ShellAttribute>();
         await foreach (var bundle in bundles)
         {
             _shells.Add(bundle);
+            bundle.ViewModel.Prepare();
+        }
+    }
+
+    public async Task LoadShells()
+    {
+        foreach (var bundle in _shells)
+        {
+            await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
         }
     }
 

@@ -25,6 +25,8 @@ internal class BundleProvider : IBundleProvider
         _bundleByViewModel = new();
     }
 
+    public bool CacheBundles { get; set; } = true;
+
     public void AddBundle(IXafBundle bundle)
     {
         if (_bundleByViewModel.ContainsKey(bundle.ViewModel))
@@ -32,8 +34,11 @@ internal class BundleProvider : IBundleProvider
             return;
         }
 
-        _bundleByViewModel.Add(bundle.ViewModel, bundle);
-        _bundlesByViewModelTypes.Add(bundle.Metadata.ViewModelType, bundle);
+        if (CacheBundles)
+        {
+            _bundleByViewModel.Add(bundle.ViewModel, bundle);
+            _bundlesByViewModelTypes.Add(bundle.Metadata.ViewModelType, bundle);
+        }
     }
 
     public async Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -43,8 +48,13 @@ internal class BundleProvider : IBundleProvider
         var view = await CreateViewAsync(metadata.ViewType, vm).ConfigureAwait(false);
         var bundle = new WpfBundle<TViewModel>(view, vm, metadata);
 
-        _bundlesByViewModelTypes.Add(typeof(TViewModel), (IXafBundle)bundle);
-        _bundleByViewModel.Add(vm, bundle);
+
+
+        if (CacheBundles)
+        {
+            _bundlesByViewModelTypes.Add(typeof(TViewModel), (IXafBundle)bundle);
+            _bundleByViewModel.Add(vm, bundle); 
+        }
 
         return bundle;
     }
@@ -56,20 +66,26 @@ internal class BundleProvider : IBundleProvider
         var view = await CreateViewAsync(metadata.ViewType, vm).ConfigureAwait(false);
         var bundle = new WpfBundle(view, vm, metadata);
 
-        _bundlesByViewModelTypes.Add(viewModelType, (IXafBundle)bundle);
-        _bundleByViewModel.Add(vm, bundle);
+        if (CacheBundles)
+        {
+            _bundlesByViewModelTypes.Add(viewModelType, (IXafBundle)bundle);
+            _bundleByViewModel.Add(vm, bundle); 
+        }
 
         return bundle;
     }
 
     public async Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
-        var metadata = _bundleMetadata.GetMetadataForViewModel<TViewModel>();
+        var metadata = _bundleMetadata.GetMetadataForViewModel(viewModel.GetType());
         var view = await CreateViewAsync(metadata.ViewType, viewModel).ConfigureAwait(false);
         var bundle = new WpfBundle<TViewModel>(view, viewModel, metadata);
 
-        _bundlesByViewModelTypes.Add(typeof(TViewModel), (IXafBundle)bundle);
-        _bundleByViewModel.Add(viewModel, bundle);
+        if (CacheBundles)
+        {
+            _bundlesByViewModelTypes.Add(typeof(TViewModel), (IXafBundle)bundle);
+            _bundleByViewModel.Add(viewModel, bundle); 
+        }
 
         return bundle;
     }
@@ -83,8 +99,13 @@ internal class BundleProvider : IBundleProvider
             var view = await CreateViewAsync(item.ViewType, vm).ConfigureAwait(false);
             var bundle = new WpfBundle(view, vm, item);
 
-            _bundlesByViewModelTypes.Add(vm.GetType(), (IXafBundle)bundle);
-            _bundleByViewModel.Add(vm, bundle);
+
+            if (CacheBundles)
+            {
+                _bundlesByViewModelTypes.Add(vm.GetType(), (IXafBundle)bundle);
+                _bundleByViewModel.Add(vm, bundle);
+            }
+            
             yield return bundle;
         }
     }

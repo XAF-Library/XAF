@@ -28,7 +28,9 @@ public interface INavigationService
 
     Task NavigateAsync(IXafBundle bundle, object parameter, object viewPresenterKey);
 
-    Task NavigateAsync(Type viewModelType,  object viewPresenterKey);
+    Task NavigateAsync(Type viewModelType, object viewPresenterKey);
+    
+    Task NavigateAsync(Type viewModelType, object parameter, object viewPresenterKey);
 
     IObservable<bool> CanNavigateBack(object viewPresenterKey);
 

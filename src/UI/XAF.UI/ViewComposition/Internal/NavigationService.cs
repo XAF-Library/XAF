@@ -135,6 +135,13 @@ internal class NavigationService : INavigationService
         RecordNavigation(bundle, viewPresenterKey);
     }
 
+    public async Task NavigateAsync(Type viewModelType, object parameter, object viewPresenterKey)
+    {
+        var bundle = await _viewService.ActivateViewAsync(viewModelType, parameter, viewPresenterKey)
+            .ConfigureAwait(false);
+        RecordNavigation(bundle, viewPresenterKey);
+    }
+
     public IObservable<IXafBundle> WhenNavigated(object viewPresenterKey)
     {
         if (!_navigationObservables.TryGetValue(viewPresenterKey, out var observable))

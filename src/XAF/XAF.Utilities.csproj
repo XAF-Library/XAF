@@ -10,6 +10,7 @@
 		<RepositoryType>Git</RepositoryType>
 		<RepositoryUrl>https://github.com/Reactive-Applications/ReactiveFramework</RepositoryUrl>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 	</PropertyGroup>
 
 	<ItemGroup>

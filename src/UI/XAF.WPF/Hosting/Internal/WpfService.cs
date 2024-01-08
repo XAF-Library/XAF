@@ -1,12 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using XAF.Modularity;
 using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewComposition;
+using XAF.UI.Abstraction.ViewModels;
 using XAF.UI.WPF.ExtensionMethods;
 using XAF.UI.WPF.ViewAdapters;
 using XAF.UI.WPF.ViewComposition;
@@ -18,24 +22,32 @@ public class WpfService : IHostedService
     private readonly IServiceProvider _serviceProvider;
     private readonly IApplicationLifetime _applicationLifetime;
     private readonly WpfEnvironment _wpfEnvironment;
+    private readonly ManualResetEvent _startupWindowLock = new ManualResetEvent(false);
+    private readonly ILogger _logger;
+
 
     private Thread _wpfThread;
     private bool _appIsRunning;
     private bool _serviceStarted;
     private bool _outsideStop;
-    private SplashWindow? _splashWindow;
+    private StartupViewModel? _startupVm;
+    private Window? _startupWindow;
+    private IBundleMetadata? _startupMetadata;
 
     public WpfService(
         IServiceProvider serviceProvider,
-        IApplicationLifetime applicationLifetime)
+        IApplicationLifetime applicationLifetime,
+        ILogger<WpfService> logger)
     {
         _serviceProvider = serviceProvider;
         _applicationLifetime = applicationLifetime;
         _wpfEnvironment = _serviceProvider.GetRequiredService<WpfEnvironment>();
+        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        var sw = Stopwatch.StartNew();
         _serviceStarted = true;
         ConfigureApp();
         _wpfThread = new Thread(WpfThread)
@@ -50,27 +62,59 @@ public class WpfService : IHostedService
         cancellationToken.ThrowIfCancellationRequested();
         _wpfThread.Start();
         await _wpfEnvironment.WaitForAppStart().ConfigureAwait(false);
+        sw.Stop();
+        _logger.LogInformation("Startup time {time}ms", sw.ElapsedMilliseconds);
         var moduleStartups = _serviceProvider.GetServices<IModuleStartup>();
 
-        foreach (var moduleStartup in moduleStartups)
+        if (_startupWindow is null)
         {
-            await moduleStartup.PrepareAsync(cancellationToken).ConfigureAwait(false);
+            foreach (var moduleStartup in moduleStartups)
+            {
+                try
+                {
+                    await moduleStartup.PrepareAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Could not prepare module {moduleStartup}");
+                }
+            }
+
+            await windowService.PrepareShells().ConfigureAwait(false);
+
+            foreach (var moduleStartup in moduleStartups)
+            {
+                try
+                {
+                    await moduleStartup.StartAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Could not prepare module {moduleStartup}");
+                }
+            }
+
+            await windowService.ShowShells().ConfigureAwait(false);
+
+            return;
         }
 
-        await windowService.CreateShells().ConfigureAwait(false);
+        _startupWindowLock.WaitOne();
 
-        foreach (var moduleStartup in moduleStartups)
-        {
-            await moduleStartup.StartAsync(cancellationToken).ConfigureAwait(false);
-        }
+        _startupVm = (StartupViewModel)ActivatorUtilities.CreateInstance(_serviceProvider, _startupMetadata!.ViewModelType);
+        _wpfEnvironment.WpfDispatcher.Invoke(() => _startupWindow.DataContext =  _startupVm);
+        var startups = _serviceProvider.GetServices<IModuleStartup>();
+        await _startupVm.PrepareAppAsync(startups, cancellationToken).ConfigureAwait(false);
 
-        if (_splashWindow is not null)
-        {
-            await _splashWindow.OnAppLoadAsync().ConfigureAwait(false);
-            _wpfEnvironment.WpfDispatcher.Invoke(_splashWindow.Close);
-        }
+        await windowService.PrepareShells().ConfigureAwait(false);
+
+        await _startupVm.LoadAppAsync(startups, cancellationToken).ConfigureAwait(false);
 
         await windowService.ShowShells().ConfigureAwait(false);
+
+        _wpfEnvironment.WpfDispatcher.Invoke(_startupWindow!.Close);
+
+        await windowService.LoadShells().ConfigureAwait(false);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
@@ -109,13 +153,29 @@ public class WpfService : IHostedService
 
         var app = _serviceProvider.GetRequiredService<Application>();
         _wpfEnvironment.WpfApp = app;
-        _splashWindow = _serviceProvider.GetService<SplashWindow>();
+        var bundleMetadata = _serviceProvider.GetService<IBundleMetadataCollection>();
+
+        _startupMetadata = bundleMetadata.GetMetadataForDecorator<StartupWindowAttribute>().FirstOrDefault();
+        
+        if (_startupMetadata != null)
+        {
+            var view = ActivatorUtilities.CreateInstance(_serviceProvider, _startupMetadata.ViewType);
+            _startupWindow = view as Window;
+        }
 
         _wpfEnvironment.AppStartLock.Set();
         _appIsRunning = true;
-        if (_splashWindow is not null)
+
+        void startupWindowActivated(object? sender, EventArgs e)
         {
-            app.Run(_splashWindow);
+            _startupWindow.Activated -= startupWindowActivated;
+            _startupWindowLock.Set();
+        }
+
+        if (_startupWindow is not null)
+        {
+            _startupWindow.Activated += startupWindowActivated;
+            app.Run(_startupWindow);
         }
         else
         {

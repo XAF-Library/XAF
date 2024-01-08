@@ -14,7 +14,7 @@ public interface IViewService
 
     Task<IXafBundle<TViewModel>> AddViewAsync<TViewModel>(TViewModel viewModel, object key)
         where TViewModel : IXafViewModel;
-    Task<IXafBundle> AddViewAsync(Type viewModelType,  object key);
+    Task<IXafBundle> AddViewAsync(Type viewModelType, object key);
 
     Task AddViewAsync(IXafBundle bundle, object key);
 
@@ -40,6 +40,8 @@ public interface IViewService
         where TViewModel : IXafViewModel;
 
     Task<IXafBundle> ActivateViewAsync(Type viewModelType, object key);
+
+    Task<IXafBundle> ActivateViewAsync(Type viewModelType, object parameter, object key);
 
     Task ActivateViewAsync(IXafBundle bundle, object key);
 

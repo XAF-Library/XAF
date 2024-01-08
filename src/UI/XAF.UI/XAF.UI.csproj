@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 
-  <ItemGroup>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Modularity\XAF.Modularity\XAF.Modularity.csproj" />
-    <ProjectReference Include="..\..\XAF\XAF.Utilities.csproj" />
-    <ProjectReference Include="..\XAF.UI.Abstraction\XAF.UI.Abstraction.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Modularity\XAF.Modularity\XAF.Modularity.csproj" />
+		<ProjectReference Include="..\..\XAF\XAF.Utilities.csproj" />
+		<ProjectReference Include="..\XAF.UI.Abstraction\XAF.UI.Abstraction.csproj" />
+	</ItemGroup>
 
 </Project>
