@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net7.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<IsPackable>false</IsPackable>
@@ -16,14 +16,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.9.0.77355">
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\src\Hosting\XAF.Hosting\XAF.Hosting.csproj" />
 		<ProjectReference Include="..\..\..\src\UI\XAF.WPF\XAF.UI.WPF.csproj" />
 		<ProjectReference Include="..\WpfPlugin\WpfPlugin.csproj" />
 	</ItemGroup>

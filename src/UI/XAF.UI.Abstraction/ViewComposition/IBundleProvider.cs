@@ -7,13 +7,21 @@ namespace XAF.UI.Abstraction.ViewComposition;
 
 public interface IBundleProvider
 {
+    bool CacheBundles { get; set; }
+
     void AddBundle(IXafBundle bundle);
 
     IEnumerable<IXafBundle<TViewModel>> GetBundles<TViewModel>()
         where TViewModel : IXafViewModel;
 
+    IEnumerable<IXafBundle> GetBundles(Type viewModelType);
+
+    IEnumerable<IXafBundle> GetBundles();
+
     bool TryGetFirstBundle<TViewModel>([NotNullWhen(true)] out IXafBundle<TViewModel>? bundle)
         where TViewModel : IXafViewModel;
+
+    bool TryGetFirstBundle(Type viewModelType, [NotNullWhen(true)] out IXafBundle? bundle);
 
     bool TryGetBundle<TViewModel>(TViewModel viewModel, [NotNullWhen(true)] out IXafBundle<TViewModel>? bundle)
         where TViewModel : IXafViewModel;
@@ -24,8 +32,12 @@ public interface IBundleProvider
     ValueTask<IXafBundle<TViewModel>> GetOrCreateBundleAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
+    ValueTask<IXafBundle> GetOrCreateBundleAsync(Type viewModelType);
+
     Task<IXafBundle<TViewModel>> CreateBundleAsync<TViewModel>()
         where TViewModel : IXafViewModel;
+
+    Task<IXafBundle> CreateBundleAsync(Type viewModelType);
 
     IAsyncEnumerable<IXafBundle> CreateBundlesWithDecoratorAsync<TViewDecorator>()
         where TViewDecorator : BundleDecoratorAttribute;

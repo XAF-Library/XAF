@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XAF.UI.ViewModels;
+using XAF.UI.Abstraction.ViewModels;
 
 namespace WpfPluginApp.ViewModels;
 internal class DialogViewModel : XafViewModel<string>

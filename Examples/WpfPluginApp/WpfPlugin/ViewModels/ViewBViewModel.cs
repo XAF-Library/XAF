@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using XAF.UI;
 using XAF.UI.Abstraction;
+using XAF.UI.Abstraction.ViewModels;
 using XAF.UI.ReactiveProperty;
-using XAF.UI.ViewModels;
 
 namespace WpfPlugin.ViewModels;
 public class ViewBViewModel : XafViewModel<string>

@@ -25,8 +25,12 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
             return;
         }
 
-        var vmType = bundleDecorators.GetDecoratorFirst<ViewForAttribute>().ViewModelType;
-        var parameterType = vmType.IsGenericType ? vmType.GetGenericArguments()[0] : null;
+        var vmType = bundleDecorators.GetFirstDecorator<ViewForAttribute>().ViewModelType;
+        var interfaces = vmType.GetInterfaces();
+        var parameterType = 
+            Array.Find(interfaces, i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IXafViewModel<>))
+            ?.GenericTypeArguments[0];
+        
         IBundleMetadata metadata = new BundleMetadata(vmType, viewType, bundleDecorators, parameterType);
         _metadataByViewModelType.Add(vmType, metadata);
         
@@ -49,6 +53,11 @@ internal class BundleMetadataCollection : IBundleMetadataCollection
     public IBundleMetadata GetMetadataForViewModel<TViewModel>() where TViewModel : IXafViewModel
     {
         return _metadataByViewModelType[typeof(TViewModel)];
+    }
+
+    public IBundleMetadata GetMetadataForViewModel(Type viewModelType)
+    {
+        return _metadataByViewModelType[viewModelType];
     }
 }
 

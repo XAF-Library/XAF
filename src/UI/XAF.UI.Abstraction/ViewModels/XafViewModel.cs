@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XAF.UI.Abstraction.ViewModels;
 using XAF.Utilities;
 
-namespace XAF.UI.ViewModels;
+namespace XAF.UI.Abstraction.ViewModels;
 public abstract class XafViewModel : NotifyPropertyChanged, IXafViewModel
 {
     public virtual void Prepare() { }

@@ -65,10 +65,10 @@ internal class NavigationService : INavigationService
 
         if (entry.Parameter is not null && entry.Bundle.Metadata.ParameterType is not null)
         {
-            return NavigateToInternal(entry.Bundle, entry.Parameter, viewPresenterKey, false);
+            return NavigateInternal(entry.Bundle, entry.Parameter, viewPresenterKey, false);
         }
 
-        return NavigateToInternal(entry.Bundle, viewPresenterKey, false);
+        return NavigateInternal(entry.Bundle, viewPresenterKey, false);
     }
 
     public Task NavigateForward(object viewPresenterKey)
@@ -82,47 +82,64 @@ internal class NavigationService : INavigationService
 
         if (entry.Parameter is not null && entry.Bundle.Metadata.ParameterType is not null)
         {
-            return NavigateToInternal(entry.Bundle, entry.Parameter, viewPresenterKey, false);
+            return NavigateInternal(entry.Bundle, entry.Parameter, viewPresenterKey, false);
         }
 
-        return NavigateToInternal(entry.Bundle, viewPresenterKey, false);
+        return NavigateInternal(entry.Bundle, viewPresenterKey, false);
 
     }
 
-    public async Task NavigateTo<TViewModel>(object viewPresenterKey) where TViewModel : IXafViewModel
+    public async Task NavigateAsync<TViewModel>(object viewPresenterKey) where TViewModel : IXafViewModel
     {
         var bundle = await _viewService.ActivateFirstViewAsync<TViewModel>(viewPresenterKey).ConfigureAwait(false);
         RecordNavigation(bundle, viewPresenterKey);
     }
 
-    public async Task NavigateTo<TViewModel, TParameter>(TParameter parameter, object viewPresenterKey)
+    public async Task NavigateAsync<TViewModel, TParameter>(TParameter parameter, object viewPresenterKey)
         where TViewModel : IXafViewModel<TParameter>
     {
-        var bundle = await _viewService.ActivateViewAsync<TViewModel, TParameter>(parameter, viewPresenterKey).ConfigureAwait(false);
+        var bundle = await _viewService.ActivateViewAsync<TViewModel, TParameter>(parameter, viewPresenterKey)
+            .ConfigureAwait(false);
         RecordNavigation(bundle, parameter, viewPresenterKey);
     }
 
-    public async Task NavigateTo<TViewModel>(TViewModel viewModel, object viewPresenterKey) where TViewModel : IXafViewModel
+    public async Task NavigateAsync<TViewModel>(TViewModel viewModel, object viewPresenterKey) where TViewModel : IXafViewModel
     {
-        var bundle = await _viewService.ActivateViewAsync(viewModel, viewPresenterKey).ConfigureAwait(false);
+        var bundle = await _viewService.ActivateViewAsync(viewModel, viewPresenterKey)
+            .ConfigureAwait(false);
         RecordNavigation(bundle, viewPresenterKey);
     }
 
-    public async Task NavigateTo<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter, object viewPresenterKey)
+    public async Task NavigateAsync<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter, object viewPresenterKey)
         where TViewModel : IXafViewModel<TParameter>
     {
-        var bundle = await _viewService.ActivateViewAsync(parameter, viewModel, viewPresenterKey);
+        var bundle = await _viewService.ActivateViewAsync(parameter, viewModel, viewPresenterKey)
+            .ConfigureAwait(false);
         RecordNavigation(bundle, parameter, viewPresenterKey);
     }
 
-    public Task NavigateTo(IXafBundle bundle, object viewPresenterKey)
+    public Task NavigateAsync(IXafBundle bundle, object viewPresenterKey)
     {
-        return NavigateToInternal(bundle, viewPresenterKey, true);
+        return NavigateInternal(bundle, viewPresenterKey, true);
     }
 
-    public Task NavigateTo(IXafBundle bundle, object parameter, object viewPresenterKey)
+    public Task NavigateAsync(IXafBundle bundle, object parameter, object viewPresenterKey)
     {
-        return NavigateToInternal(bundle, parameter, viewPresenterKey, true);
+        return NavigateInternal(bundle, parameter, viewPresenterKey, true);
+    }
+
+    public async Task NavigateAsync(Type viewModelType, object viewPresenterKey)
+    {
+        var bundle = await _viewService.ActivateViewAsync(viewModelType, viewPresenterKey)
+            .ConfigureAwait(false);
+        RecordNavigation(bundle, viewPresenterKey);
+    }
+
+    public async Task NavigateAsync(Type viewModelType, object parameter, object viewPresenterKey)
+    {
+        var bundle = await _viewService.ActivateViewAsync(viewModelType, parameter, viewPresenterKey)
+            .ConfigureAwait(false);
+        RecordNavigation(bundle, viewPresenterKey);
     }
 
     public IObservable<IXafBundle> WhenNavigated(object viewPresenterKey)
@@ -136,7 +153,7 @@ internal class NavigationService : INavigationService
         return observable;
     }
 
-    private async Task NavigateToInternal(IXafBundle bundle, object viewPresenterKey, bool record)
+    private async Task NavigateInternal(IXafBundle bundle, object viewPresenterKey, bool record)
     {
         await _viewService.ActivateViewAsync(bundle, viewPresenterKey);
         if (record)
@@ -145,7 +162,7 @@ internal class NavigationService : INavigationService
         }
     }
 
-    private async Task NavigateToInternal(IXafBundle bundle, object parameter, object viewPresenterKey, bool record)
+    private async Task NavigateInternal(IXafBundle bundle, object parameter, object viewPresenterKey, bool record)
     {
         await _viewService.ActivateViewAsync(bundle, parameter, viewPresenterKey);
         if (record)
@@ -162,7 +179,7 @@ internal class NavigationService : INavigationService
     private void RecordNavigation(IXafBundle bundle, object? parameter, object key)
     {
         var stack = _navigationStacks.GetOrAdd(key);
-        if(stack.CurrentEntry is not null && bundle == stack.CurrentEntry.Bundle && parameter  == stack.CurrentEntry.Parameter)
+        if (stack.CurrentEntry is not null && bundle == stack.CurrentEntry.Bundle && parameter == stack.CurrentEntry.Parameter)
         {
             return;
         }

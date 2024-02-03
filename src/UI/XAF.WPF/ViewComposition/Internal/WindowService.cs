@@ -20,17 +20,19 @@ namespace XAF.UI.WPF.ViewComposition.Internal;
 internal class WindowService : IWindowService
 {
     private readonly IBundleProvider _bundleProvider;
-    private readonly IWpfThread _wpfThread;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IWpfEnvironment _wpfEnvironment;
     private readonly List<IXafBundle> _shells = new();
     private readonly List<IXafBundle> _openWindows = new();
     private Type _defaultWindowType = typeof(Window);
 
-    public WindowService(IBundleProvider bundleProvider, IWpfThread wpfThread, IServiceProvider serviceProvider)
+    public WindowService(IBundleProvider bundleProvider, IServiceProvider serviceProvider, IWpfEnvironment wpfEnvironment)
     {
         _bundleProvider = bundleProvider;
-        _wpfThread = wpfThread;
         _serviceProvider = serviceProvider;
+        _wpfEnvironment = wpfEnvironment;
+
+        _bundleProvider.CacheBundles = false;
     }
 
     public async Task CloseAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -42,7 +44,6 @@ internal class WindowService : IWindowService
             {
                 continue;
             }
-
             window.Close();
             await bundle.ViewModel.Unload().ConfigureAwait(false);
         }
@@ -91,22 +92,25 @@ internal class WindowService : IWindowService
 
     }
 
-    public async Task ShowDialogAsync<TViewModel>() where TViewModel : IXafViewModel
+    public async Task<TViewModel> ShowDialogAsync<TViewModel>() where TViewModel : IXafViewModel
     {
         var bundle = await _bundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
-        await ShowDialogAsync(bundle);
+        await ShowDialogAsync(bundle).ConfigureAwait(false);
+        return bundle.ViewModel;
     }
 
     public async Task ShowDialogAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
         var bundle = await _bundleProvider.CreateBundleAsync(viewModel).ConfigureAwait(false);
-        await ShowDialogAsync(bundle);
+        await ShowDialogAsync(bundle)
+            .ConfigureAwait(false);
     }
 
-    public async Task ShowDialogAsync<TViewModel, TParameter>(TParameter parameter) where TViewModel : IXafViewModel<TParameter>
+    public async Task<TViewModel> ShowDialogAsync<TViewModel, TParameter>(TParameter parameter) where TViewModel : IXafViewModel<TParameter>
     {
         var bundle = await _bundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
-        await ShowDialogAsync(bundle, parameter);
+        await ShowDialogAsync(bundle, parameter).ConfigureAwait(false);
+        return bundle.ViewModel;
     }
 
     public async Task ShowDialogAsync<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter) where TViewModel : IXafViewModel<TParameter>
@@ -138,7 +142,7 @@ internal class WindowService : IWindowService
         }
 
         var vm = (IXafViewModel<TParameter>)bundle.ViewModel
-            ?? throw new Exception("Wrong type");
+            ?? throw new ArgumentException($"The bundle ViewModle is not an {typeof(IXafViewModel<TParameter>)}");
 
         vm.Prepare();
         vm.Prepare(parameter);
@@ -156,15 +160,15 @@ internal class WindowService : IWindowService
                 continue;
             }
 
-            bundle.ViewModel.Prepare();
-
             Schedulers.MainScheduler.Schedule(() =>
             {
                 window.Show();
-                _wpfThread.Application!.MainWindow = window;
+                if (!hasShell)
+                {
+                    _wpfEnvironment.WpfApp!.MainWindow = window;
+                }
             });
 
-            await bundle.ViewModel.LoadAsync();
             hasShell = true;
         }
 
@@ -172,15 +176,23 @@ internal class WindowService : IWindowService
         {
             throw new InvalidOperationException("No shell window found");
         }
-
     }
 
-    public async Task CreateShells()
+    public async Task PrepareShells()
     {
         var bundles = _bundleProvider.CreateBundlesWithDecoratorAsync<ShellAttribute>();
         await foreach (var bundle in bundles)
         {
             _shells.Add(bundle);
+            bundle.ViewModel.Prepare();
+        }
+    }
+
+    public async Task LoadShells()
+    {
+        foreach (var bundle in _shells)
+        {
+            await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
         }
     }
 

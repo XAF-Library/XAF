@@ -25,6 +25,17 @@ internal class ViewAdapterCollection : IViewAdapterCollection
         _adaptersByViewType.Add(adapter.ViewType, adapter);
     }
 
+    public void AddAdapter(Type adapterType)
+    {
+        if (!adapterType.IsAssignableTo(typeof(IViewAdapter)))
+        {
+            throw new ArgumentException($"The adaptertype does not implement the {typeof(IViewAdapter)} interface");
+        }
+
+        var adapter = (IViewAdapter)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, adapterType);
+        _adaptersByViewType.Add(adapter.ViewType, adapter);
+    }
+
     public IViewAdapter GetAdapterFor(Type viewType)
     {
         var type = viewType;

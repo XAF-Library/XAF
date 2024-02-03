@@ -17,13 +17,13 @@ public interface IWindowService
 
     Task ShowAsync(IXafBundle bundle);
 
-    Task ShowDialogAsync<TViewModel>()
+    Task<TViewModel> ShowDialogAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
     Task ShowDialogAsync<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
 
-    Task ShowDialogAsync<TViewModel, TParameter>(TParameter parameter)
+    Task<TViewModel> ShowDialogAsync<TViewModel, TParameter>(TParameter parameter)
         where TViewModel : IXafViewModel<TParameter>;
 
     Task ShowDialogAsync<TViewModel, TParameter>(TViewModel viewModel, TParameter parameter)
@@ -38,10 +38,13 @@ public interface IWindowService
 
     Task CloseAsync<TViewModel>(TViewModel viewModel)
         where TViewModel : IXafViewModel;
+    
+    Task PrepareShells();
 
     Task ShowShells();
 
-    Task CreateShells();
+    Task LoadShells();
+
 
     void SetDefaultWindowType<TWindow>()
         where TWindow : class;

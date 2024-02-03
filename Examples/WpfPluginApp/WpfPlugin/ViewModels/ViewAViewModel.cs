@@ -1,8 +1,8 @@
 ﻿using System.Reactive.Linq;
 using XAF.UI.Abstraction.ViewComposition;
+using XAF.UI.Abstraction.ViewModels;
 using XAF.UI.ReactiveCommands;
 using XAF.UI.ReactiveProperty;
-using XAF.UI.ViewModels;
 
 namespace WpfPlugin.ViewModels;
 public class ViewAViewModel : XafViewModel
@@ -16,7 +16,7 @@ public class ViewAViewModel : XafViewModel
         // Executes navigation to View B. 
         // Can only be executed if Message is not empty.
         NavigateToViewBCommand = RxCommand.CreateFromTask(
-            () => navigationService.NavigateTo<ViewBViewModel, string>(Message, "PageViews"),
+            () => navigationService.NavigateAsync<ViewBViewModel, string>(Message, "PageViews"),
             Message.Select(s => !string.IsNullOrWhiteSpace(s)));
     }
 
