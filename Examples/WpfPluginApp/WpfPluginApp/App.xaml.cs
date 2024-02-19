@@ -21,5 +21,6 @@ public partial class App : Application
 {
     public App()
     {
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
     }
 }

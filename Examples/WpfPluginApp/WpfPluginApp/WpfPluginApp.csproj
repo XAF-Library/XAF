@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0-windows7.0</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<IsPackable>false</IsPackable>
@@ -13,13 +13,6 @@
 	  <EmbeddedResource Remove="Attributes\**" />
 	  <None Remove="Attributes\**" />
 	  <Page Remove="Attributes\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

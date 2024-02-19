@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewComposition;
@@ -160,14 +161,12 @@ internal class WindowService : IWindowService
                 continue;
             }
 
-            Schedulers.MainScheduler.Schedule(() =>
+            Schedulers.MainScheduler.Schedule(window.Show);
+
+            if (!hasShell)
             {
-                window.Show();
-                if (!hasShell)
-                {
-                    _wpfEnvironment.WpfApp!.MainWindow = window;
-                }
-            });
+                _wpfEnvironment.WpfDispatcher.Invoke(() => _wpfEnvironment.WpfApp!.MainWindow = window);
+            }
 
             hasShell = true;
         }

@@ -122,7 +122,7 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
         bundle.ViewModel.Prepare();
 
-        if (bundle.Metadata.ParameterType == parameter.GetType())
+        if (parameter.GetType().IsAssignableTo(bundle.Metadata.ParameterType))
         {
             var prepareMethod = bundle.Metadata.ViewModelType.GetMethods()
                 .Single(m => m.Name == nameof(IXafViewModel.Prepare) && m.GetParameters().Length == 1);

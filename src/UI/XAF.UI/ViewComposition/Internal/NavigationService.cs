@@ -139,7 +139,8 @@ internal class NavigationService : INavigationService
     {
         var bundle = await _viewService.ActivateViewAsync(viewModelType, parameter, viewPresenterKey)
             .ConfigureAwait(false);
-        RecordNavigation(bundle, viewPresenterKey);
+        RecordNavigation(bundle, parameter,viewPresenterKey);
+        
     }
 
     public IObservable<IXafBundle> WhenNavigated(object viewPresenterKey)
