@@ -10,6 +10,7 @@ public interface IXafViewModel : IComparable<IXafViewModel>
     void Prepare();
     Task LoadAsync();
     Task Unload();
+    Task WaitForViewClose();
 }
 
 public interface IXafViewModel<in TParameter> : IXafViewModel

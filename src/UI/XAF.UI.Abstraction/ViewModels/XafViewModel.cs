@@ -8,6 +8,7 @@ using XAF.Utilities;
 namespace XAF.UI.Abstraction.ViewModels;
 public abstract class XafViewModel : NotifyPropertyChanged, IXafViewModel
 {
+    private readonly SemaphoreSlim _waitForClose = new SemaphoreSlim(0);
     public virtual void Prepare() { }
 
     public virtual Task LoadAsync()
@@ -17,12 +18,18 @@ public abstract class XafViewModel : NotifyPropertyChanged, IXafViewModel
 
     public virtual Task Unload()
     {
+        _waitForClose.Release();
         return Task.CompletedTask;
     }
 
     public virtual int CompareTo(IXafViewModel? other)
     {
         return 0;
+    }
+
+    public Task WaitForViewClose()
+    {
+        return _waitForClose.WaitAsync();
     }
 }
 

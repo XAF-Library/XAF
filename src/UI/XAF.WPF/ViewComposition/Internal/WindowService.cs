@@ -46,7 +46,7 @@ internal class WindowService : IWindowService
                 continue;
             }
             window.Close();
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            //await bundle.ViewModel.Unload().ConfigureAwait(false);
         }
     }
 
@@ -64,7 +64,7 @@ internal class WindowService : IWindowService
         }
 
         window.Close();
-        await bundle.ViewModel.Unload();
+        //await bundle.ViewModel.Unload();
     }
 
     public async Task ShowAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -88,10 +88,12 @@ internal class WindowService : IWindowService
         }
 
         bundle.ViewModel.Prepare();
+        bundleWindow.Closed += (s, e) => bundle.ViewModel.Unload();
         Schedulers.MainScheduler.Schedule(() => bundleWindow.Show());
         await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
 
     }
+
 
     public async Task<TViewModel> ShowDialogAsync<TViewModel>() where TViewModel : IXafViewModel
     {
@@ -128,6 +130,7 @@ internal class WindowService : IWindowService
             bundleWindow = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
             bundleWindow.Content = bundle.View;
         }
+        bundleWindow.Closed += (s, e) => bundle.ViewModel.Unload();
 
         bundle.ViewModel.Prepare();
         Schedulers.MainScheduler.Schedule(() => bundleWindow.ShowDialog());
@@ -141,6 +144,7 @@ internal class WindowService : IWindowService
             bundleWindow = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
             bundleWindow.Content = bundle.View;
         }
+        bundleWindow.Closed += (s, e) => bundle.ViewModel.Unload();
 
         var vm = (IXafViewModel<TParameter>)bundle.ViewModel
             ?? throw new ArgumentException($"The bundle ViewModle is not an {typeof(IXafViewModel<TParameter>)}");
