@@ -135,6 +135,7 @@ internal class WindowService : IWindowService
         bundle.ViewModel.Prepare();
         Schedulers.MainScheduler.Schedule(() => bundleWindow.ShowDialog());
         await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await bundle.ViewModel.WaitForViewClose();
     }
 
     public async Task ShowDialogAsync<TParameter>(IXafBundle bundle, TParameter parameter)
@@ -153,6 +154,7 @@ internal class WindowService : IWindowService
         vm.Prepare(parameter);
         Schedulers.MainScheduler.Schedule(() => bundleWindow.ShowDialog());
         await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await bundle.ViewModel.WaitForViewClose();
     }
 
     public async Task ShowShells()
