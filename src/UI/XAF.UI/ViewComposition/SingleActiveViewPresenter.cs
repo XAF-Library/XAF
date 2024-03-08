@@ -13,24 +13,24 @@ public class SingleActiveViewPresenter : ViewPresenter
     {
     }
 
-    public override void Activate(IXafBundle view)
+    public override async Task ActivateAsync(IXafBundle view)
     {
         var currentActive = ActiveViews.Items.FirstOrDefault();
 
         if (currentActive != null && currentActive != view && Views.Items.Contains(currentActive))
         {
-            base.Deactivate(currentActive);
+            await base.DeactivateAsync(currentActive);
         }
 
-        base.Activate(view);
+        await base.ActivateAsync(view);
     }
 
-    public override void Add(IXafBundle view)
+    public override async Task AddAsync(IXafBundle view)
     {
-        base.Add(view);
+        await base.AddAsync(view);
         if (ActiveViews.Count == 0)
         {
-            Activate(view);
+            await ActivateAsync(view);
         }
     }
 }

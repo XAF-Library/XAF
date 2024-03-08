@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Navigation;
 using WpfPlugin.ViewModels;
 using XAF.Modularity;

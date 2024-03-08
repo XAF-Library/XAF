@@ -16,7 +16,7 @@ public abstract class XafViewModel : NotifyPropertyChanged, IXafViewModel
         return Task.CompletedTask;
     }
 
-    public virtual Task Unload()
+    public virtual Task UnloadAsync()
     {
         _waitForClose.Release();
         return Task.CompletedTask;
