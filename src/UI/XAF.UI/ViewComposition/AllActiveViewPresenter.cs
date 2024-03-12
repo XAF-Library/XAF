@@ -20,16 +20,13 @@ public class AllActiveViewPresenter : ViewPresenter
         await base.ActivateAsync(view).ConfigureAwait(false);
     }
 
-    public override async Task<bool> RemoveAsync(IXafBundle view)
+    public override async Task<bool> DeactivateAsync(IXafBundle view)
     {
-        var result = await base.RemoveAsync(view);
-        await base.DeactivateAsync(view).ConfigureAwait(false);
-        return result;
-    }
-
-    public override Task<bool> DeactivateAsync(IXafBundle view)
-    {
-        return RemoveAsync(view);
+        if (Views.Items.Contains(view))
+        {
+            await RemoveAsync(view).ConfigureAwait(false);
+        }
+        return await base.DeactivateAsync(view).ConfigureAwait(false);
     }
 
     public override Task ActivateAsync(IXafBundle view)

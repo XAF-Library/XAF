@@ -26,7 +26,9 @@ public class ControlViewModel : XafViewModel
 
     public IXafCommand OpenDialogCommand { get; }
 
-    public ControlViewModel(INavigationService navigationService, IWindowService windowService)
+    public IXafCommand DeleteCommand { get; }
+
+    public ControlViewModel(INavigationService navigationService, IWindowService windowService, IViewService viewService)
     {
         var viewAVm = new ViewAViewModel(navigationService);
         // Create a command that executes a Navigation.
@@ -35,6 +37,7 @@ public class ControlViewModel : XafViewModel
         OpenDialogCommand = XafCommand.Create(OpenDialog, new AsyncCommandOptions());
         NavigateBackCommand = RxCommand.CreateFromTask(() => navigationService.NavigateBack("PageViews"), navigationService.CanNavigateBack("PageViews"));
         NavigateForwardCommand = RxCommand.CreateFromTask(() => navigationService.NavigateForward("PageViews"), navigationService.CanNavigateForward("PageViews"));
+        DeleteCommand = XafCommand.Create(() => viewService.RemoveAllAsync("StackPanel"));
         _windowService = windowService;
     }
 

@@ -15,6 +15,7 @@ using XAF.UI.Abstraction;
 using XAF.UI.Abstraction.Attributes;
 using XAF.UI.Abstraction.ViewComposition;
 using XAF.UI.Abstraction.ViewModels;
+using XAF.UI.WPF.Attributes;
 using XAF.UI.WPF.Hosting;
 
 namespace XAF.UI.WPF.ViewComposition.Internal;
@@ -38,7 +39,7 @@ internal class WindowService : IWindowService
 
     public async Task CloseAsync<TViewModel>() where TViewModel : IXafViewModel
     {
-        var toClose = _openWindows.Where(b => b.Metadata.ViewModelType == typeof(TViewModel));
+        var toClose = _openWindows.FindAll(b => b.ViewModelType == typeof(TViewModel));
         foreach (var bundle in toClose)
         {
             if (bundle.View is not Window window)
@@ -46,13 +47,12 @@ internal class WindowService : IWindowService
                 continue;
             }
             window.Close();
-            //await bundle.ViewModel.Unload().ConfigureAwait(false);
         }
     }
 
     public async Task CloseAsync<TViewModel>(TViewModel viewModel) where TViewModel : IXafViewModel
     {
-        var bundle = _openWindows.FirstOrDefault(b => b.ViewModel.Equals(viewModel));
+        var bundle = _openWindows.Find(b => b.ViewModel.Equals(viewModel));
         if (bundle is null)
         {
             return;
@@ -64,7 +64,6 @@ internal class WindowService : IWindowService
         }
 
         window.Close();
-        //await bundle.ViewModel.Unload();
     }
 
     public async Task ShowAsync<TViewModel>() where TViewModel : IXafViewModel
@@ -81,11 +80,7 @@ internal class WindowService : IWindowService
 
     public async Task ShowAsync(IXafBundle bundle)
     {
-        if (bundle.View is not Window bundleWindow)
-        {
-            bundleWindow = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
-            bundleWindow.Content = bundle.View;
-        }
+        var bundleWindow = GetWindow(bundle);
 
         bundle.ViewModel.Prepare();
         bundleWindow.Closed += (s, e) => bundle.ViewModel.UnloadAsync();
@@ -93,7 +88,6 @@ internal class WindowService : IWindowService
         await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
 
     }
-
 
     public async Task<TViewModel> ShowDialogAsync<TViewModel>() where TViewModel : IXafViewModel
     {
@@ -125,11 +119,7 @@ internal class WindowService : IWindowService
 
     public async Task ShowDialogAsync(IXafBundle bundle)
     {
-        if (bundle.View is not Window bundleWindow)
-        {
-            bundleWindow = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
-            bundleWindow.Content = bundle.View;
-        }
+        var bundleWindow = GetWindow(bundle);
         bundleWindow.Closed += (s, e) => bundle.ViewModel.UnloadAsync();
 
         bundle.ViewModel.Prepare();
@@ -140,11 +130,7 @@ internal class WindowService : IWindowService
 
     public async Task ShowDialogAsync<TParameter>(IXafBundle bundle, TParameter parameter)
     {
-        if (bundle.View is not Window bundleWindow)
-        {
-            bundleWindow = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
-            bundleWindow.Content = bundle.View;
-        }
+        var bundleWindow = GetWindow(bundle);
         bundleWindow.Closed += (s, e) => bundle.ViewModel.UnloadAsync();
 
         var vm = (IXafViewModel<TParameter>)bundle.ViewModel
@@ -214,5 +200,20 @@ internal class WindowService : IWindowService
         }
 
         _defaultWindowType = type;
+    }
+
+    private Window GetWindow(IXafBundle bundle)
+    {
+        if(bundle.View is Window window)
+        {
+            return window;
+        }
+
+        if(bundle.ViewDecorators.TryGetDecorator<WindowAttribute>(out var windowAttribute))
+        {
+            return (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, windowAttribute.WindowType);
+        }
+
+        return (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
     }
 }

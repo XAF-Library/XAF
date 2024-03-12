@@ -44,8 +44,9 @@ public class ViewPresenter : IViewPresenter
 
     public virtual async Task<bool> RemoveAsync(IXafBundle view)
     {
+        var result = ViewsSource.Remove(view);
         await DeactivateAsync(view);
-        return ViewsSource.Remove(view);
+        return result;
     }
 
     public virtual async Task ActivateAsync(IXafBundle view)

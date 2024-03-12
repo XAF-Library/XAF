@@ -63,7 +63,7 @@ internal class NavigationService : INavigationService
 
         var entry = stack.NavigateBack();
 
-        if (entry.Parameter is not null && entry.Bundle.Metadata.ParameterType is not null)
+        if (entry.Parameter is not null && entry.Bundle.ParameterType is not null)
         {
             return NavigateInternal(entry.Bundle, entry.Parameter, viewPresenterKey, false);
         }
@@ -80,7 +80,7 @@ internal class NavigationService : INavigationService
 
         var entry = stack.NavigateForward();
 
-        if (entry.Parameter is not null && entry.Bundle.Metadata.ParameterType is not null)
+        if (entry.Parameter is not null && entry.Bundle.ParameterType is not null)
         {
             return NavigateInternal(entry.Bundle, entry.Parameter, viewPresenterKey, false);
         }

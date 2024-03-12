@@ -37,7 +37,7 @@ internal class BundleProvider : IBundleProvider
         if (CacheBundles)
         {
             _bundleByViewModel.Add(bundle.ViewModel, bundle);
-            _bundlesByViewModelTypes.Add(bundle.Metadata.ViewModelType, bundle);
+            _bundlesByViewModelTypes.Add(bundle.ViewModelType, bundle);
         }
     }
 
