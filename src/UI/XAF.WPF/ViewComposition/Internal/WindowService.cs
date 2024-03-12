@@ -204,16 +204,20 @@ internal class WindowService : IWindowService
 
     private Window GetWindow(IXafBundle bundle)
     {
-        if(bundle.View is Window window)
+        if (bundle.View is Window window)
         {
             return window;
         }
 
-        if(bundle.ViewDecorators.TryGetDecorator<WindowAttribute>(out var windowAttribute))
+        if (bundle.ViewDecorators.TryGetDecorator<WindowAttribute>(out var windowAttribute))
         {
-            return (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, windowAttribute.WindowType);
+            window = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, windowAttribute.WindowType);
+            window.Content = bundle.View;
+            return window;
         }
 
-        return (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
+        window = (Window)ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, _defaultWindowType);
+        window.Content = bundle.View;
+        return window;
     }
 }
