@@ -6,15 +6,16 @@ using XAF.UI.Abstraction.ViewComposition;
 namespace XAF.UI.ViewComposition;
 public class ViewPresenter : IViewPresenter
 {
-    private readonly SourceList<IXafBundle> _views;
-    private readonly SourceList<IXafBundle> _activeViews;
     private readonly IViewAdapterCollection _viewAdapters;
     private bool _disposedValue;
     private readonly Dictionary<object, CompositeDisposable> _viewDisposables;
 
+    protected SourceList<IXafBundle> ViewsSource { get; }
+    protected SourceList<IXafBundle> ActiveViewsSource { get; }
+
     public ISubject<IComparer<IXafBundle>> Comparer { get; }
-    public IObservableList<IXafBundle> Views => _views;
-    public IObservableList<IXafBundle> ActiveViews => _activeViews;
+    public IObservableList<IXafBundle> Views => ViewsSource;
+    public IObservableList<IXafBundle> ActiveViews => ActiveViewsSource;
 
     public IBundleProvider BundleProvider { get; }
 
@@ -24,43 +25,54 @@ public class ViewPresenter : IViewPresenter
         Comparer = new BehaviorSubject<IComparer<IXafBundle>>(comparer);
 
         _viewDisposables = new();
-        _views = new SourceList<IXafBundle>();
-        _activeViews = new SourceList<IXafBundle>();
+        ViewsSource = new SourceList<IXafBundle>();
+        ActiveViewsSource = new SourceList<IXafBundle>();
         _viewAdapters = viewAdapters;
         BundleProvider = bundleProvider;
     }
 
-    public virtual void Add(IXafBundle view)
+    public virtual Task AddAsync(IXafBundle view)
     {
-        if (!_views.Items.Contains(view))
+        if (!ViewsSource.Items.Contains(view))
         {
-            _views.Add(view);
+            ViewsSource.Add(view);
             BundleProvider.AddBundle(view);
         }
+
+        return Task.CompletedTask;
     }
 
-    public virtual bool Remove(IXafBundle view)
+    public virtual async Task<bool> RemoveAsync(IXafBundle view)
     {
-        _activeViews.Remove(view);
-        return _views.Remove(view);
+        var result = ViewsSource.Remove(view);
+        await DeactivateAsync(view);
+        return result;
     }
 
-    public virtual void Activate(IXafBundle view)
+    public virtual async Task ActivateAsync(IXafBundle view)
     {
-        if (!_views.Items.Contains(view))
+        if (!ViewsSource.Items.Contains(view))
         {
-            _views.Add(view);
+            ViewsSource.Add(view);
         }
 
-        if (!_activeViews.Items.Contains(view))
+        if (!ActiveViews.Items.Contains(view))
         {
-            _activeViews.Add(view);
+            ActiveViewsSource.Add(view);
+            await view.ViewModel.LoadAsync().ConfigureAwait(false);
         }
     }
 
-    public virtual bool Deactivate(IXafBundle view)
+    public virtual async Task<bool> DeactivateAsync(IXafBundle view)
     {
-        return _activeViews.Remove(view);
+        var result = ActiveViewsSource.Remove(view);
+
+        if (result)
+        {
+            await view.ViewModel.UnloadAsync().ConfigureAwait(false);
+        }
+
+        return result;
     }
 
     protected virtual void Dispose(bool disposing)

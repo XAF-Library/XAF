@@ -12,13 +12,19 @@ internal class WpfBundle : IWpfBundle
 
     public FrameworkElement View { get; }
 
-    public IBundleMetadata Metadata { get; }
+    public Type ViewModelType { get; }
+    public Type ViewType { get; }
+    public Type? ParameterType { get; }
+    public IBundleDecoratorCollection ViewDecorators { get; }
 
     public WpfBundle(FrameworkElement view, IXafViewModel viewModel, IBundleMetadata metadata)
     {
         View = view;
         ViewModel = viewModel;
-        Metadata = metadata;
+        ViewModelType = metadata.ViewModelType;
+        ViewType = metadata.ViewType;
+        ParameterType = metadata.ParameterType;
+        ViewDecorators = metadata.ViewDecorators;
     }
 
     public int CompareTo(IXafBundle? other)

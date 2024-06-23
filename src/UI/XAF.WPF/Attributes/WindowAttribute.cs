@@ -1,14 +1,15 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows;
+using XAF.UI.Abstraction.Attributes;
 
 namespace XAF.UI.WPF.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class DialogWindowAttribute : Attribute
+public class WindowAttribute : BundleDecoratorAttribute
 {
     public Type WindowType { get; }
 
-    public DialogWindowAttribute(Type windowType)
+    public WindowAttribute(Type windowType)
     {
         WindowType = windowType;
     }
@@ -16,11 +17,11 @@ public class DialogWindowAttribute : Attribute
 
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class DialogWindowAttribute<TWindow> : DialogWindowAttribute
+public class WindowAttribute<TWindow> : WindowAttribute
     where TWindow : Window
 {
 
-    public DialogWindowAttribute()
+    public WindowAttribute()
         : base(typeof(TWindow))
     {
     }

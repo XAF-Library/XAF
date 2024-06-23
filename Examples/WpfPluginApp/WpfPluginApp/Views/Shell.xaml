@@ -14,7 +14,8 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
         <ContentControl Grid.Column="0">
@@ -28,5 +29,11 @@
                 <xaf:ViewContainer Key="PageViews" />
             </i:Interaction.Behaviors>
         </ContentControl>
+
+        <StackPanel Grid.Column="2">
+            <i:Interaction.Behaviors>
+                <xaf:ViewContainer Key="StackPanel"/>
+            </i:Interaction.Behaviors>
+        </StackPanel>
     </Grid>
 </Window>

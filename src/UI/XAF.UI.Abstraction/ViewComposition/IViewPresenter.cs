@@ -11,13 +11,13 @@ using XAF.UI.Abstraction.ViewModels;
 namespace XAF.UI.Abstraction.ViewComposition;
 public interface IViewPresenter : IDisposable
 {
-    void Add(IXafBundle view);
+    Task AddAsync(IXafBundle view);
 
-    bool Remove(IXafBundle view);
+    Task<bool> RemoveAsync(IXafBundle view);
 
-    void Activate(IXafBundle view);
+    Task ActivateAsync(IXafBundle view);
 
-    bool Deactivate(IXafBundle view);
+    Task<bool> DeactivateAsync(IXafBundle view);
 
     void Connect(object view);
 

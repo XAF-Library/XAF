@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using XAF.UI.Abstraction.ExtensionMethods;
 using XAF.UI.ViewComposition;
@@ -13,6 +14,7 @@ public class SelectorAdapter : ViewAdapter<Selector, SingleActiveViewPresenter>
     {
         viewPresenter.Views.Connect()
             .PrepareForViewChange(viewPresenter)
+            .Transform(b => b.View)
             .Bind(out var views)
             .Subscribe()
             .DisposeWith(disposables);
@@ -20,8 +22,8 @@ public class SelectorAdapter : ViewAdapter<Selector, SingleActiveViewPresenter>
 
         viewPresenter.ActiveViews.Connect()
             .PrepareForViewChange(viewPresenter)
-            .QueryWhenChanged(c => view.SelectedItem = c.FirstOrDefault()?.View)
-            .Subscribe()
+            .QueryWhenChanged()
+            .Subscribe(c => view.SelectedItem = c.FirstOrDefault()?.View)
             .DisposeWith(disposables);
     }
 }

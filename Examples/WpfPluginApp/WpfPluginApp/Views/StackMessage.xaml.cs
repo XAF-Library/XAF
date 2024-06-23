@@ -12,15 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfPluginApp.ViewModels;
+using XAF.UI.Abstraction.Attributes;
 
-namespace WpfPluginApp;
+namespace WpfPluginApp.Views;
 /// <summary>
-/// Interaktionslogik für App.xaml
+/// Interaktionslogik für StackMessage.xaml
 /// </summary>
-public partial class App : Application
+[ViewFor<StackMessageViewModel>]
+public partial class StackMessage : UserControl
 {
-    public App()
+    public StackMessage()
     {
-        ShutdownMode = ShutdownMode.OnMainWindowClose;
+        InitializeComponent();
     }
 }

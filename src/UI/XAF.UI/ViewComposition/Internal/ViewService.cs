@@ -41,8 +41,7 @@ internal class ViewService : IViewService
             foreach (var bundle in bundles)
             {
                 bundle.ViewModel.Prepare();
-                viewPresenter.Activate(bundle);
-                await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+                await viewPresenter.ActivateAsync(bundle);
             }
 
             return bundles;
@@ -50,8 +49,7 @@ internal class ViewService : IViewService
 
         var newBundle = await viewPresenter.BundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
         newBundle.ViewModel.Prepare();
-        viewPresenter.Activate(newBundle);
-        await newBundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(newBundle);
         return Enumerable.Repeat(newBundle, 1);
     }
 
@@ -61,8 +59,7 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
         var bundle = await viewPresenter.BundleProvider.GetOrCreateBundleAsync(viewModel).ConfigureAwait(false);
         bundle.ViewModel.Prepare();
-        viewPresenter.Activate(bundle);
-        await viewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
         return bundle;
     }
 
@@ -72,8 +69,7 @@ internal class ViewService : IViewService
         var bundle = await viewPresenter.BundleProvider.GetOrCreateBundleAsync(viewModel).ConfigureAwait(false);
         viewModel.Prepare();
         viewModel.Prepare(parameter);
-        viewPresenter.Activate(bundle);
-        await viewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
         return bundle;
     }
 
@@ -102,8 +98,7 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
         var viewModel = bundle.ViewModel;
         viewModel.Prepare();
-        viewPresenter.Activate(bundle);
-        await viewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
     }
 
     public async Task<IXafBundle<TViewModel>> ActivateViewAsync<TViewModel, TParameter>(TParameter parameter, object key) where TViewModel : IXafViewModel<TParameter>
@@ -112,8 +107,7 @@ internal class ViewService : IViewService
         var bundle = await viewPresenter.BundleProvider.GetOrCreateBundleAsync<TViewModel>().ConfigureAwait(false);
         bundle.ViewModel.Prepare();
         bundle.ViewModel.Prepare(parameter);
-        viewPresenter.Activate(bundle);
-        await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
         return bundle;
     }
 
@@ -122,16 +116,15 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
         bundle.ViewModel.Prepare();
 
-        if (bundle.Metadata.ParameterType == parameter.GetType())
+        if (parameter.GetType().IsAssignableTo(bundle.ParameterType))
         {
-            var prepareMethod = bundle.Metadata.ViewModelType.GetMethods()
+            var prepareMethod = bundle.ViewModelType.GetMethods()
                 .Single(m => m.Name == nameof(IXafViewModel.Prepare) && m.GetParameters().Length == 1);
 
             prepareMethod.Invoke(bundle.ViewModel, new[] { parameter });
         }
 
-        viewPresenter.Activate(bundle);
-        await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
     }
 
     public async Task<IEnumerable<IXafBundle<TViewModel>>> ActivateViewsAsync<TViewModel, TParameter>(TParameter parameter, object key) where TViewModel : IXafViewModel<TParameter>
@@ -146,8 +139,7 @@ internal class ViewService : IViewService
             {
                 bundle.ViewModel.Prepare();
                 bundle.ViewModel.Prepare(parameter);
-                viewPresenter.Activate(bundle);
-                await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+                await viewPresenter.ActivateAsync(bundle);
             }
 
             return bundles;
@@ -156,8 +148,7 @@ internal class ViewService : IViewService
         var newBundle = await viewPresenter.BundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
         newBundle.ViewModel.Prepare();
         newBundle.ViewModel.Prepare(parameter);
-        viewPresenter.Activate(newBundle);
-        await newBundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(newBundle);
         return Enumerable.Repeat(newBundle, 1);
     }
 
@@ -171,8 +162,7 @@ internal class ViewService : IViewService
         }
 
         bundle.ViewModel.Prepare();
-        viewPresenter.Activate(bundle);
-        await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
         return bundle;
     }
 
@@ -187,8 +177,7 @@ internal class ViewService : IViewService
 
         bundle.ViewModel.Prepare();
         bundle.ViewModel.Prepare(parameter);
-        viewPresenter.Activate(bundle);
-        await bundle.ViewModel.LoadAsync().ConfigureAwait(false);
+        await viewPresenter.ActivateAsync(bundle);
         return bundle;
     }
 
@@ -197,7 +186,7 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
 
         var bundle = await viewPresenter.BundleProvider.CreateBundleAsync<TViewModel>().ConfigureAwait(false);
-        viewPresenter.Add(bundle);
+        await viewPresenter.AddAsync(bundle);
         return bundle;
     }
 
@@ -206,7 +195,7 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
 
         var bundle = await viewPresenter.BundleProvider.CreateBundleAsync(viewModel).ConfigureAwait(false);
-        viewPresenter.Add(bundle);
+        await viewPresenter.AddAsync(bundle);
         return bundle;
     }
 
@@ -216,14 +205,14 @@ internal class ViewService : IViewService
 
         var bundle = await viewPresenter.BundleProvider.CreateBundleAsync(viewModelType)
             .ConfigureAwait(false);
-        viewPresenter.Add(bundle);
+        await viewPresenter.AddAsync(bundle);
         return bundle;
     }
 
     public Task AddViewAsync(IXafBundle bundle, object key)
     {
         var viewPresenter = _viewPresenters[key];
-        viewPresenter.Add(bundle);
+        viewPresenter.AddAsync(bundle);
         return Task.CompletedTask;
     }
 
@@ -233,8 +222,8 @@ internal class ViewService : IViewService
 
         if (viewPresenter.BundleProvider.TryGetBundle(viewModel, out var bundle))
         {
-            viewPresenter.Deactivate(bundle);
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.DeactivateAsync(bundle);
+            await bundle.ViewModel.UnloadAsync().ConfigureAwait(false);
         }
     }
 
@@ -242,9 +231,9 @@ internal class ViewService : IViewService
     {
         var viewPresenter = _viewPresenters[key];
         var bundles = viewPresenter.BundleProvider.GetBundles<TViewModel>();
-        foreach (var bundle in bundles.Where(viewPresenter.Deactivate))
+        foreach (var bundle in bundles)
         {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.DeactivateAsync(bundle);
         }
     }
 
@@ -252,29 +241,25 @@ internal class ViewService : IViewService
     {
         var viewPresenter = _viewPresenters[key];
         var bundles = viewPresenter.BundleProvider.GetBundles(viewModelType);
-        foreach (var bundle in bundles.Where(viewPresenter.Deactivate))
+        foreach (var bundle in bundles)
         {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.DeactivateAsync(bundle);
         }
     }
 
-    public async Task DeactivateViewAsync(IXafBundle bundle, object key)
+    public Task DeactivateViewAsync(IXafBundle bundle, object key)
     {
         var viewPresenter = _viewPresenters[key];
 
-        if (viewPresenter.Deactivate(bundle))
-        {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
-        }
+        return viewPresenter.DeactivateAsync(bundle);
     }
 
     public async Task RemoveViewAsync<TViewModel>(TViewModel viewModel, object key) where TViewModel : IXafViewModel
     {
         var viewPresenter = _viewPresenters[key];
-        if (viewPresenter.BundleProvider.TryGetBundle(viewModel, out var bundle)
-            && viewPresenter.Remove(bundle))
+        if (viewPresenter.BundleProvider.TryGetBundle(viewModel, out var bundle))
         {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.RemoveAsync(bundle);
         }
     }
 
@@ -282,9 +267,9 @@ internal class ViewService : IViewService
     {
         var viewPresenter = _viewPresenters[key];
         var bundles = viewPresenter.BundleProvider.GetBundles<TViewModel>();
-        foreach (var bundle in bundles.Where(viewPresenter.Remove))
+        foreach (var bundle in bundles)
         {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.RemoveAsync(bundle);
         }
     }
 
@@ -292,19 +277,16 @@ internal class ViewService : IViewService
     {
         var viewPresenter = _viewPresenters[key];
         var bundles = viewPresenter.BundleProvider.GetBundles(viewModelType);
-        foreach (var bundle in bundles.Where(viewPresenter.Remove))
+        foreach (var bundle in bundles)
         {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.RemoveAsync(bundle);
         }
     }
 
     public async Task RemoveViewAsync(IXafBundle bundle, object key)
     {
         var viewPresenter = _viewPresenters[key];
-        if (viewPresenter.Remove(bundle))
-        {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
-        }
+        await viewPresenter.RemoveAsync(bundle);
     }
 
     public async Task RemoveAllAsync(object key)
@@ -312,9 +294,9 @@ internal class ViewService : IViewService
         var viewPresenter = _viewPresenters[key];
         var bundles = viewPresenter.BundleProvider.GetBundles();
 
-        foreach (var bundle in bundles.Where(viewPresenter.Remove))
+        foreach (var bundle in bundles)
         {
-            await bundle.ViewModel.Unload().ConfigureAwait(false);
+            await viewPresenter.RemoveAsync(bundle);
         }
     }
 }

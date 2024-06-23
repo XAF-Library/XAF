@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DynamicData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,19 +14,23 @@ public class AllActiveViewPresenter : ViewPresenter
     {
     }
 
-    public override void Add(IXafBundle view)
+    public override async Task AddAsync(IXafBundle view)
     {
-        base.Add(view);
-        Activate(view);
+        await base.AddAsync(view).ConfigureAwait(false);
+        await base.ActivateAsync(view).ConfigureAwait(false);
     }
 
-    public override void Activate(IXafBundle view)
+    public override async Task<bool> DeactivateAsync(IXafBundle view)
     {
-        throw new InvalidOperationException("Could not activate view in an all active view presenter");
+        if (Views.Items.Contains(view))
+        {
+            await RemoveAsync(view).ConfigureAwait(false);
+        }
+        return await base.DeactivateAsync(view).ConfigureAwait(false);
     }
 
-    public override bool Deactivate(IXafBundle view)
+    public override Task ActivateAsync(IXafBundle view)
     {
-        throw new InvalidOperationException("Could not deactivate view in an all active view presenter");
+        return AddAsync(view);
     }
 }

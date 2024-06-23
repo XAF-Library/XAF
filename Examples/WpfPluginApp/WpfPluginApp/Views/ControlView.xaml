@@ -36,5 +36,10 @@
             Command="{Binding NavigateForwardCommand}"
             Content="Navigate Forward" />
 
+        <Button
+            Margin="5"
+            Command="{Binding DeleteCommand}"
+            Content="Delete" />
+
     </StackPanel>
 </UserControl>

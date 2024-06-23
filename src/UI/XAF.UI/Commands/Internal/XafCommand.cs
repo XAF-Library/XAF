@@ -63,7 +63,7 @@ internal class XafCommand<TParam> : IXafCommand<TParam>
 
     public void NotifyCanExecuteChanged()
     {
-        throw new NotImplementedException();
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
