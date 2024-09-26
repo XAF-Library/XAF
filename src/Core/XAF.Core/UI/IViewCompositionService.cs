@@ -19,22 +19,28 @@ public interface IViewCompositionService
     Task<bool> AddViewAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter, object presenterKey)
         where TViewModel : IXafViewModel<TParameter>;
 
+    Task<bool> SelectViewAsync<TViewModel>(TViewModel vm, object presenterKey)
+        where TViewModel : IXafViewModel;
+
+    Task<bool> SelectViewAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter, object presenterKey)
+        where TViewModel : IXafViewModel<TParameter>;
+
     Task<bool> RemoveViewAsync<TViewModel>(TViewModel vm, object presenterKey)
         where TViewModel : IXafViewModel;
 
-    Task<bool> ShowViewAsync<TViewModel>()
+    Task<bool> OpenWindowAsync<TViewModel>()
         where TViewModel : IXafViewModel;
 
-    Task<bool> ShowViewAsync<TViewModel>(TViewModel vm)
+    Task<bool> OpenWindowAsync<TViewModel>(TViewModel vm)
         where TViewModel : IXafViewModel;
 
-    Task<bool> ShowViewAsync<TViewModel, TParameter>(TParameter parameter)
+    Task<bool> OpenWindowAsync<TViewModel, TParameter>(TParameter parameter)
         where TViewModel : class, IXafViewModel<TParameter>;
 
-    Task<bool> ShowViewAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter)
+    Task<bool> OpenWindowAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter)
         where TViewModel : IXafViewModel<TParameter>;
 
-    Task<bool> CloseViewAsync<TViewModel>(TViewModel vm)
+    Task<bool> CloseWindowAsync<TViewModel>(TViewModel vm)
         where TViewModel : IXafViewModel;
 }
 

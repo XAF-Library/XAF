@@ -21,8 +21,4 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\..\XAF\XAF.Utilities.csproj" />
-	</ItemGroup>
-
 </Project>

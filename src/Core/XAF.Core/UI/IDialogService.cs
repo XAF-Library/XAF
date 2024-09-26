@@ -5,7 +5,7 @@ public interface IDialogService
 {
     event AsyncEventHandler<DialogEventArgs> DialogRequested;
 
-    event AsyncEventHandler<DialogEventArgs> DialogOpend;
+    event AsyncEventHandler<DialogEventArgs> DialogOpened;
 
     event AsyncEventHandler<DialogEventArgs> DialogClosed;
 
