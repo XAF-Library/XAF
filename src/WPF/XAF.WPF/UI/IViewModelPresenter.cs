@@ -14,12 +14,12 @@ public interface IViewModelPresenter
 
     void DetachFrom(FrameworkElement container);
 
-    void Add<TViewModel>(TViewModel viewModel)
+    bool Add<TViewModel>(TViewModel viewModel, CancellationToken cancellation)
         where TViewModel : IXafViewModel;
 
-    void Select<TViewModel>(TViewModel vm)
+    bool Select<TViewModel>(TViewModel vm, CancellationToken cancellation)
         where TViewModel : IXafViewModel;
 
-    void Remove<TViewModel>(TViewModel viewModel)
+    bool Remove<TViewModel>(TViewModel viewModel, CancellationToken cancellation)
         where TViewModel : IXafViewModel;
 }

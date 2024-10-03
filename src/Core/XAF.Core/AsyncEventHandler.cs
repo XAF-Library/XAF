@@ -12,14 +12,14 @@ public static class AsyncEventHandlerExtensions
         {
             eventHandler(s, e);
             return Task.CompletedTask;
-        }
+        };
 
     public static AsyncEventHandler<TEventArgs> Async<TEventArgs>(EventHandler<TEventArgs> eventHandler)
         => (s, e) =>
         {
             eventHandler(s, e);
             return Task.CompletedTask;
-        }
+        };
 
 
     public static Task InvokeAsync(this AsyncEventHandler eventHandler, object sender, EventArgs args)

@@ -1,20 +1,16 @@
 ﻿namespace XAF.Core.MVVM;
 public interface IXafViewModel : IComparable<IXafViewModel>
 {
-    void Prepare();
+    Task LoadAsync();
 
-    Task WhenLoaded();
+    Task WhenSelected();
 
-    Task WhenActivated();
+    Task WhenUnselected();
 
-    Task WhenDeactivated();
-
-    Task WhenUnloadAsync();
-
-    Task WaitForViewClose();
+    Task UnloadAsync();
 }
 
 public interface IXafViewModel<in TParameter> : IXafViewModel
 {
-    void Prepare(TParameter parameter);
+    Task PrepareAsync(TParameter parameter);
 }

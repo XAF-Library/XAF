@@ -4,7 +4,7 @@ public abstract class XafViewModel : NotifyPropertyChanged, IXafViewModel
     private readonly SemaphoreSlim _waitForClose = new SemaphoreSlim(0);
     public virtual void Prepare() { }
 
-    public virtual Task WhenActivated()
+    public virtual Task WhenSelected()
     {
         return Task.CompletedTask;
     }

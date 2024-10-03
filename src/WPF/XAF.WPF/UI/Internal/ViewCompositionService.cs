@@ -1,87 +1,211 @@
-﻿using XAF.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using XAF.Core.MVVM;
 using XAF.Core.UI;
 
 namespace XAF.WPF.UI.Internal;
 internal sealed class ViewCompositionService : IViewCompositionService
 {
-    public event AsyncEventHandler<ViewManipulationEventArgs> ViewManipulationRequested;
-    public event AsyncEventHandler<ViewManipulationEventArgs> ViewManipulationCompleted;
+    private readonly ViewModelPresenterRepository _presenterRepository;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly Subject<ViewManipulation> _viewManipulationRequestedSubject;
+    private readonly Subject<ViewManipulation> _viewManipulationCompletedSubject;
 
-    public async Task<bool> AddViewAsync<TViewModel>(TViewModel vm, object presenterKey) where TViewModel : IXafViewModel
+    public ViewCompositionService(ViewModelPresenterRepository presenterRepository, IServiceProvider serviceProvider)
     {
-        var canceled = await OnViewManipulationRequested(ManipulationType.AddView, vm, presenterKey).ConfigureAwait(false);
+        _viewManipulationCompletedSubject = new();
+        _viewManipulationRequestedSubject = new();
+        _presenterRepository = presenterRepository;
+        _serviceProvider = serviceProvider;
+    }
 
-        if (canceled)
+    public Task<bool> AddViewAsync<TViewModel>(object presenterKey, CancellationToken cancellation) where TViewModel : class, IXafViewModel
+    {
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
+
+        var vm = _serviceProvider.GetRequiredService<TViewModel>();
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Add, vm, presenterKey);
+
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
+
+        if (tokenSource.IsCancellationRequested)
         {
-            return false;
+            return Task.FromResult(false);
         }
+
+        if (!presenter.Add(vm, tokenSource.Token))
+        {
+            return Task.FromResult(false);
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return Task.FromResult(true);
     }
 
-    public Task<bool> AddViewAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter, object presenterKey) where TViewModel : IXafViewModel<TParameter>
+    public async Task<bool> AddViewAsync<TViewModel, TParameter>(TParameter parameter, object presenterKey, CancellationToken cancellation) where TViewModel : class, IXafViewModel<TParameter>
     {
-        throw new NotImplementedException();
-    }
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
 
-    public Task<bool> CloseWindowAsync<TViewModel>(TViewModel vm) where TViewModel : IXafViewModel
-    {
-        throw new NotImplementedException();
-    }
+        var vm = _serviceProvider.GetRequiredService<TViewModel>();
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Add, vm, presenterKey, parameter);
 
-    public Task<bool> RemoveViewAsync<TViewModel>(TViewModel vm, object presenterKey) where TViewModel : IXafViewModel
-    {
-        throw new NotImplementedException();
-    }
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
 
-    public Task<bool> OpenWindowAsync<TViewModel>() where TViewModel : IXafViewModel
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> OpenWindowAsync<TViewModel>(TViewModel vm) where TViewModel : IXafViewModel
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> OpenWindowAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter) where TViewModel : IXafViewModel<TParameter>
-    {
-        throw new NotImplementedException();
-    }
-
-    Task<bool> IViewCompositionService.AddViewAsync<TViewModel>(object presenterKey)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task<bool> IViewCompositionService.AddViewAsync<TViewModel, TParameter>(object presenterKey, TParameter parameter)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task<bool> IViewCompositionService.OpenWindowAsync<TViewModel, TParameter>(TParameter parameter)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="vm"></param>
-    /// <param name="presenterKey"></param>
-    /// <param name="parameter"></param>
-    /// <returns>true if an delegate cancels the manipulation, otherwise false</returns>
-    protected async Task<bool> OnViewManipulationRequested(ManipulationType type, IXafViewModel vm, object presenterKey, object? parameter = null)
-    {
-        var args = new ViewManipulationEventArgs(type, vm, presenterKey, parameter);
-
-        if (ViewManipulationRequested is null)
+        if (tokenSource.IsCancellationRequested)
         {
             return false;
         }
 
-        await ViewManipulationRequested.InvokeAsync(this, args).ConfigureAwait(false);
+        await vm.PrepareAsync(parameter);
 
-        return args.Cancle;
+        if (!presenter.Add(vm, tokenSource.Token))
+        {
+            return false;
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return true;
+    }
+
+    public Task<bool> AddViewAsync<TViewModel>(TViewModel vm, object presenterKey, CancellationToken cancle) where TViewModel : IXafViewModel
+    {
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancle);
+
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Add, vm, presenterKey);
+
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
+
+        if (tokenSource.IsCancellationRequested)
+        {
+            return Task.FromResult(false);
+        }
+
+        if (!presenter.Add(vm, tokenSource.Token))
+        {
+            return Task.FromResult(false);
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return Task.FromResult(true);
+    }
+
+    public async Task<bool> AddViewAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter, object presenterKey, CancellationToken cancle) where TViewModel : IXafViewModel<TParameter>
+    {
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancle);
+
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Add, vm, presenterKey, parameter);
+
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
+
+        if (tokenSource.IsCancellationRequested)
+        {
+            return false;
+        }
+
+        await vm.PrepareAsync(parameter).ConfigureAwait(false);
+
+        if (!presenter.Add(vm, tokenSource.Token))
+        {
+            return false;
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return true;
+    }
+
+    public Task<bool> RemoveViewAsync<TViewModel>(TViewModel vm, object presenterKey, CancellationToken cancle) where TViewModel : IXafViewModel
+    {
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancle);
+
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Remove, vm, presenterKey);
+
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
+
+        if (tokenSource.IsCancellationRequested)
+        {
+            return Task.FromResult(false);
+        }
+
+        if (!presenter.Remove(vm, tokenSource.Token))
+        {
+            return Task.FromResult(false);
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> SelectViewAsync<TViewModel>(TViewModel vm, object presenterKey, CancellationToken cancellation) where TViewModel : IXafViewModel
+    {
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
+
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Select, vm, presenterKey);
+
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
+
+        if (tokenSource.IsCancellationRequested)
+        {
+            return Task.FromResult(false);
+        }
+
+        if (!presenter.Select(vm, tokenSource.Token))
+        {
+            return Task.FromResult(false);
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return Task.FromResult(true);
+    }
+
+    public async Task<bool> SelectViewAsync<TViewModel, TParameter>(TViewModel vm, TParameter parameter, object presenterKey, CancellationToken cancellation) where TViewModel : IXafViewModel<TParameter>
+    {
+        var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
+
+        var manipulation = new ViewManipulation(tokenSource, ViewManipulationType.Select, vm, presenterKey, parameter);
+
+        _viewManipulationRequestedSubject.OnNext(manipulation);
+        var presenter = _presenterRepository.GetPresenter(presenterKey);
+
+        if (tokenSource.IsCancellationRequested)
+        {
+            return false;
+        }
+
+        await vm.PrepareAsync(parameter).ConfigureAwait(false);
+
+        if (!presenter.Select(vm, tokenSource.Token))
+        {
+            return false;
+        }
+
+        _viewManipulationCompletedSubject.OnNext(manipulation);
+        return true;
+    }
+
+    public IObservable<ViewManipulation> ViewManipulationCompleted()
+    {
+        return _viewManipulationCompletedSubject;
+    }
+
+    public IObservable<ViewManipulation> ViewManipulationCompleted(object presenterKey)
+    {
+        return _viewManipulationCompletedSubject.Where(m => m.PresenterKey == presenterKey);
+    }
+
+    public IObservable<ViewManipulation> ViewManipulationRequested()
+    {
+        return _viewManipulationRequestedSubject;
+    }
+
+    public IObservable<ViewManipulation> ViewManipulationRequested(object presenterKey)
+    {
+        return _viewManipulationRequestedSubject.Where(m => m.PresenterKey == presenterKey);
     }
 }

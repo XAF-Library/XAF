@@ -15,7 +15,7 @@ public interface IModule
 
     Assembly Assembly { get; }
 
-    void ConfigureServices(IServiceCollection services);
+    void RegisterServices(IServiceCollection services);
 
     Task LoadAsync(IServiceProvider serviceProvider);
 }

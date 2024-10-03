@@ -16,7 +16,7 @@ public static class DictionaryExtensions
     /// <param name="dictionary"></param>
     /// <param name="key">the key to search for</param>
     /// <returns>The founded or new value</returns>
-    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+    public static TValue GetOrAddDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
         where TKey : notnull
         where TValue : new()
     {
@@ -39,16 +39,16 @@ public static class DictionaryExtensions
     /// <param name="key">the key to search for</param>
     /// <param name="defaultValue">the default value to add if not existing</param>
     /// <returns>The founded or new value</returns>
-    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue)
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> valueFactory)
         where TKey : notnull
     {
-        ref var valOrNew = ref CollectionsMarshal.GetValueRefOrAddDefault(dictionary, key, out var exists);
-        if (!exists)
+        if (!dictionary.TryGetValue(key, out var value))
         {
-            valOrNew = defaultValue;
+            value = valueFactory(key);
+            dictionary.Add(key, value);
         }
 
-        return valOrNew;
+        return value;
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public static class DictionaryExtensions
         where TCollection : ICollection<TValue>, new()
         where TKey : notnull
     {
-        var coll = dictionary.GetOrAdd(key);
+        var coll = dictionary.GetOrAddDefault(key);
         coll.Add(value);
     }
 

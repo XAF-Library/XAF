@@ -1,13 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using XAF.WPF.UI.ViewAdapters;
 
 namespace XAF.WPF.UI;
-public interface IViewAdapterProvider
+public interface IViewAdapterCollection
 {
-
     bool TryGetAdapterFor<TView>([NotNullWhen(true)] out IViewAdapter? viewAdapter)
         where TView : FrameworkElement;
 
     bool TryGetAdapterFor(FrameworkElement element, [NotNullWhen(true)] out IViewAdapter? adapter);
 
+    void AddAdapter(IViewAdapter adapter);
 }

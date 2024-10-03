@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace XAF.WPF.UI;
+namespace XAF.WPF.UI.ViewAdapters;
 
 public interface IViewAdapter
 {
