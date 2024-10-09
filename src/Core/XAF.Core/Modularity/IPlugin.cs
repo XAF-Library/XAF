@@ -1,19 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace XAF.Core.Modularity;
 
-public interface IModule
+public interface IPlugin
 {
     string Name { get; }
 
     Version Version { get; }
 
     string Description { get; }
-
-    Type Type { get; }
-
-    Assembly Assembly { get; }
 
     void RegisterServices(IServiceCollection services);
 

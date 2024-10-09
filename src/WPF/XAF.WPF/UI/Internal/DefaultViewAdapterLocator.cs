@@ -4,7 +4,7 @@ using System.Windows;
 using XAF.WPF.UI.ViewAdapters;
 
 namespace XAF.WPF.UI.Internal;
-internal class ViewAdapterCollection : IViewAdapterCollection
+internal class DefaultViewAdapterLocator : IViewAdapterLocator
 {
     private readonly ConcurrentDictionary<Type, IViewAdapter> _viewAdaptersByViewType;
     public void AddAdapter(IViewAdapter adapter)

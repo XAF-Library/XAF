@@ -3,7 +3,7 @@ using System.Windows;
 using XAF.WPF.UI.ViewAdapters;
 
 namespace XAF.WPF.UI;
-public interface IViewAdapterCollection
+public interface IViewAdapterLocator
 {
     bool TryGetAdapterFor<TView>([NotNullWhen(true)] out IViewAdapter? viewAdapter)
         where TView : FrameworkElement;

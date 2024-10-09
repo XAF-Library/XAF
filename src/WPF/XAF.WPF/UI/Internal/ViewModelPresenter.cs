@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Reactive.Disposables;
 using System.Windows;
+using XAF.Core.ExtensionMethods;
 using XAF.Core.MVVM;
 
 namespace XAF.WPF.UI.Internal;
@@ -11,8 +12,8 @@ internal class ViewModelPresenter : IViewModelPresenter
     private List<FrameworkElement> _containers;
     private ConcurrentDictionary<FrameworkElement, IDisposable> _disposablesForAdapters;
 
-    private readonly IViewAdapterCollection _viewAdapterProvider;
-    private readonly IViewProvider _viewProvider;
+    private readonly IViewAdapterLocator _viewAdapterLocator;
+    private readonly IViewLocator _viewLocator;
     private readonly ILogger<ViewModelPresenter> _logger;
     private readonly CompositeDisposable _compositeDisposable;
 
@@ -20,28 +21,34 @@ internal class ViewModelPresenter : IViewModelPresenter
     public IViewCollection SelectedViews { get; }
     public IViewCollection Views { get; }
 
-    public ViewModelPresenter(object key, IViewAdapterCollection viewAdapterProvider, IViewProvider viewProvider, ILogger<ViewModelPresenter> logger)
+    public ViewModelPresenter(
+        object key,
+        IViewAdapterLocator viewAdapterLocator,
+        IViewLocator viewLocator,
+        ILogger<ViewModelPresenter> logger)
     {
         Key = key;
-        _viewAdapterProvider = viewAdapterProvider;
-        _viewProvider = viewProvider;
+        _viewAdapterLocator = viewAdapterLocator;
+        _viewLocator = viewLocator;
         _logger = logger;
 
         _containers = [];
         _disposablesForAdapters = [];
         _compositeDisposable = new();
 
-        var dis = SelectedViews
+        Views = new ViewCollection();
+        SelectedViews = new ViewCollection();
+
+        SelectedViews
             .OnItemAdded(async i => await i.viewModel.WhenSelected())
             .OnItemRemoved(async i => await i.viewModel.WhenUnselected())
-            .Subscribe();
-
-        _compositeDisposable.Add(dis);
+            .Subscribe()
+            .DisposeWith(_compositeDisposable);
     }
 
     public void AttachTo(FrameworkElement container)
     {
-        if (!_viewAdapterProvider.TryGetAdapterFor(container, out var adapter))
+        if (!_viewAdapterLocator.TryGetAdapterFor(container, out var adapter))
         {
             _logger.LogError("No ViewAdapter for {container} found", container);
             return;
@@ -84,7 +91,7 @@ internal class ViewModelPresenter : IViewModelPresenter
             return false;
         }
 
-        var view = _viewProvider.GetViewFor<TViewModel>();
+        var view = _viewLocator.GetViewFor<TViewModel>();
         view.DataContext = viewModel;
         view.IsVisibleChanged += async (_, args) => await VisibilityChanged((bool)args.NewValue, viewModel);
 

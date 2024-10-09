@@ -7,12 +7,12 @@ using XAF.Core.UI;
 namespace XAF.WPF.UI.Internal;
 internal sealed class ViewCompositionService : IViewCompositionService
 {
-    private readonly ViewModelPresenterRepository _presenterRepository;
+    private readonly ViewModelPresenterLocator _presenterRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly Subject<ViewManipulation> _viewManipulationRequestedSubject;
     private readonly Subject<ViewManipulation> _viewManipulationCompletedSubject;
 
-    public ViewCompositionService(ViewModelPresenterRepository presenterRepository, IServiceProvider serviceProvider)
+    public ViewCompositionService(ViewModelPresenterLocator presenterRepository, IServiceProvider serviceProvider)
     {
         _viewManipulationCompletedSubject = new();
         _viewManipulationRequestedSubject = new();

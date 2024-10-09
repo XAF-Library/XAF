@@ -2,7 +2,7 @@
 
 public enum PresentationType
 {
-    Ignore,
-    List,
     Detail,
+    List,
+    Both
 }
