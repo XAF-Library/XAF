@@ -12,5 +12,5 @@ public interface IXafViewModel : IComparable<IXafViewModel>
 
 public interface IXafViewModel<in TParameter> : IXafViewModel
 {
-    Task PrepareAsync(TParameter parameter);
+    void Prepare(TParameter parameter);
 }

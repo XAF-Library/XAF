@@ -1,16 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace XAF.Core.Modularity;
 
 public interface IPlugin
 {
     string Name { get; }
+    string Description { get; }
 
     Version Version { get; }
 
-    string Description { get; }
+    Type Type { get; }
+
+    Assembly ContainingAssembly { get; }
 
     void RegisterServices(IServiceCollection services);
 
-    Task LoadAsync(IServiceProvider serviceProvider);
+    Task StartAsync(IServiceProvider serviceProvider);
 }

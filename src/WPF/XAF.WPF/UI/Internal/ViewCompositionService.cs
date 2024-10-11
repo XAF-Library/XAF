@@ -59,7 +59,7 @@ internal sealed class ViewCompositionService : IViewCompositionService
             return false;
         }
 
-        await vm.PrepareAsync(parameter);
+        vm.Prepare(parameter);
 
         if (!presenter.Add(vm, tokenSource.Token))
         {
@@ -107,7 +107,7 @@ internal sealed class ViewCompositionService : IViewCompositionService
             return false;
         }
 
-        await vm.PrepareAsync(parameter).ConfigureAwait(false);
+        vm.Prepare(parameter);
 
         if (!presenter.Add(vm, tokenSource.Token))
         {
@@ -178,7 +178,7 @@ internal sealed class ViewCompositionService : IViewCompositionService
             return false;
         }
 
-        await vm.PrepareAsync(parameter).ConfigureAwait(false);
+        vm.Prepare(parameter);
 
         if (!presenter.Select(vm, tokenSource.Token))
         {
