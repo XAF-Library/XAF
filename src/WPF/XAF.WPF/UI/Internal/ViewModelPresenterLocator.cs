@@ -3,11 +3,11 @@
 namespace XAF.WPF.UI.Internal;
 internal class ViewModelPresenterLocator
 {
-    private readonly Func<object, IViewModelPresenter> _presenterFactory;
+    private readonly IViewModelPresenterFactory _presenterFactory;
 
     private readonly Dictionary<object, IViewModelPresenter> _presentersByKey;
 
-    public ViewModelPresenterLocator(Func<object, IViewModelPresenter> presenterFactory)
+    public ViewModelPresenterLocator(IViewModelPresenterFactory presenterFactory)
     {
         _presenterFactory = presenterFactory;
         _presentersByKey = [];
@@ -15,6 +15,6 @@ internal class ViewModelPresenterLocator
 
     public IViewModelPresenter GetPresenter(object key)
     {
-        return _presentersByKey.GetOrAdd(key, _presenterFactory);
+        return _presentersByKey.GetOrAdd(key, _presenterFactory.CreateViewModelPresenter);
     }
 }

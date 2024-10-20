@@ -5,14 +5,11 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\XAF.Core\XAF.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Hosting\Internal\" />
+    <ProjectReference Include="..\..\src\WPF\XAF.WPF\XAF.WPF.csproj" />
   </ItemGroup>
 
 </Project>

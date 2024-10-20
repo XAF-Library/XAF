@@ -25,7 +25,7 @@ internal class DefaultViewLocator : IViewLocator
         {
             foreach (var attribute in viewType.GetCustomAttributes<ViewForAttribute>())
             {
-                _viewTypeByViewModelType[(attribute.ViewModelType, attribute.PresentationType)] = viewType;
+                _viewTypeByViewModelType.Add((attribute.ViewModelType, attribute.PresentationType), viewType);
             }
         }
 

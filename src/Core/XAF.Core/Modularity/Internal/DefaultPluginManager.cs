@@ -1,38 +1,36 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using XAF.Core.Modularity.Attributes;
 
 namespace XAF.Core.Modularity.Internal;
-internal class DefaultPluginManager : IPluginManager
+internal class DefaultPluginManager : IModuleManager
 {
-    private readonly List<IPlugin> _plugins;
-    private readonly Dictionary<IPlugin, ServiceCollection> _servicesForPlugin;
-    private readonly Dictionary<IPlugin, IServiceProvider> _serviceProviderForPlugin;
+    private readonly List<IServiceModule> _plugins;
+    private readonly Dictionary<IServiceModule, ServiceCollection> _servicesForPlugin;
+    private readonly IServiceCollection _exportedServices;
+    private readonly Dictionary<IServiceModule, IServiceProvider> _serviceProviderForPlugin;
+    private readonly ILoggingBuilder _loggingBuilder;
+    private readonly IList<ServiceDescriptor> _hostServices;
     private bool _pluginsLoaded;
-    private IServiceCollection _hostServices;
 
-    public DefaultPluginManager()
+    public DefaultPluginManager(IList<ServiceDescriptor> hostServices)
     {
         _plugins = [];
+        _exportedServices = new ServiceCollection();
+        _hostServices = hostServices;
     }
 
-    public void AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
+    public void AddPlugin<TPlugin>() where TPlugin : IServiceModule, new()
     {
         _plugins.Add(new TPlugin());
     }
 
     public void AddPlugin(Type pluginType)
     {
-        if (!pluginType.IsAssignableTo(typeof(IPlugin)))
+        if (!pluginType.IsAssignableTo(typeof(IServiceModule)))
         {
-            throw new NotSupportedException($"{pluginType} has to implement the {typeof(IPlugin)}");
+            throw new NotSupportedException($"{pluginType} has to implement the {typeof(IServiceModule)}");
         }
 
         if (pluginType.IsAbstract)
@@ -40,39 +38,41 @@ internal class DefaultPluginManager : IPluginManager
             throw new NotSupportedException($"abstract classes are not supported");
         }
 
-        var ctor = pluginType.GetConstructor(Type.EmptyTypes) 
+        var ctor = pluginType.GetConstructor(Type.EmptyTypes)
             ?? throw new NotSupportedException($"{pluginType} must have an empty constructor");
 
-        var plugin = (IPlugin)ctor.Invoke([]);
+        var plugin = (IServiceModule)ctor.Invoke([]);
 
         _plugins.Add(plugin);
     }
 
-    public void LoadPlugins(IServiceCollection services)
+    public void LoadPlugins()
     {
-        _hostServices = services;
-        foreach (var plugin in _plugins) 
+        foreach (var plugin in _plugins)
         {
-            var collection = new ServiceCollection();
-            _servicesForPlugin.Add(plugin, collection);
-            plugin.RegisterServices(collection);
+            var pluginServices = new ServiceCollection { _hostServices };
+            _servicesForPlugin.Add(plugin, pluginServices);
 
-            var attributes =  plugin.Type.GetCustomAttributes(typeof(ExportsAttribute<>));
+            plugin.RegisterServices(pluginServices);
+
+            var loggingBuilder = new LoggingBuilder(pluginServices);
+            plugin.ConfigureLogging(loggingBuilder);
+
+            var attributes = plugin.Type.GetCustomAttributes(typeof(ExportsAttribute<>));
             foreach (var attribute in attributes)
             {
                 var exportedType = attribute.GetType().GetGenericArguments()[0];
 
-                var descriptor = collection.LastOrDefault(d => d.ServiceType == exportedType) 
+                var descriptor = pluginServices.LastOrDefault(d => d.ServiceType == exportedType)
                     ?? throw new KeyNotFoundException($"Exported type {exportedType} in plugin {plugin} not registered");
-                
-                if (collection.Any(d => d.ServiceType == exportedType))
+
+                if (_exportedServices.Any(d => d.ServiceType == exportedType))
                 {
                     throw new NotSupportedException($"Service {exportedType} is already registered");
                 }
 
-                collection.Add(descriptor);
+                _exportedServices.Add(descriptor);
             }
-
         }
         _pluginsLoaded = true;
     }
@@ -98,5 +98,15 @@ internal class DefaultPluginManager : IPluginManager
 
         return Task.WhenAll(tasks);
 
+    }
+
+    private class LoggingBuilder : ILoggingBuilder
+    {
+        public IServiceCollection Services { get; }
+
+        public LoggingBuilder(IServiceCollection services)
+        {
+            Services = services;
+        }
     }
 }
